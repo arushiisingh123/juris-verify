@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.Python
+*.egg-info/
+build/
+dist/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Model / dataset caches (these are huge and shouldn't go in git)
+.cache/
+*.bin
+*.safetensors
+chroma_db/
+chroma/
+huggingface/
+.chromadb/
+
+# Env / secrets
+.env
+.env.*
+*.key
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Antigravity / editor
+.agent/
+.vscode/
+.idea/
+
+# Eval outputs (can get large, regenerate instead of committing)
+eval/outputs/
+*.log
