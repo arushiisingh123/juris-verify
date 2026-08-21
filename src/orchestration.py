@@ -4,21 +4,25 @@ Orchestration layer for Juris-Verify.
 Implements the Synthesizer -> Prosecutor -> Adjudicator loop using LangGraph.
 """
 
+import hashlib
+import uuid
 from typing import TypedDict, Optional, List, Dict, Any
 from langgraph.graph import StateGraph, END
 from langchain_core.runnables.config import RunnableConfig
 
-from src.verification import NLIVerifier
+from src.verification import NLIVerifier, map_to_matrix_label
 from src.retrieval import HybridRetriever
 from src.extraction import extract_best_evidence
-
+from src.matrix import insert_record
 
 class AgentState(TypedDict):
+    run_id: str
     claim: str
     evidence: str
     evidence_doc_id: Optional[str]
     summary: Optional[str]
     verdict: Optional[str]
+    confidence: Optional[float]
     retries: int  # Number of retries after the first attempt (e.g. max_retries=3 means 4 total attempts)
     feedback: Optional[str]
     status: Optional[str]
@@ -52,8 +56,8 @@ def prosecutor_node(state: AgentState, config: RunnableConfig) -> Dict[str, Any]
     """Prosecutor node: checks the summary against the evidence."""
     verifier = get_verifier()
     # verify() takes (claim, evidence) -- we pass the summary as the claim to verify it.
-    verdict = verifier.verify(state["summary"], state["evidence"])
-    return {"verdict": verdict}
+    res = verifier.verify(state["summary"], state["evidence"], return_dict=True)
+    return {"verdict": res["verdict"], "confidence": res["confidence"]}
 
 
 def adjudicator_node(state: AgentState, config: RunnableConfig) -> Dict[str, Any]:
@@ -91,6 +95,18 @@ def adjudicator_node(state: AgentState, config: RunnableConfig) -> Dict[str, Any
         else:
             status = "EXHAUSTED"
             
+    # Persist the current pass to the Contradiction Matrix
+    claim_id = hashlib.sha256(state["claim"].encode('utf-8')).hexdigest()
+    matrix_label = map_to_matrix_label(verdict)
+    insert_record(
+        run_id=state["run_id"],
+        claim_id=claim_id,
+        source_doc_id=evidence_doc_id,
+        label=matrix_label,
+        confidence=state.get("confidence"),
+        evidence_span=evidence
+    )
+    
     # Append to history on every pass
     new_history = list(state.get("history", []))
     new_history.append({
@@ -144,6 +160,7 @@ def run_pipeline(claim: str, documents: list, max_retries: int = 3) -> dict:
     
     app = build_graph()
     initial_state = {
+        "run_id": str(uuid.uuid4()),
         "claim": claim,
         "evidence": evidence,
         "evidence_doc_id": evidence_doc_id,
@@ -151,6 +168,7 @@ def run_pipeline(claim: str, documents: list, max_retries: int = 3) -> dict:
         "history": [],
         "summary": None,
         "verdict": None,
+        "confidence": None,
         "feedback": None,
         "status": None
     }
@@ -170,26 +188,30 @@ if __name__ == "__main__":
             self.responses = responses
             self.calls = 0
             
-        def verify(self, claim, evidence):
+        def verify(self, claim, evidence, return_dict=False):
             resp = self.responses[self.calls] if self.calls < len(self.responses) else self.responses[-1]
             self.calls += 1
+            if return_dict:
+                return {"verdict": resp, "confidence": 0.99}
             return resp
 
     # Override get_verifier for testing
     original_get_verifier = get_verifier
     
-    def test_path(name, responses, doc_id=None, max_retries=3):
+    def test_path(name, claim_text, responses, doc_id=None, max_retries=3):
         print(f"--- Testing {name} ---")
         global _verifier
         _verifier = MockVerifier(responses)
         
         app = build_graph()
         initial_state = {
-            "claim": "Test claim",
+            "run_id": f"run-{name.split()[0].lower()}",
+            "claim": claim_text,
             "evidence": "Test evidence text.",
             "evidence_doc_id": doc_id,
             "retries": 0,
             "history": [],
+            "confidence": None
         }
         
         result = app.invoke(
@@ -205,13 +227,13 @@ if __name__ == "__main__":
         print()
 
     # 1. CONTRADICTED path (resolves after 1 retry)
-    test_path("CONTRADICTED path with doc_id", ["CONTRADICTED", "SUPPORTED"], doc_id="doc-123")
+    test_path("CONTRADICTED path with doc_id", "Test claim - contradicted", ["CONTRADICTED", "SUPPORTED"], doc_id="doc-123")
     
     # 2. PARTIALLY_SUPPORTED path (resolves after 1 retry, no doc_id)
-    test_path("PARTIALLY_SUPPORTED path without doc_id", ["PARTIALLY_SUPPORTED", "SUPPORTED"])
+    test_path("PARTIALLY_SUPPORTED path without doc_id", "Test claim - partially supported", ["PARTIALLY_SUPPORTED", "SUPPORTED"])
     
     # 3. Retries-exhausted path
-    test_path("EXHAUSTED path", ["CONTRADICTED", "CONTRADICTED", "CONTRADICTED", "CONTRADICTED"], max_retries=3)
+    test_path("EXHAUSTED path", "Test claim - exhausted", ["CONTRADICTED", "CONTRADICTED", "CONTRADICTED", "CONTRADICTED"], max_retries=3)
     
     # 4. End-to-End wiring via run_pipeline
     print("--- Testing End-to-End run_pipeline ---")

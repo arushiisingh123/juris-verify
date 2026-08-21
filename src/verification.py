@@ -26,24 +26,30 @@ class NLIVerifier:
             "text-classification", model=NLI_MODEL_NAME, device=device
         )
 
-    def verify(self, claim, evidence):
+    def verify(self, claim, evidence, return_dict=False):
         """Run NLI: premise=evidence, hypothesis=claim.
 
         Returns:
-            str: one of "SUPPORTED", "CONTRADICTED", "PARTIALLY_SUPPORTED"
+            str: one of "SUPPORTED", "CONTRADICTED", "PARTIALLY_SUPPORTED" (if return_dict is False)
+            dict: {"verdict": str, "confidence": float} (if return_dict is True)
         """
         result = self.nli_pipeline({"text": evidence, "text_pair": claim})
         if isinstance(result, list):
             result = result[0]
 
         label = result["label"].lower()
+        score = float(result.get("score", 0.0))
 
         if label == "entailment":
-            return "SUPPORTED"
+            verdict = "SUPPORTED"
         elif label == "contradiction":
-            return "CONTRADICTED"
+            verdict = "CONTRADICTED"
         else:
-            return "PARTIALLY_SUPPORTED"
+            verdict = "PARTIALLY_SUPPORTED"
+            
+        if return_dict:
+            return {"verdict": verdict, "confidence": score}
+        return verdict
 
 
 def map_to_matrix_label(verdict):

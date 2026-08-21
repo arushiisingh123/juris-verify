@@ -17,9 +17,11 @@ class MockVerifier:
         self.responses = responses
         self.calls = 0
         
-    def verify(self, claim, evidence):
+    def verify(self, claim, evidence, return_dict=False):
         resp = self.responses[self.calls] if self.calls < len(self.responses) else self.responses[-1]
         self.calls += 1
+        if return_dict:
+            return {"verdict": resp, "confidence": 0.99}
         return resp
 
 # We also need to mock HybridRetriever and extract_best_evidence to return predictable strings
@@ -43,18 +45,34 @@ src.orchestration.extract_best_evidence = mock_extract
 src.orchestration._verifier = MockVerifier(["CONTRADICTED", "SUPPORTED"])
 
 
-print("--- Testing End-to-End run_pipeline ---")
-dummy_documents = [
-    {"doc_id": "1", "text": "This is a dummy document. The Earth is actually flat."},
-    {"doc_id": "2", "text": "This is another document. The Earth revolves around the sun and is spherical in nature."}
-]
+def test_path(name, claim_text, responses, doc_id=None, max_retries=3):
+    print(f"--- Testing {name} ---")
+    src.orchestration._verifier = MockVerifier(responses)
+    
+    app = src.orchestration.build_graph()
+    initial_state = {
+        "run_id": f"run-{name.split()[0].lower()}",
+        "claim": claim_text,
+        "evidence": "Test evidence text.",
+        "evidence_doc_id": doc_id,
+        "retries": 0,
+        "history": [],
+        "confidence": None
+    }
+    
+    result = app.invoke(
+        initial_state,
+        config={"configurable": {"max_retries": max_retries}}
+    )
+    
+    print(f"Final Status: {result.get('status')}")
+    print(f"Final Retries: {result.get('retries')}")
+    print("History:")
+    for idx, h in enumerate(result.get("history", [])):
+        print(f"  [{idx}] Verdict: {h['verdict']}, Feedback: {h['feedback']}")
+    print()
 
-result = src.orchestration.run_pipeline("The Earth is flat.", dummy_documents, max_retries=2)
-
-print(f"Final Status: {result.get('status')}")
-print(f"Final Evidence extracted: {result.get('evidence')}")
-print("History:")
-for idx, h in enumerate(result.get("history", [])):
-    print(f"  [{idx}] Summary: {h['summary']}\n      Verdict: {h['verdict']}, Feedback: {h['feedback']}")
-print()
+test_path("CONTRADICTED path with doc_id", "Test claim - contradicted", ["CONTRADICTED", "SUPPORTED"], doc_id="doc-123")
+test_path("PARTIALLY_SUPPORTED path without doc_id", "Test claim - partially supported", ["PARTIALLY_SUPPORTED", "SUPPORTED"])
+test_path("EXHAUSTED path", "Test claim - exhausted", ["CONTRADICTED", "CONTRADICTED", "CONTRADICTED", "CONTRADICTED"], max_retries=3)
 
