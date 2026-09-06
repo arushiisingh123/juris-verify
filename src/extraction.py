@@ -21,7 +21,13 @@ from sentence_transformers import util
 
 def split_sentences(document):
     """Split a document into sentences, dropping short fragments and
-    the leading title (SciFact docs are 'title + abstract')."""
+    the leading title (SciFact docs are 'title + abstract').
+    
+    NOTE: Title stripping is applied per-document. In the legacy
+    single-string implementation, only Doc 1's title was dropped,
+    allowing Doc 2's title to leak into sentence candidate pools (e.g.
+    Claim #36 where Doc 2's title was previously extracted).
+    """
     sentences = re.split(r"(?<=[.!?])\s+", document)
     sentences = [s.strip() for s in sentences if len(s.strip()) > 20]
 
@@ -31,25 +37,46 @@ def split_sentences(document):
     return sentences
 
 
-def extract_best_evidence(claim, document, embedder):
-    """Select the single sentence in `document` most similar to `claim`.
+def extract_best_evidence(claim, candidates, embedder):
+    """Select the single sentence across candidate documents most similar to `claim`.
 
     Args:
+        claim: the claim string to find evidence for
+        candidates: list of {"doc_id": ..., "text": ...} dicts (or a single candidate dict)
         embedder: a SentenceTransformer instance (reuse the retriever's
             embedding_model to avoid loading the model twice)
 
     Returns:
-        str: the extracted sentence, guaranteed to be a verbatim
-        substring of `document`
+        dict: {"sentence": str, "doc_id": Any} where sentence is guaranteed to be a
+        verbatim substring of the source document with the given doc_id.
     """
-    sentences = split_sentences(document)
-    if not sentences:
-        return ""
+    if isinstance(candidates, dict):
+        candidates = [candidates]
+    elif not candidates:
+        return {"sentence": "", "doc_id": None}
+
+    all_sentences = []
+    all_doc_ids = []
+
+    for candidate in candidates:
+        text = candidate.get("text", "")
+        doc_id = candidate.get("doc_id")
+
+        sentences = split_sentences(text)
+        for s in sentences:
+            all_sentences.append(s)
+            all_doc_ids.append(doc_id)
+
+    if not all_sentences:
+        return {"sentence": "", "doc_id": None}
 
     claim_embedding = embedder.encode(claim, convert_to_tensor=True)
-    sentence_embeddings = embedder.encode(sentences, convert_to_tensor=True)
+    sentence_embeddings = embedder.encode(all_sentences, convert_to_tensor=True)
 
     scores = util.cos_sim(claim_embedding, sentence_embeddings)[0]
     best_idx = scores.argmax().item()
 
-    return sentences[best_idx]
+    return {
+        "sentence": all_sentences[best_idx],
+        "doc_id": all_doc_ids[best_idx],
+    }

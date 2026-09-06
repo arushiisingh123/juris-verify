@@ -18,9 +18,11 @@ Claim -> HybridRetriever (semantic + BM25 -> CrossEncoder rerank)
       -> label (SUPPORT / CONTRADICT / NEI)
 ```
 
-**Validated result:** 88% accuracy on a 50-claim held-out SciFact eval
-(`eval/evaluate.py`). Scale `N_EVAL_CLAIMS` up before citing this number
-anywhere formal.
+**Validated result:** 86% accuracy on a 50-claim held-out SciFact eval
+(`eval/evaluate.py`). Re-measured post-Citation URI refactor via
+`compare_old_new_extraction.py` (0 regressions vs baseline; old 88% figure was
+an approximation from the exploratory notebook). Scale `N_EVAL_CLAIMS` up
+before citing this number anywhere formal.
 
 ### Design decisions worth knowing before touching this code
 
@@ -30,11 +32,16 @@ anywhere formal.
   citation-grounding. The current extractor (`src/extraction.py`) selects an
   existing sentence via embedding similarity, so its output is always a
   verbatim substring of the source doc.
+- **Per-document title stripping:** SciFact corpus texts are formatted as
+  `title + abstract`. Sentence extraction cleans titles per-document. (In the
+  pre-refactor single-string version, Doc 2's title leaked through into candidate
+  pools — e.g. Claim #36, which previously extracted a title string that happened
+  to score a correct verdict).
 - **The verifier is a dedicated NLI model, not a generative LLM.** FLAN-T5,
   Mistral-7B-Instruct, and Qwen2.5-7B were all tried as verifiers and
   rejected (too weak / over-predicted "partially supported" on clear-cut
   cases). `MoritzLaurer/DeBERTa-v3-large-mnli-fever-anli-ling-wanli` is what's
-  scoring 88% — don't swap the verifier without re-running `eval/evaluate.py`
+  scoring 86% — don't swap the verifier without re-running `eval/evaluate.py`
   and comparing.
 
 ## What's NOT built yet — the actual next-phase work
@@ -49,9 +56,9 @@ anywhere formal.
 3. **Persisted Contradiction Matrix.** Structure verifier output into
    `{claim_id, source_doc_id, label, confidence, evidence_span, timestamp}`
    records instead of returning one-off dicts. Should be queryable.
-4. **Citation URIs.** Extracted evidence is currently plain text — attach
-   `doc_id` + character span so every correction is traceable back to an
-   exact source location.
+4. **Citation URIs.** (Implemented) Extracted evidence preserves and tags
+   source `doc_id` throughout retrieval, sentence extraction, LangGraph
+   orchestration, and persisted Contradiction Matrix records.
 5. **Phase 3 — legal track.** Not started. Plan is CaseHOLD first (most
    tractable), then COLIEE, then EUR-Lex.
 6. **RAGAS faithfulness scoring.** `ragas` is installed, unused. Should be

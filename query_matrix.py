@@ -15,4 +15,4 @@ for claim in claims:
     if not records:
         print("  No records found.")
     for r in records:
-        print(f"  Run ID: {r['run_id']} | Label: {r['label']:<15} | Conf: {r['confidence']:.4f} | TS: {r['timestamp']}")
+        print(f"  Run ID: {r['run_id']} | Doc ID: {str(r['source_doc_id']):<10} | Label: {r['label']:<15} | Conf: {r['confidence']:.4f} | TS: {r['timestamp']}")

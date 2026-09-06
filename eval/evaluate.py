@@ -8,6 +8,10 @@ N_EVAL_CLAIMS up substantially -- 50 is enough for iteration, not
 enough for a headline figure.
 """
 
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from src.data_loader import (
     load_scifact,
     get_valid_claims,
@@ -48,6 +52,7 @@ def run_eval():
                 "gold": gold,
                 "prediction": prediction,
                 "evidence": result["evidence"],
+                "evidence_doc_id": result.get("evidence_doc_id"),
             })
 
     accuracy = round(correct / len(eval_claims) * 100, 2)

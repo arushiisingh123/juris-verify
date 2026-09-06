@@ -32,6 +32,7 @@ def main():
     print(f"\nFinal Status: {result.get('status')}")
     print(f"Final Retries: {result.get('retries')}")
     print(f"Final Evidence extracted: {result.get('evidence')}")
+    print(f"Final Evidence doc_id: {result.get('evidence_doc_id')}")
     print("History:")
     for idx, h in enumerate(result.get("history", [])):
         print(f"  [{idx}] Summary: {h['summary']}\n      Verdict: {h['verdict']}\n      Feedback: {h['feedback']}")

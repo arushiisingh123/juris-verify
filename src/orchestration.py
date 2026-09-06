@@ -149,14 +149,18 @@ def build_graph():
 def run_pipeline(claim: str, documents: list, max_retries: int = 3) -> dict:
     """Wires the LangGraph loop into the existing retriever + extractor."""
     retriever = HybridRetriever(documents)
-    retrieved_docs_text = retriever.retrieve(claim)
+    candidate_docs = retriever.retrieve(claim)
     
-    evidence = extract_best_evidence(
-        claim, retrieved_docs_text[:3000], retriever.embedding_model
+    truncated_candidates = [
+        {"doc_id": doc["doc_id"], "text": doc["text"][:3000]}
+        for doc in candidate_docs
+    ]
+    
+    extraction = extract_best_evidence(
+        claim, truncated_candidates, retriever.embedding_model
     )
-    
-    # TODO(README #4): populate real doc_id once retrieval.py returns per-document ids
-    evidence_doc_id = None
+    evidence = extraction["sentence"]
+    evidence_doc_id = str(extraction["doc_id"]) if extraction["doc_id"] is not None else None
     
     app = build_graph()
     initial_state = {

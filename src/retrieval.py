@@ -56,29 +56,47 @@ class HybridRetriever:
         """Retrieve and rerank documents for a claim.
 
         Returns:
-            str: newline-joined text of the top_n reranked documents
+            list: list of {"doc_id": ..., "text": ...} dicts for the top_n reranked documents
         """
         # Semantic
         query_embedding = self.embedding_model.encode(claim).tolist()
         semantic_results = self.collection.query(
-            query_embeddings=[query_embedding], n_results=semantic_k
+            query_embeddings=[query_embedding],
+            n_results=semantic_k,
+            include=["documents", "metadatas"],
         )
-        semantic_docs = semantic_results["documents"][0]
+        semantic_docs_text = semantic_results["documents"][0]
+        semantic_metadatas = semantic_results["metadatas"][0]
+
+        semantic_candidates = [
+            {"doc_id": meta["doc_id"], "text": text}
+            for text, meta in zip(semantic_docs_text, semantic_metadatas)
+        ]
 
         # BM25
         tokenized_query = claim.lower().split()
         bm25_results = self.bm25.get_top_n(tokenized_query, self.documents, n=bm25_k)
 
-        # Merge, dedupe
-        hybrid_docs = list(semantic_docs)
+        # Merge, dedupe by doc_id
+        seen_doc_ids = set()
+        hybrid_docs = []
+
+        for doc in semantic_candidates:
+            doc_id_str = str(doc["doc_id"])
+            if doc_id_str not in seen_doc_ids:
+                seen_doc_ids.add(doc_id_str)
+                hybrid_docs.append(doc)
+
         for doc in bm25_results:
-            if doc["text"] not in hybrid_docs:
-                hybrid_docs.append(doc["text"])
+            doc_id_str = str(doc["doc_id"])
+            if doc_id_str not in seen_doc_ids:
+                seen_doc_ids.add(doc_id_str)
+                hybrid_docs.append(doc)
 
         # Rerank
-        pairs = [(claim, doc) for doc in hybrid_docs]
+        pairs = [(claim, doc["text"]) for doc in hybrid_docs]
         scores = self.reranker.predict(pairs)
         ranked = sorted(zip(hybrid_docs, scores), key=lambda x: x[1], reverse=True)
         top_docs = [ranked[i][0] for i in range(min(top_n, len(ranked)))]
 
-        return "\n\n".join(top_docs)
+        return top_docs
