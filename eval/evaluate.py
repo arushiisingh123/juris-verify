@@ -71,7 +71,7 @@ def split_claim_into_statements(claim: str) -> list:
 
 
 def compute_nli_faithfulness(claim: str, evidence: str, verifier: NLIVerifier, return_details: bool = False):
-    """Compute NLI-based factual consistency / faithfulness score.
+    """Compute NLI-based factual consistency / faithfulness score (strict, entailment-only).
 
     Methodology (SummaC/FactCC family):
     1. Decompose the claim into atomic sub-statements.
@@ -114,6 +114,48 @@ def compute_nli_faithfulness(claim: str, evidence: str, verifier: NLIVerifier, r
     return score
 
 
+def compute_weighted_nli_faithfulness(claim: str, evidence: str, verifier: NLIVerifier, return_details: bool = False):
+    """Same as compute_nli_faithfulness but gives partial credit:
+    SUPPORTED = 1.0, PARTIALLY_SUPPORTED = 0.5, CONTRADICTED = 0.0.
+    Reflects the project's 3-way AGREE/SCOPE-MISMATCH/CONTRADICT
+    distinction rather than collapsing to binary supported/unsupported.
+
+    LIMITATION: all atomic sub-statements from a single claim are checked against
+    the same evidence sentence (extract_best_evidence returns one sentence per claim,
+    not one per sub-statement) -- for genuinely multi-part claims where each part is
+    supported by different source sentences, this may understate faithfulness.
+    Acceptable for now since most SciFact claims are single-assertion.
+
+    NOTE: Deliberately reuses the existing NLIVerifier (DeBERTa-v3-large-mnli) rather
+    than an LLM judge, keeping the eval harness fully local/reproducible with no
+    external API dependency.
+    """
+    if not evidence or not evidence.strip():
+        if return_details:
+            return 0.0, []
+        return 0.0
+
+    statements = split_claim_into_statements(claim)
+    if not statements:
+        if return_details:
+            return 0.0, []
+        return 0.0
+
+    weights = {"SUPPORTED": 1.0, "PARTIALLY_SUPPORTED": 0.5, "CONTRADICTED": 0.0}
+    total_credit = 0.0
+    details = []
+    for stmt in statements:
+        verdict = verifier.verify(claim=stmt, evidence=evidence)
+        credit = weights.get(verdict, 0.0)
+        total_credit += credit
+        details.append({"statement": stmt, "verdict": verdict, "credit": credit})
+
+    score = round(total_credit / len(statements), 4)
+    if return_details:
+        return score, details
+    return score
+
+
 def run_eval():
     claims_dataset, corpus_dataset = load_scifact()
     valid_claims = get_valid_claims(claims_dataset)
@@ -126,8 +168,10 @@ def run_eval():
 
     correct = 0
     wrong_cases = []
-    faithfulness_scores = []
-    faithfulness_by_label = {"SUPPORT": [], "CONTRADICT": [], "NEI": []}
+    strict_faithfulness_scores = []
+    weighted_faithfulness_scores = []
+    strict_by_label = {"SUPPORT": [], "CONTRADICT": [], "NEI": []}
+    weighted_by_label = {"SUPPORT": [], "CONTRADICT": [], "NEI": []}
     all_eval_details = []
 
     for item in eval_claims:
@@ -137,13 +181,19 @@ def run_eval():
         result = pipeline.predict_claim(claim_text)
         prediction = normalize_for_scifact_eval(result["verdict"])
 
-        # Compute NLI Faithfulness score reusing pipeline.verifier
-        f_score, f_details = compute_nli_faithfulness(
+        # Compute both Strict and Weighted NLI Faithfulness scores reusing pipeline.verifier
+        strict_score, strict_details = compute_nli_faithfulness(
             claim_text, result["evidence"], pipeline.verifier, return_details=True
         )
-        faithfulness_scores.append(f_score)
-        if gold in faithfulness_by_label:
-            faithfulness_by_label[gold].append(f_score)
+        weighted_score, weighted_details = compute_weighted_nli_faithfulness(
+            claim_text, result["evidence"], pipeline.verifier, return_details=True
+        )
+
+        strict_faithfulness_scores.append(strict_score)
+        weighted_faithfulness_scores.append(weighted_score)
+        if gold in strict_by_label:
+            strict_by_label[gold].append(strict_score)
+            weighted_by_label[gold].append(weighted_score)
 
         all_eval_details.append({
             "claim": claim_text,
@@ -152,8 +202,9 @@ def run_eval():
             "verdict": result["verdict"],
             "evidence": result["evidence"],
             "evidence_doc_id": result.get("evidence_doc_id"),
-            "faithfulness": f_score,
-            "statements": f_details,
+            "strict_faithfulness": strict_score,
+            "weighted_faithfulness": weighted_score,
+            "statements": weighted_details,
         })
 
         if prediction == gold:
@@ -165,31 +216,51 @@ def run_eval():
                 "prediction": prediction,
                 "evidence": result["evidence"],
                 "evidence_doc_id": result.get("evidence_doc_id"),
-                "faithfulness": f_score,
+                "strict_faithfulness": strict_score,
+                "weighted_faithfulness": weighted_score,
             })
 
     accuracy = round(correct / len(eval_claims) * 100, 2)
-    avg_faithfulness = round(sum(faithfulness_scores) / len(faithfulness_scores), 4) if faithfulness_scores else 0.0
+    avg_strict_faithfulness = (
+        round(sum(strict_faithfulness_scores) / len(strict_faithfulness_scores), 4)
+        if strict_faithfulness_scores
+        else 0.0
+    )
+    avg_weighted_faithfulness = (
+        round(sum(weighted_faithfulness_scores) / len(weighted_faithfulness_scores), 4)
+        if weighted_faithfulness_scores
+        else 0.0
+    )
 
     print(f"Correct: {correct}")
     print(f"Total: {len(eval_claims)}")
     print(f"Accuracy: {accuracy}%")
 
-    print(f"\n================ NLI FAITHFULNESS REPORT ================")
-    print(f"Overall Average Faithfulness: {avg_faithfulness:.4f}")
-    print("Breakdown by Gold Label:")
+    print(f"\n============================ NLI FAITHFULNESS REPORT ============================")
+    print(f"Overall Metrics:")
+    print(f"  - Strict Faithfulness (Entailment Only):    {avg_strict_faithfulness:.4f}")
+    print(f"  - Weighted Faithfulness (Partial Credit):   {avg_weighted_faithfulness:.4f}")
+    print(f"\nBreakdown by Gold Label:")
     for label in ["SUPPORT", "CONTRADICT", "NEI"]:
-        scores = faithfulness_by_label[label]
-        avg_l = sum(scores) / len(scores) if scores else 0.0
-        print(f"  - {label:<12} ({len(scores):>2} claims): avg faithfulness = {avg_l:.4f}")
-    print("=========================================================\n")
+        s_scores = strict_by_label[label]
+        w_scores = weighted_by_label[label]
+        s_avg = sum(s_scores) / len(s_scores) if s_scores else 0.0
+        w_avg = sum(w_scores) / len(w_scores) if w_scores else 0.0
+        print(f"  - {label:<12} ({len(s_scores):>2} claims): Strict = {s_avg:.4f} | Weighted = {w_avg:.4f}")
+    print(f"=================================================================================\n")
 
     return {
         "accuracy": accuracy,
-        "faithfulness": avg_faithfulness,
-        "faithfulness_by_label": {
+        "strict_faithfulness": avg_strict_faithfulness,
+        "weighted_faithfulness": avg_weighted_faithfulness,
+        "faithfulness": avg_strict_faithfulness,
+        "strict_faithfulness_by_label": {
             label: round(sum(scores) / len(scores), 4) if scores else 0.0
-            for label, scores in faithfulness_by_label.items()
+            for label, scores in strict_by_label.items()
+        },
+        "weighted_faithfulness_by_label": {
+            label: round(sum(scores) / len(scores), 4) if scores else 0.0
+            for label, scores in weighted_by_label.items()
         },
         "wrong_cases": wrong_cases,
         "eval_details": all_eval_details,

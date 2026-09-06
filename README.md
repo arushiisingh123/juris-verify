@@ -62,9 +62,13 @@ before citing this number anywhere formal.
 5. **Phase 3 — legal track.** Not started. Plan is CaseHOLD first (most
    tractable), then COLIEE, then EUR-Lex.
 6. **Faithfulness scoring (SummaC/FactCC NLI method).** (Implemented in
-   `eval/evaluate.py`) Factual consistency metric reported alongside accuracy,
-   broken out by gold label (SUPPORT / CONTRADICT / NEI). Reuses local
-   `NLIVerifier` over atomic sub-statements without external LLM API
+   `eval/evaluate.py`) Dual factual consistency metrics reported alongside
+   accuracy, broken out by gold label (SUPPORT / CONTRADICT / NEI):
+   - **Strict Faithfulness:** Binary entailment-only (SUPPORTED = 1.0, else 0.0).
+   - **Weighted Faithfulness:** 3-way partial credit reflecting the project's
+     AGREE / SCOPE-MISMATCH / CONTRADICT taxonomy (SUPPORTED = 1.0,
+     PARTIALLY_SUPPORTED = 0.5, CONTRADICTED = 0.0).
+   Reuses local `NLIVerifier` over atomic sub-statements without external LLM API
    dependencies. *Limitation:* Atomic statements are checked against the single
    top evidence sentence; multi-sentence support may understate faithfulness for
    complex multi-assertion claims.
