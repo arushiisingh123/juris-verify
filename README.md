@@ -61,8 +61,13 @@ before citing this number anywhere formal.
    orchestration, and persisted Contradiction Matrix records.
 5. **Phase 3 — legal track.** Not started. Plan is CaseHOLD first (most
    tractable), then COLIEE, then EUR-Lex.
-6. **RAGAS faithfulness scoring.** `ragas` is installed, unused. Should be
-   added to `eval/evaluate.py` as an additional metric alongside accuracy.
+6. **Faithfulness scoring (SummaC/FactCC NLI method).** (Implemented in
+   `eval/evaluate.py`) Factual consistency metric reported alongside accuracy,
+   broken out by gold label (SUPPORT / CONTRADICT / NEI). Reuses local
+   `NLIVerifier` over atomic sub-statements without external LLM API
+   dependencies. *Limitation:* Atomic statements are checked against the single
+   top evidence sentence; multi-sentence support may understate faithfulness for
+   complex multi-assertion claims.
 7. **Scale the eval set.** 50 claims is fine for iteration, not for a paper
    headline number.
 
