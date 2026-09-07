@@ -82,8 +82,9 @@ is the first unbiased, validated reference benchmark for this pipeline.
    understate faithfulness for multi-assertion claims.
 
    *Evidenced Single-Sentence Extraction Bottleneck vs. NLI Reasoning Limits:* An
-   empirical audit of a random sample of 25 of the 80 `PARTIALLY_SUPPORTED`
-   `CONTRADICT` cases at scale ($N=504$) revealed two distinct failure modes:
+   empirical audit of a randomized sample of 25 claims (`random.sample(seed=42)`)
+   drawn from the full population of 80 `PARTIALLY_SUPPORTED` `CONTRADICT` cases at
+   scale ($N=504$) revealed two distinct failure modes:
    - **Sentence-Extraction Bottleneck (84.0%, 21 of 25 cases):** The retrieved
      source document contained an explicit contradiction sentence that evaluated
      directly to `CONTRADICTED` under the existing `NLIVerifier`, but
@@ -93,6 +94,13 @@ is the first unbiased, validated reference benchmark for this pipeline.
      sentences in the source/gold document, every sentence evaluated to neutral
      (`PARTIALLY_SUPPORTED`) due to complex comparative framing, subtle statistical
      inferences, or domain-specific terminology.
+
+   *Note on Earlier Pilot Audit:* An initial audit on the $N=50$ pilot found a
+   50/50 split (3 of 6 cases); that estimate was drawn from an unstratified,
+   non-random first-50 slice with an unrepresentatively small sample ($n=6$). The
+   84/16 split drawn from the full, unbiased 504-claim population is the more
+   statistically trustworthy measurement and supersedes the 50/50 figure as the
+   validated reference distribution going forward.
 7. **Scale the eval set.** (Implemented in `eval/evaluate.py`) Configurable
    evaluation harness scaled to the full SciFact unique training set ($N=504$,
    331 SUPPORT / 173 CONTRADICT) with support for stratified sampling
