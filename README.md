@@ -69,15 +69,23 @@ before citing this number anywhere formal.
      AGREE / SCOPE-MISMATCH / CONTRADICT taxonomy (SUPPORTED = 1.0,
      PARTIALLY_SUPPORTED = 0.5, CONTRADICTED = 0.0).
    Reuses local `NLIVerifier` over atomic sub-statements without external LLM API
-   dependencies. *Limitation:* Atomic statements are checked against the single
-   top evidence sentence; multi-sentence support may understate faithfulness for
-   complex multi-assertion claims. Furthermore, cosine similarity in
-   `extract_best_evidence` can bias toward high lexical overlap (e.g. picking an
-   introductory `OBJECTIVE` sentence rather than a finding/conclusion), causing
-   the verifier to receive a neutral span (`PARTIALLY_SUPPORTED`) rather than a
-   decisive contradiction sentence present elsewhere in the same document
-   (e.g. Claim #138 in Doc 26016929, where `extract_best_evidence` picked the
-   neutral Objective sentence over the definitive contradictory Conclusion sentence).
+   dependencies.
+
+   *General Limitation:* Atomic statements are evaluated against a single top
+   evidence sentence (`extract_best_evidence`); multi-sentence support may
+   understate faithfulness for multi-assertion claims.
+
+   *Evidenced Single-Sentence Extraction Bottleneck:* An audit of the 6 gold
+   `CONTRADICT` claims that received `PARTIALLY_SUPPORTED` revealed that exactly
+   **3 of 6 (50%)** failed solely because cosine-similarity sentence extraction
+   selected a high-overlap introductory/objective sentence instead of a conclusive
+   finding elsewhere in the document (e.g. Claim #138 in Doc 26016929, Claim #122 in
+   Doc 3272084, and Claim #112 in Doc 6157837). In each case, evaluating the
+   document's conclusion or result sentences with the existing verifier yielded a
+   decisive `CONTRADICTED` verdict. The remaining 3 of 6 (50%) cases represented
+   subtle numerical discrepancies (e.g. Claim #2 comparing "1 in 5M" vs "493 per M")
+   or domain-specific terminology where standard NLI models output neutral across
+   all sentences.
 7. **Scale the eval set.** 50 claims is fine for iteration, not for a paper
    headline number.
 
