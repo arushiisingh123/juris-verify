@@ -81,23 +81,27 @@ is the first unbiased, validated reference benchmark for this pipeline.
    evidence sentence (`extract_best_evidence`); multi-sentence support may
    understate faithfulness for multi-assertion claims.
 
-   *Evidenced Single-Sentence Extraction Bottleneck:* An audit of the gold
-   `CONTRADICT` claims that received `PARTIALLY_SUPPORTED` revealed that exactly
-   **50% (3 of 6 in pilot audit)** failed solely because cosine-similarity sentence
-   extraction selected a high-overlap introductory/objective sentence instead of a
-   conclusive finding elsewhere in the document (e.g. Claim #138 in Doc 26016929,
-   Claim #122 in Doc 3272084, and Claim #112 in Doc 6157837). In each case,
-   evaluating the document's conclusion or result sentences with the existing
-   verifier yielded a decisive `CONTRADICTED` verdict.
+   *Evidenced Single-Sentence Extraction Bottleneck vs. NLI Reasoning Limits:* An
+   empirical audit of a random sample of 25 of the 80 `PARTIALLY_SUPPORTED`
+   `CONTRADICT` cases at scale ($N=504$) revealed two distinct failure modes:
+   - **Sentence-Extraction Bottleneck (84.0%, 21 of 25 cases):** The retrieved
+     source document contained an explicit contradiction sentence that evaluated
+     directly to `CONTRADICTED` under the existing `NLIVerifier`, but
+     `extract_best_evidence` selected a high-overlap introductory/objective
+     sentence due to cosine similarity bias.
+   - **NLI Reasoning Limits (16.0%, 4 of 25 cases):** Even when checking all
+     sentences in the source/gold document, every sentence evaluated to neutral
+     (`PARTIALLY_SUPPORTED`) due to complex comparative framing, subtle statistical
+     inferences, or domain-specific terminology.
 7. **Scale the eval set.** (Implemented in `eval/evaluate.py`) Configurable
    evaluation harness scaled to the full SciFact unique training set ($N=504$,
    331 SUPPORT / 173 CONTRADICT) with support for stratified sampling
    (`--stratified`), deterministic random seed (`--seed 42`), execution wall-time
    benchmarking, and timestamped JSON artifact export (`eval/results_20260907_095418_n504.json`).
    - **Full-scale Accuracy:** 78.97% (398/504 total; SUPPORT: 93.05% [308/331],
-     CONTRADICT: 52.02% [90/173]). The performance delta from the pilot is
-     concentrated in contradiction detection, precisely matching the extraction
-     bottleneck identified above.
+     CONTRADICT: 52.02% [90/173]). The accuracy drop from the pilot is
+     concentrated in contradiction detection, driven by the dual failure modes
+     quantified above (84% extraction selection failure, 16% NLI reasoning limits).
    - **Runtime:** 124.62s (~2.08 min, 0.25s/claim on GPU).
    - *Scope Clarification:* `eval/evaluate.py` evaluates the base single-pass
      pipeline (`JurisVerifyPipeline.predict_claim`), measuring standalone
