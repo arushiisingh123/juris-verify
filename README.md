@@ -18,11 +18,15 @@ Claim -> HybridRetriever (semantic + BM25 -> CrossEncoder rerank)
       -> label (SUPPORT / CONTRADICT / NEI)
 ```
 
-**Validated result:** 86% accuracy on a 50-claim held-out SciFact eval
-(`eval/evaluate.py`). Re-measured post-Citation URI refactor via
-`compare_old_new_extraction.py` (0 regressions vs baseline; old 88% figure was
-an approximation from the exploratory notebook). Scale `N_EVAL_CLAIMS` up
-before citing this number anywhere formal.
+**Validated result:** 78.97% accuracy (398/504) on the full SciFact unique
+labeled population (`eval/evaluate.py`), with Strict Faithfulness of 0.1766
+and Weighted Faithfulness of 0.4762.
+
+*Note on Earlier Figures:* The earlier 86% figure (43/50) and 88% prototype
+figure were measured on an unstratified first-50-claims slice (`unique_claims[:50]`)
+in dataset order, which contained an unrepresentatively easy distribution. The
+78.97% figure across the entire 504-claim population (331 SUPPORT / 173 CONTRADICT)
+is the first unbiased, validated reference benchmark for this pipeline.
 
 ### Design decisions worth knowing before touching this code
 
@@ -41,8 +45,8 @@ before citing this number anywhere formal.
   Mistral-7B-Instruct, and Qwen2.5-7B were all tried as verifiers and
   rejected (too weak / over-predicted "partially supported" on clear-cut
   cases). `MoritzLaurer/DeBERTa-v3-large-mnli-fever-anli-ling-wanli` is what's
-  scoring 86% — don't swap the verifier without re-running `eval/evaluate.py`
-  and comparing.
+  scoring 78.97% overall (93.05% on SUPPORT, 52.02% on CONTRADICT) — don't swap
+  the verifier without re-running `eval/evaluate.py` and comparing.
 
 ## What's NOT built yet — the actual next-phase work
 
@@ -63,11 +67,13 @@ before citing this number anywhere formal.
    tractable), then COLIEE, then EUR-Lex.
 6. **Faithfulness scoring (SummaC/FactCC NLI method).** (Implemented in
    `eval/evaluate.py`) Dual factual consistency metrics reported alongside
-   accuracy, broken out by gold label (SUPPORT / CONTRADICT / NEI):
+   accuracy, broken out by gold label (SUPPORT / CONTRADICT / NEI) at $N=504$:
    - **Strict Faithfulness:** Binary entailment-only (SUPPORTED = 1.0, else 0.0).
+     Overall: **0.1766** (SUPPORT: 0.2598, CONTRADICT: 0.0173).
    - **Weighted Faithfulness:** 3-way partial credit reflecting the project's
      AGREE / SCOPE-MISMATCH / CONTRADICT taxonomy (SUPPORTED = 1.0,
      PARTIALLY_SUPPORTED = 0.5, CONTRADICTED = 0.0).
+     Overall: **0.4762** (SUPPORT: 0.5952, CONTRADICT: 0.2486).
    Reuses local `NLIVerifier` over atomic sub-statements without external LLM API
    dependencies.
 
@@ -75,27 +81,29 @@ before citing this number anywhere formal.
    evidence sentence (`extract_best_evidence`); multi-sentence support may
    understate faithfulness for multi-assertion claims.
 
-   *Evidenced Single-Sentence Extraction Bottleneck:* An audit of the 6 gold
+   *Evidenced Single-Sentence Extraction Bottleneck:* An audit of the gold
    `CONTRADICT` claims that received `PARTIALLY_SUPPORTED` revealed that exactly
-   **3 of 6 (50%)** failed solely because cosine-similarity sentence extraction
-   selected a high-overlap introductory/objective sentence instead of a conclusive
-   finding elsewhere in the document (e.g. Claim #138 in Doc 26016929, Claim #122 in
-   Doc 3272084, and Claim #112 in Doc 6157837). In each case, evaluating the
-   document's conclusion or result sentences with the existing verifier yielded a
-   decisive `CONTRADICTED` verdict. The remaining 3 of 6 (50%) cases represented
-   subtle numerical discrepancies (e.g. Claim #2 comparing "1 in 5M" vs "493 per M")
-   or domain-specific terminology where standard NLI models output neutral across
-   all sentences.
+   **50% (3 of 6 in pilot audit)** failed solely because cosine-similarity sentence
+   extraction selected a high-overlap introductory/objective sentence instead of a
+   conclusive finding elsewhere in the document (e.g. Claim #138 in Doc 26016929,
+   Claim #122 in Doc 3272084, and Claim #112 in Doc 6157837). In each case,
+   evaluating the document's conclusion or result sentences with the existing
+   verifier yielded a decisive `CONTRADICTED` verdict.
 7. **Scale the eval set.** (Implemented in `eval/evaluate.py`) Configurable
    evaluation harness scaled to the full SciFact unique training set ($N=504$,
    331 SUPPORT / 173 CONTRADICT) with support for stratified sampling
    (`--stratified`), deterministic random seed (`--seed 42`), execution wall-time
-   benchmarking, and timestamped JSON artifact export.
-   *Scope Clarification:* `eval/evaluate.py` evaluates the base single-pass
-   pipeline (`JurisVerifyPipeline.predict_claim`), measuring standalone
-   retrieval, extraction, and verification accuracy and faithfulness across the
-   corpus, NOT the LangGraph adjudicator retry loop from item #1 (which handles
-   adversarial correction cycles).
+   benchmarking, and timestamped JSON artifact export (`eval/results_20260907_095418_n504.json`).
+   - **Full-scale Accuracy:** 78.97% (398/504 total; SUPPORT: 93.05% [308/331],
+     CONTRADICT: 52.02% [90/173]). The performance delta from the pilot is
+     concentrated in contradiction detection, precisely matching the extraction
+     bottleneck identified above.
+   - **Runtime:** 124.62s (~2.08 min, 0.25s/claim on GPU).
+   - *Scope Clarification:* `eval/evaluate.py` evaluates the base single-pass
+     pipeline (`JurisVerifyPipeline.predict_claim`), measuring standalone
+     retrieval, extraction, and verification accuracy and faithfulness across the
+     corpus, NOT the LangGraph adjudicator retry loop from item #1 (which handles
+     adversarial correction cycles).
 
 ## Suggested build order
 
