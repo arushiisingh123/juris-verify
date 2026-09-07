@@ -71,7 +71,13 @@ before citing this number anywhere formal.
    Reuses local `NLIVerifier` over atomic sub-statements without external LLM API
    dependencies. *Limitation:* Atomic statements are checked against the single
    top evidence sentence; multi-sentence support may understate faithfulness for
-   complex multi-assertion claims.
+   complex multi-assertion claims. Furthermore, cosine similarity in
+   `extract_best_evidence` can bias toward high lexical overlap (e.g. picking an
+   introductory `OBJECTIVE` sentence rather than a finding/conclusion), causing
+   the verifier to receive a neutral span (`PARTIALLY_SUPPORTED`) rather than a
+   decisive contradiction sentence present elsewhere in the same document
+   (e.g. Claim #138 in Doc 26016929, where `extract_best_evidence` picked the
+   neutral Objective sentence over the definitive contradictory Conclusion sentence).
 7. **Scale the eval set.** 50 claims is fine for iteration, not for a paper
    headline number.
 
