@@ -86,8 +86,16 @@ before citing this number anywhere formal.
    subtle numerical discrepancies (e.g. Claim #2 comparing "1 in 5M" vs "493 per M")
    or domain-specific terminology where standard NLI models output neutral across
    all sentences.
-7. **Scale the eval set.** 50 claims is fine for iteration, not for a paper
-   headline number.
+7. **Scale the eval set.** (Implemented in `eval/evaluate.py`) Configurable
+   evaluation harness scaled to the full SciFact unique training set ($N=504$,
+   331 SUPPORT / 173 CONTRADICT) with support for stratified sampling
+   (`--stratified`), deterministic random seed (`--seed 42`), execution wall-time
+   benchmarking, and timestamped JSON artifact export.
+   *Scope Clarification:* `eval/evaluate.py` evaluates the base single-pass
+   pipeline (`JurisVerifyPipeline.predict_claim`), measuring standalone
+   retrieval, extraction, and verification accuracy and faithfulness across the
+   corpus, NOT the LangGraph adjudicator retry loop from item #1 (which handles
+   adversarial correction cycles).
 
 ## Suggested build order
 

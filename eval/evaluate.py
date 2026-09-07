@@ -1,6 +1,11 @@
 import sys
 import os
 import re
+import json
+import time
+import argparse
+from datetime import datetime, timezone
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from src.data_loader import (
@@ -12,7 +17,6 @@ from src.data_loader import (
 from src.pipeline import JurisVerifyPipeline
 from src.verification import NLIVerifier, normalize_for_scifact_eval
 
-N_EVAL_CLAIMS = 50  # bump this before reporting results in the paper
 PRONOUNS_PATTERN = r"^(?:it|this|that|they|these|those)\b"
 
 
@@ -156,7 +160,45 @@ def compute_weighted_nli_faithfulness(claim: str, evidence: str, verifier: NLIVe
     return score
 
 
-def run_eval():
+def get_eval_subset(unique_claims: list, n_claims=None, stratified: bool = False, seed: int = 42) -> list:
+    """Select a subset of claims for evaluation, optionally with stratified sampling by gold label."""
+    if n_claims is None or n_claims >= len(unique_claims):
+        return list(unique_claims)
+
+    if not stratified:
+        return list(unique_claims[:n_claims])
+
+    import random
+    rng = random.Random(seed)
+    by_label = {}
+    for item in unique_claims:
+        by_label.setdefault(item["evidence_label"], []).append(item)
+
+    sampled = []
+    total_avail = len(unique_claims)
+    for label, items in by_label.items():
+        label_n = max(1, round(n_claims * len(items) / total_avail))
+        sampled_items = rng.sample(items, min(label_n, len(items)))
+        sampled.extend(sampled_items)
+
+    # Reconcile exact target count if rounding differed
+    if len(sampled) > n_claims:
+        sampled = sampled[:n_claims]
+    elif len(sampled) < n_claims:
+        remaining = [c for c in unique_claims if c not in sampled]
+        sampled.extend(rng.sample(remaining, n_claims - len(sampled)))
+
+    return sampled
+
+
+def run_eval(
+    n_claims=None,
+    stratified: bool = False,
+    seed: int = 42,
+    output_dir: str = "eval",
+    save_json: bool = True,
+):
+    """Run evaluation over the SciFact dataset with accuracy and dual faithfulness reporting."""
     claims_dataset, corpus_dataset = load_scifact()
     valid_claims = get_valid_claims(claims_dataset)
     unique_claims = get_unique_claims(valid_claims)
@@ -164,7 +206,10 @@ def run_eval():
 
     pipeline = JurisVerifyPipeline(documents)
 
-    eval_claims = unique_claims[:N_EVAL_CLAIMS]
+    eval_claims = get_eval_subset(unique_claims, n_claims=n_claims, stratified=stratified, seed=seed)
+
+    print(f"Starting evaluation on {len(eval_claims)} claims (total pool: {len(unique_claims)} unique claims)...")
+    start_time = time.time()
 
     correct = 0
     wrong_cases = []
@@ -174,7 +219,7 @@ def run_eval():
     weighted_by_label = {"SUPPORT": [], "CONTRADICT": [], "NEI": []}
     all_eval_details = []
 
-    for item in eval_claims:
+    for idx, item in enumerate(eval_claims, 1):
         claim_text = item["claim"]
         gold = item["evidence_label"]
 
@@ -195,7 +240,8 @@ def run_eval():
             strict_by_label[gold].append(strict_score)
             weighted_by_label[gold].append(weighted_score)
 
-        all_eval_details.append({
+        claim_record = {
+            "claim_index": idx,
             "claim": claim_text,
             "gold": gold,
             "prediction": prediction,
@@ -205,20 +251,16 @@ def run_eval():
             "strict_faithfulness": strict_score,
             "weighted_faithfulness": weighted_score,
             "statements": weighted_details,
-        })
+        }
+        all_eval_details.append(claim_record)
 
         if prediction == gold:
             correct += 1
         else:
-            wrong_cases.append({
-                "claim": claim_text,
-                "gold": gold,
-                "prediction": prediction,
-                "evidence": result["evidence"],
-                "evidence_doc_id": result.get("evidence_doc_id"),
-                "strict_faithfulness": strict_score,
-                "weighted_faithfulness": weighted_score,
-            })
+            wrong_cases.append(claim_record)
+
+    elapsed = time.time() - start_time
+    sec_per_claim = elapsed / len(eval_claims) if eval_claims else 0.0
 
     accuracy = round(correct / len(eval_claims) * 100, 2)
     avg_strict_faithfulness = (
@@ -232,9 +274,11 @@ def run_eval():
         else 0.0
     )
 
-    print(f"Correct: {correct}")
-    print(f"Total: {len(eval_claims)}")
-    print(f"Accuracy: {accuracy}%")
+    print(f"\n============================ EVALUATION SUMMARY ============================")
+    print(f"Total Evaluated Claims: {len(eval_claims)} (of {len(unique_claims)} total available)")
+    print(f"Correct Predictions:    {correct}")
+    print(f"Accuracy:               {accuracy}%")
+    print(f"Execution Wall Time:    {elapsed:.2f}s ({sec_per_claim:.2f}s per claim)")
 
     print(f"\n============================ NLI FAITHFULNESS REPORT ============================")
     print(f"Overall Metrics:")
@@ -246,26 +290,100 @@ def run_eval():
         w_scores = weighted_by_label[label]
         s_avg = sum(s_scores) / len(s_scores) if s_scores else 0.0
         w_avg = sum(w_scores) / len(w_scores) if w_scores else 0.0
-        print(f"  - {label:<12} ({len(s_scores):>2} claims): Strict = {s_avg:.4f} | Weighted = {w_avg:.4f}")
+        print(f"  - {label:<12} ({len(s_scores):>3} claims): Strict = {s_avg:.4f} | Weighted = {w_avg:.4f}")
     print(f"=================================================================================\n")
 
-    return {
-        "accuracy": accuracy,
-        "strict_faithfulness": avg_strict_faithfulness,
-        "weighted_faithfulness": avg_weighted_faithfulness,
-        "faithfulness": avg_strict_faithfulness,
-        "strict_faithfulness_by_label": {
-            label: round(sum(scores) / len(scores), 4) if scores else 0.0
-            for label, scores in strict_by_label.items()
+    results_payload = {
+        "metadata": {
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "n_claims": len(eval_claims),
+            "total_available_unique_claims": len(unique_claims),
+            "stratified": stratified,
+            "seed": seed,
+            "runtime_seconds": round(elapsed, 2),
+            "seconds_per_claim": round(sec_per_claim, 4),
         },
-        "weighted_faithfulness_by_label": {
-            label: round(sum(scores) / len(scores), 4) if scores else 0.0
-            for label, scores in weighted_by_label.items()
+        "metrics": {
+            "accuracy": accuracy,
+            "correct": correct,
+            "total": len(eval_claims),
+            "strict_faithfulness": avg_strict_faithfulness,
+            "weighted_faithfulness": avg_weighted_faithfulness,
+            "strict_faithfulness_by_label": {
+                label: round(sum(scores) / len(scores), 4) if scores else 0.0
+                for label, scores in strict_by_label.items()
+            },
+            "weighted_faithfulness_by_label": {
+                label: round(sum(scores) / len(scores), 4) if scores else 0.0
+                for label, scores in weighted_by_label.items()
+            },
+            "claim_counts_by_label": {
+                label: len(scores) for label, scores in strict_by_label.items()
+            },
         },
         "wrong_cases": wrong_cases,
         "eval_details": all_eval_details,
     }
 
+    if save_json:
+        os.makedirs(output_dir, exist_ok=True)
+        timestamp_str = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        out_filename = os.path.join(output_dir, f"results_{timestamp_str}_n{len(eval_claims)}.json")
+        with open(out_filename, "w", encoding="utf-8") as f:
+            json.dump(results_payload, f, indent=2, ensure_ascii=False)
+        print(f"Saved evaluation results to: {out_filename}")
+
+        # If evaluating first 50 claims unstratified, update/archive results_n50.json
+        if len(eval_claims) == 50 and not stratified:
+            n50_file = os.path.join(output_dir, "results_n50.json")
+            with open(n50_file, "w", encoding="utf-8") as f:
+                json.dump(results_payload, f, indent=2, ensure_ascii=False)
+            print(f"Archived n=50 reference results to: {n50_file}")
+
+    return results_payload
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Juris-Verify Scaled Evaluation Harness")
+    parser.add_argument(
+        "--n_claims",
+        type=str,
+        default="504",
+        help="Number of claims to evaluate (e.g. '50', '504', 'all'). Default: '504' (full train set)",
+    )
+    parser.add_argument(
+        "--stratified",
+        action="store_true",
+        help="Perform stratified sampling by gold label when n_claims < total",
+    )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=42,
+        help="Random seed for stratified sampling (default: 42)",
+    )
+    parser.add_argument(
+        "--output_dir",
+        type=str,
+        default="eval",
+        help="Directory to save JSON results artifacts (default: 'eval')",
+    )
+    parser.add_argument(
+        "--no_save",
+        action="store_true",
+        help="Disable saving JSON results file",
+    )
+    return parser.parse_args()
+
 
 if __name__ == "__main__":
-    run_eval()
+    args = parse_args()
+    n_val = None if args.n_claims.lower() in ["all", "none"] else int(args.n_claims)
+    run_eval(
+        n_claims=n_val,
+        stratified=args.stratified,
+        seed=args.seed,
+        output_dir=args.output_dir,
+        save_json=not args.no_save,
+    )
+

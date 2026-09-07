@@ -1,0 +1,1063 @@
+{
+  "metadata": {
+    "timestamp": "2026-09-07T08:56:07.687878+00:00",
+    "n_claims": 50,
+    "total_available_unique_claims": 504,
+    "stratified": false,
+    "seed": 42,
+    "runtime_seconds": 1136.94,
+    "seconds_per_claim": 22.7388
+  },
+  "metrics": {
+    "accuracy": 86.0,
+    "correct": 43,
+    "total": 50,
+    "strict_faithfulness": 0.22,
+    "weighted_faithfulness": 0.48,
+    "strict_faithfulness_by_label": {
+      "SUPPORT": 0.3438,
+      "CONTRADICT": 0.0,
+      "NEI": 0.0
+    },
+    "weighted_faithfulness_by_label": {
+      "SUPPORT": 0.6562,
+      "CONTRADICT": 0.1667,
+      "NEI": 0.0
+    },
+    "claim_counts_by_label": {
+      "SUPPORT": 32,
+      "CONTRADICT": 18,
+      "NEI": 0
+    }
+  },
+  "wrong_cases": [
+    {
+      "claim_index": 1,
+      "claim": "1 in 5 million in UK have abnormal PrP positivity.",
+      "gold": "CONTRADICT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "RESULTS Of the 32,441 appendix samples 16 were positive for abnormal PrP, indicating an overall prevalence of 493 per million population (95% confidence interval 282 to 801 per million).",
+      "evidence_doc_id": "13734012",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "1 in 5 million in UK have abnormal PrP positivity.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 21,
+      "claim": "Activated Cdk5 regulates DNA damage-induced neuronal death.",
+      "gold": "SUPPORT",
+      "prediction": "CONTRADICT",
+      "verdict": "CONTRADICTED",
+      "evidence": "Interruption of the Cdk5-ATM pathway attenuates DNA-damage-induced neuronal cell cycle re-entry and expression of the p53 targets PUMA and Bax, protecting neurons from death.",
+      "evidence_doc_id": "21295300",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.0,
+      "statements": [
+        {
+          "statement": "Activated Cdk5 regulates DNA damage-induced neuronal death.",
+          "verdict": "CONTRADICTED",
+          "credit": 0.0
+        }
+      ]
+    },
+    {
+      "claim_index": 32,
+      "claim": "Allogeneic mechanical circulatory support is not as effective as autologous mechanical circulatory support for treating acute myocardial infarction.",
+      "gold": "CONTRADICT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "OBJECTIVE To test whether allogeneic MSCs are as safe and effective as autologous MSCs in patients with left ventricular (LV) dysfunction due to ICM.",
+      "evidence_doc_id": "40164383",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "Allogeneic mechanical circulatory support is not as effective as autologous mechanical circulatory support for treating acute myocardial infarction.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 33,
+      "claim": "Alteration of origin firing causes changes in termination zones of Okazaki fragments.",
+      "gold": "CONTRADICT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "Via the deep sequencing of Okazaki fragments, we comprehensively document replication fork directionality throughout the S.",
+      "evidence_doc_id": "36606083",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "Alteration of origin firing causes changes in termination zones of Okazaki fragments.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 38,
+      "claim": "Angiotensin converting enzyme inhibitors are associated with decreased risk for functional renal insufficiency.",
+      "gold": "CONTRADICT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "BACKGROUND Angiotensin receptor blockers (ARB) and angiotensin converting enzyme (ACE) inhibitors are known to reduce proteinuria.",
+      "evidence_doc_id": "25816994",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "Angiotensin converting enzyme inhibitors are associated with decreased risk for functional renal insufficiency.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 44,
+      "claim": "Antimicrobial agents are more effective due to the pressure of antimicrobial usage.",
+      "gold": "CONTRADICT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "The findings confirm that penicillin V is the most commonly prescribed antibiotic agent for treatment of patients with an acute respiratory tract infection in Danish general practice.",
+      "evidence_doc_id": "3272084",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "Antimicrobial agents are more effective due to the pressure of antimicrobial usage.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 46,
+      "claim": "Asymptomatic visual impairment screening in elderly populations leads to improved vision.",
+      "gold": "CONTRADICT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "OBJECTIVE To assess whether population screening for impaired vision among older people in the community leads to improvements in vision.",
+      "evidence_doc_id": "26016929",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "Asymptomatic visual impairment screening in elderly populations leads to improved vision.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    }
+  ],
+  "eval_details": [
+    {
+      "claim_index": 1,
+      "claim": "1 in 5 million in UK have abnormal PrP positivity.",
+      "gold": "CONTRADICT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "RESULTS Of the 32,441 appendix samples 16 were positive for abnormal PrP, indicating an overall prevalence of 493 per million population (95% confidence interval 282 to 801 per million).",
+      "evidence_doc_id": "13734012",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "1 in 5 million in UK have abnormal PrP positivity.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 2,
+      "claim": "32% of liver transplantation programs required patients to discontinue methadone treatment in 2001.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "Approximately 180 patients receiving methadone maintenance are reported to have undergone liver transplantation.",
+      "evidence_doc_id": "44265107",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "32% of liver transplantation programs required patients to discontinue methadone treatment in 2001.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 3,
+      "claim": "40mg/day dosage of folic acid and 2mg/day dosage of vitamin B12 does not affect chronic kidney disease (CKD) progression.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "OBJECTIVE To determine whether high doses of folic acid and B vitamins administered daily reduce mortality in patients with chronic kidney disease.",
+      "evidence_doc_id": "33409100",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "40mg/day dosage of folic acid and 2mg/day dosage of vitamin B12 does not affect chronic kidney disease (CKD) progression.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 4,
+      "claim": "76-85% of people with severe mental disorder receive no treatment in low and middle income countries.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "Although disorder severity was correlated with probability of treatment in almost all countries, 35.5% to 50.3% of serious cases in developed countries and 76.3% to 85.4% in less-developed countries received no treatment in the 12 months before the interview.",
+      "evidence_doc_id": "6490571",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "76-85% of people with severe mental disorder receive no treatment in low and middle income countries.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 5,
+      "claim": "A T helper 2 cell (Th2) environment impedes disease development in patients with systemic lupus erythematosus (SLE).",
+      "gold": "CONTRADICT",
+      "prediction": "CONTRADICT",
+      "verdict": "CONTRADICTED",
+      "evidence": "We report that activation of basophils by autoreactive IgE causes their homing to lymph nodes, promoting T helper type 2 (T(H)2) cell differentiation and enhancing the production of self-reactive antibodies that cause lupus-like nephritis in mice lacking the Src family protein tyrosine kinase Lyn (Lyn(-/-) mice).",
+      "evidence_doc_id": "12670680",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.0,
+      "statements": [
+        {
+          "statement": "A T helper 2 cell (Th2) environment impedes disease development in patients with systemic lupus erythematosus (SLE).",
+          "verdict": "CONTRADICTED",
+          "credit": 0.0
+        }
+      ]
+    },
+    {
+      "claim_index": 6,
+      "claim": "A breast cancer patient's capacity to metabolize tamoxifen influences treatment outcome.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "DESIGN, SETTING, AND PATIENTS Retrospective analysis of German and US cohorts of patients treated with adjuvant tamoxifen for early stage breast cancer.",
+      "evidence_doc_id": "24341590",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "A breast cancer patient's capacity to metabolize tamoxifen influences treatment outcome.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 7,
+      "claim": "A country's Vaccine Alliance (GAVI) eligibility is not indictivate of accelerated adoption of the Hub vaccine.",
+      "gold": "CONTRADICT",
+      "prediction": "CONTRADICT",
+      "verdict": "CONTRADICTED",
+      "evidence": "CONCLUSIONS This study substantiates previous findings related to vaccine price and presents new evidence to suggest that GAVI eligibility is associated with accelerated decisions to adopt Hib vaccine.",
+      "evidence_doc_id": "12428497",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.0,
+      "statements": [
+        {
+          "statement": "A country's Vaccine Alliance (GAVI) eligibility is not indictivate of accelerated adoption of the Hub vaccine.",
+          "verdict": "CONTRADICTED",
+          "credit": 0.0
+        }
+      ]
+    },
+    {
+      "claim_index": 8,
+      "claim": "A deficiency of folate increases blood levels of homocysteine.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "SUPPORTED",
+      "evidence": "CONCLUSIONS A dosage of folic acid of 0.8 mg/d appears necessary to achieve the maximum reduction in serum homocysteine level across the range of homocysteine levels in the population.",
+      "evidence_doc_id": "11705328",
+      "strict_faithfulness": 1.0,
+      "weighted_faithfulness": 1.0,
+      "statements": [
+        {
+          "statement": "A deficiency of folate increases blood levels of homocysteine.",
+          "verdict": "SUPPORTED",
+          "credit": 1.0
+        }
+      ]
+    },
+    {
+      "claim_index": 9,
+      "claim": "A diminished ovarian reserve does not solely indicate infertility in an a priori non-infertile population.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "SUPPORTED",
+      "evidence": "Conclusions and Relevance Among women aged 30 to 44 years without a history of infertility who had been trying to conceive for 3 months or less, biomarkers indicating diminished ovarian reserve compared with normal ovarian reserve were not associated with reduced fertility.",
+      "evidence_doc_id": "13497630",
+      "strict_faithfulness": 1.0,
+      "weighted_faithfulness": 1.0,
+      "statements": [
+        {
+          "statement": "A diminished ovarian reserve does not solely indicate infertility in an a priori non-infertile population.",
+          "verdict": "SUPPORTED",
+          "credit": 1.0
+        }
+      ]
+    },
+    {
+      "claim_index": 10,
+      "claim": "A diminished ovarian reserve is a very strong indicator of infertility, even in an a priori non-infertile population.",
+      "gold": "CONTRADICT",
+      "prediction": "CONTRADICT",
+      "verdict": "CONTRADICTED",
+      "evidence": "Conclusions and Relevance Among women aged 30 to 44 years without a history of infertility who had been trying to conceive for 3 months or less, biomarkers indicating diminished ovarian reserve compared with normal ovarian reserve were not associated with reduced fertility.",
+      "evidence_doc_id": "13497630",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.0,
+      "statements": [
+        {
+          "statement": "A diminished ovarian reserve is a very strong indicator of infertility, even in an a priori non-infertile population.",
+          "verdict": "CONTRADICTED",
+          "credit": 0.0
+        }
+      ]
+    },
+    {
+      "claim_index": 11,
+      "claim": "A high microerythrocyte count protects against severe anemia in homozygous alpha (+)- thalassemia trait subjects.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "Individuals homozygous for alpha(+)-thalassaemia have microcytosis and an increased erythrocyte count.",
+      "evidence_doc_id": "18174210",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "A high microerythrocyte count protects against severe anemia in homozygous alpha (+)- thalassemia trait subjects.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 12,
+      "claim": "A mutation in HNF4A leads to an increased risk of developing diabetes by the age of 14 years.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "We assessed the in utero and neonatal role of two key regulators of pancreatic insulin secretion by studying birthweight and the incidence of neonatal hypoglycaemia in patients with heterozygous mutations in the maturity-onset diabetes of the young (MODY) genes HNF4A (encoding HNF-4α) and HNF1A/TCF1 (encoding HNF-1α), and the effect of pancreatic deletion of Hnf4a on foetal and neonatal insulin secretion in mice.",
+      "evidence_doc_id": "56893404",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "A mutation in HNF4A leads to an increased risk of developing diabetes by the age of 14 years.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 13,
+      "claim": "A single nucleotide variant the gene DGKK is strongly associated with increased risk of hypospadias.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "We propose DGKK as a major risk gene for hypospadias.",
+      "evidence_doc_id": "380526",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "A single nucleotide variant the gene DGKK is strongly associated with increased risk of hypospadias.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 14,
+      "claim": "A strong bias in the phage genome locations where the spacers were derived has been observed in many CRISPR subtypes that confer the immunity to phage.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "We detect a strong and reproducible bias in the phage genome locations from which spacers derive.",
+      "evidence_doc_id": "26996935",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "A strong bias in the phage genome locations where the spacers were derived has been observed in many CRISPR subtypes that confer the immunity to phage.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 15,
+      "claim": "ALDH1 expression is associated with poorer prognosis for breast cancer primary tumors.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "SUPPORTED",
+      "evidence": "In a series of 577 breast carcinomas, expression of ALDH1 detected by immunostaining correlated with poor prognosis.",
+      "evidence_doc_id": "45638119",
+      "strict_faithfulness": 1.0,
+      "weighted_faithfulness": 1.0,
+      "statements": [
+        {
+          "statement": "ALDH1 expression is associated with poorer prognosis for breast cancer primary tumors.",
+          "verdict": "SUPPORTED",
+          "credit": 1.0
+        }
+      ]
+    },
+    {
+      "claim_index": 16,
+      "claim": "AMP-activated protein kinase (AMPK) activation reduces inflammation-related fibrosis in the lungs.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "AMPK also suppresses inflammation.",
+      "evidence_doc_id": "3973445",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "AMP-activated protein kinase (AMPK) activation reduces inflammation-related fibrosis in the lungs.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 17,
+      "claim": "APOE4 expression in iPSC-derived neurons results in decreased tau phosphorylation.",
+      "gold": "CONTRADICT",
+      "prediction": "CONTRADICT",
+      "verdict": "CONTRADICTED",
+      "evidence": "Using human neurons derived from induced pluripotent stem cells that expressed apolipoprotein E4 (ApoE4), a variant of the APOE gene product and the major genetic risk factor for AD, we demonstrated that ApoE4-expressing neurons had higher levels of tau phosphorylation, unrelated to their increased production of amyloid-β (Aβ) peptides, and that they displayed GABAergic neuron degeneration.",
+      "evidence_doc_id": "4709641",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.0,
+      "statements": [
+        {
+          "statement": "APOE4 expression in iPSC-derived neurons results in decreased tau phosphorylation.",
+          "verdict": "CONTRADICTED",
+          "credit": 0.0
+        }
+      ]
+    },
+    {
+      "claim_index": 18,
+      "claim": "ART has no effect on the infectiveness of HIV-positive people.",
+      "gold": "CONTRADICT",
+      "prediction": "CONTRADICT",
+      "verdict": "CONTRADICTED",
+      "evidence": "FINDINGS The studied strategy could greatly accelerate the transition from the present endemic phase, in which most adults living with HIV are not receiving ART, to an elimination phase, in which most are on ART, within 5 years.",
+      "evidence_doc_id": "374902",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.0,
+      "statements": [
+        {
+          "statement": "ART has no effect on the infectiveness of HIV-positive people.",
+          "verdict": "CONTRADICTED",
+          "credit": 0.0
+        }
+      ]
+    },
+    {
+      "claim_index": 19,
+      "claim": "ART substantially reduces infectiveness of HIV-positive people.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "SUPPORTED",
+      "evidence": "CONCLUSIONS Mathematical models evaluating the impact of ART vary substantially in structure, complexity, and parameter choices, but all suggest that ART, at high levels of access and with high adherence, has the potential to substantially reduce new HIV infections.",
+      "evidence_doc_id": "13899137",
+      "strict_faithfulness": 1.0,
+      "weighted_faithfulness": 1.0,
+      "statements": [
+        {
+          "statement": "ART substantially reduces infectiveness of HIV-positive people.",
+          "verdict": "SUPPORTED",
+          "credit": 1.0
+        }
+      ]
+    },
+    {
+      "claim_index": 20,
+      "claim": "Activated Cdk5 phosphorylates the ATM protein in response to DNA damage.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "Thus, activation of Cdk5 by DNA damage serves as a critical signal to initiate the ATM response and regulate ATM-dependent cellular processes.",
+      "evidence_doc_id": "21295300",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "Activated Cdk5 phosphorylates the ATM protein in response to DNA damage.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 21,
+      "claim": "Activated Cdk5 regulates DNA damage-induced neuronal death.",
+      "gold": "SUPPORT",
+      "prediction": "CONTRADICT",
+      "verdict": "CONTRADICTED",
+      "evidence": "Interruption of the Cdk5-ATM pathway attenuates DNA-damage-induced neuronal cell cycle re-entry and expression of the p53 targets PUMA and Bax, protecting neurons from death.",
+      "evidence_doc_id": "21295300",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.0,
+      "statements": [
+        {
+          "statement": "Activated Cdk5 regulates DNA damage-induced neuronal death.",
+          "verdict": "CONTRADICTED",
+          "credit": 0.0
+        }
+      ]
+    },
+    {
+      "claim_index": 22,
+      "claim": "Activation of PPM1D enhances p53 function.",
+      "gold": "CONTRADICT",
+      "prediction": "CONTRADICT",
+      "verdict": "CONTRADICTED",
+      "evidence": "PPM1D mutations were mutually exclusive with TP53 mutations in BSG and attenuated p53 activation in vitro.",
+      "evidence_doc_id": 5956380,
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.0,
+      "statements": [
+        {
+          "statement": "Activation of PPM1D enhances p53 function.",
+          "verdict": "CONTRADICTED",
+          "credit": 0.0
+        }
+      ]
+    },
+    {
+      "claim_index": 23,
+      "claim": "Activation of the Rac1 homolog CED-10 kills viable cells in SRGP-1 mutant Caenorhabditis elegans.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "Here, we identify srgp-1 as a negative regulator of cell clearance in both Caenorhabditis elegans and mammalian cells.",
+      "evidence_doc_id": "1127562",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "Activation of the Rac1 homolog CED-10 kills viable cells in SRGP-1 mutant Caenorhabditis elegans.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 24,
+      "claim": "Active Ly49Q induces neutrophil polarization.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "SUPPORTED",
+      "evidence": "However, in the presence of inflammatory stimuli, Ly49Q mediated rapid neutrophil polarization and tissue infiltration in an ITIM-domain-dependent manner.",
+      "evidence_doc_id": "5531479",
+      "strict_faithfulness": 1.0,
+      "weighted_faithfulness": 1.0,
+      "statements": [
+        {
+          "statement": "Active Ly49Q induces neutrophil polarization.",
+          "verdict": "SUPPORTED",
+          "credit": 1.0
+        }
+      ]
+    },
+    {
+      "claim_index": 25,
+      "claim": "Active Ly49Q prevents neutrophil polarization.",
+      "gold": "CONTRADICT",
+      "prediction": "CONTRADICT",
+      "verdict": "CONTRADICTED",
+      "evidence": "However, in the presence of inflammatory stimuli, Ly49Q mediated rapid neutrophil polarization and tissue infiltration in an ITIM-domain-dependent manner.",
+      "evidence_doc_id": "5531479",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.0,
+      "statements": [
+        {
+          "statement": "Active Ly49Q prevents neutrophil polarization.",
+          "verdict": "CONTRADICTED",
+          "credit": 0.0
+        }
+      ]
+    },
+    {
+      "claim_index": 26,
+      "claim": "Active caspase-11 participate in regulating phagosome-lysosome fusion.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "SUPPORTED",
+      "evidence": "However, caspase-11 was dispensable for the fusion of lysosomes with phagosomes containing nonpathogenic bacteria, uncovering a fundamental difference in the trafficking of phagosomes according to their cargo.",
+      "evidence_doc_id": "5099266",
+      "strict_faithfulness": 1.0,
+      "weighted_faithfulness": 1.0,
+      "statements": [
+        {
+          "statement": "Active caspase-11 participate in regulating phagosome-lysosome fusion.",
+          "verdict": "SUPPORTED",
+          "credit": 1.0
+        }
+      ]
+    },
+    {
+      "claim_index": 27,
+      "claim": "Active caspase-11 protein promotes pyroptosis.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "SUPPORTED",
+      "evidence": "Caspase-1 is activated by ligands of various canonical inflammasomes, and caspase-4, -5 and -11 directly recognize bacterial lipopolysaccharide, both of which trigger pyroptosis.",
+      "evidence_doc_id": "4407455",
+      "strict_faithfulness": 1.0,
+      "weighted_faithfulness": 1.0,
+      "statements": [
+        {
+          "statement": "Active caspase-11 protein promotes pyroptosis.",
+          "verdict": "SUPPORTED",
+          "credit": 1.0
+        }
+      ]
+    },
+    {
+      "claim_index": 28,
+      "claim": "Adult tissue-resident macrophages are seeded before birth.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "SUPPORTED",
+      "evidence": "Recently, it has become evident that most adult tissue macrophages originate during embryonic development and not from circulating monocytes.",
+      "evidence_doc_id": "22406695",
+      "strict_faithfulness": 1.0,
+      "weighted_faithfulness": 1.0,
+      "statements": [
+        {
+          "statement": "Adult tissue-resident macrophages are seeded before birth.",
+          "verdict": "SUPPORTED",
+          "credit": 1.0
+        }
+      ]
+    },
+    {
+      "claim_index": 29,
+      "claim": "Adult tissue-resident macrophages possess a self-renewing capacity.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "Despite accumulating evidence suggesting local self-maintenance of tissue macrophages in the steady state, the dogma remains that tissue macrophages derive from monocytes.",
+      "evidence_doc_id": "12827098",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "Adult tissue-resident macrophages possess a self-renewing capacity.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 30,
+      "claim": "Aggravated inflammation is dependent on NLRP3 inflammasome activation.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "This indicates that NLRP3 inflammasome senses mitochondrial dysfunction and may explain the frequent association of mitochondrial damage with inflammatory diseases.",
+      "evidence_doc_id": "4399311",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "Aggravated inflammation is dependent on NLRP3 inflammasome activation.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 31,
+      "claim": "Alirocumab treatment reduces apo(a) fractional clearance rate.",
+      "gold": "CONTRADICT",
+      "prediction": "CONTRADICT",
+      "verdict": "CONTRADICTED",
+      "evidence": "The increase in apo(a) FCR during alirocumab treatment suggests that increased LDL receptors may also play a role in the reduction of plasma Lp(a).",
+      "evidence_doc_id": "6540064",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.0,
+      "statements": [
+        {
+          "statement": "Alirocumab treatment reduces apo(a) fractional clearance rate.",
+          "verdict": "CONTRADICTED",
+          "credit": 0.0
+        }
+      ]
+    },
+    {
+      "claim_index": 32,
+      "claim": "Allogeneic mechanical circulatory support is not as effective as autologous mechanical circulatory support for treating acute myocardial infarction.",
+      "gold": "CONTRADICT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "OBJECTIVE To test whether allogeneic MSCs are as safe and effective as autologous MSCs in patients with left ventricular (LV) dysfunction due to ICM.",
+      "evidence_doc_id": "40164383",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "Allogeneic mechanical circulatory support is not as effective as autologous mechanical circulatory support for treating acute myocardial infarction.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 33,
+      "claim": "Alteration of origin firing causes changes in termination zones of Okazaki fragments.",
+      "gold": "CONTRADICT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "Via the deep sequencing of Okazaki fragments, we comprehensively document replication fork directionality throughout the S.",
+      "evidence_doc_id": "36606083",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "Alteration of origin firing causes changes in termination zones of Okazaki fragments.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 34,
+      "claim": "Ambulatory blood pressure monitoring is inaccurate at diagnosing hypertension.",
+      "gold": "CONTRADICT",
+      "prediction": "CONTRADICT",
+      "verdict": "CONTRADICTED",
+      "evidence": "BACKGROUND The diagnosis of hypertension has traditionally been based on blood-pressure measurements in the clinic, but home and ambulatory measurements better correlate with cardiovascular outcome, and ambulatory monitoring is more accurate than both clinic and home monitoring in diagnosing hypertension.",
+      "evidence_doc_id": "5151024",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.0,
+      "statements": [
+        {
+          "statement": "Ambulatory blood pressure monitoring is inaccurate at diagnosing hypertension.",
+          "verdict": "CONTRADICTED",
+          "credit": 0.0
+        }
+      ]
+    },
+    {
+      "claim_index": 35,
+      "claim": "Amitriptyline is an effective treatment for chronic tension-type headaches.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "SUPPORTED",
+      "evidence": "Amitriptyline is the medication of first choice in the treatment of chronic tension-type headache.",
+      "evidence_doc_id": "23865182",
+      "strict_faithfulness": 1.0,
+      "weighted_faithfulness": 1.0,
+      "statements": [
+        {
+          "statement": "Amitriptyline is an effective treatment for chronic tension-type headaches.",
+          "verdict": "SUPPORTED",
+          "credit": 1.0
+        }
+      ]
+    },
+    {
+      "claim_index": 36,
+      "claim": "An M2-like phenotype in brown adipose tissue macrophages is quickly induced by cold exposure.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "Exposure to cold temperature rapidly promoted alternative activation of adipose tissue macrophages, which secrete catecholamines to induce thermogenic gene expression in brown adipose tissue and lipolysis in white adipose tissue.",
+      "evidence_doc_id": "4319174",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "An M2-like phenotype in brown adipose tissue macrophages is quickly induced by cold exposure.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 37,
+      "claim": "Androgenetic haploid mouse embryonic stem cells (ESCs) can be derived and genetically manipulated in vitro.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "Human and mouse embryonic stem cells (ESCs) are derived from blastocyst-stage embryos but have very different biological properties, and molecular analyses suggest that the pluripotent state of human ESCs isolated so far corresponds to that of mouse-derived epiblast stem cells (EpiSCs).",
+      "evidence_doc_id": 7581911,
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "Androgenetic haploid mouse embryonic stem cells (ESCs) can be derived and genetically manipulated in vitro.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 38,
+      "claim": "Angiotensin converting enzyme inhibitors are associated with decreased risk for functional renal insufficiency.",
+      "gold": "CONTRADICT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "BACKGROUND Angiotensin receptor blockers (ARB) and angiotensin converting enzyme (ACE) inhibitors are known to reduce proteinuria.",
+      "evidence_doc_id": "25816994",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "Angiotensin converting enzyme inhibitors are associated with decreased risk for functional renal insufficiency.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 39,
+      "claim": "Anthrax spores are very difficult to dispose once they are dispersed.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "CONCLUSIONS Bacillus anthracis spores used in a recent terrorist incident reaerosolized under common office activities.",
+      "evidence_doc_id": "33872649",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "Anthrax spores are very difficult to dispose once they are dispersed.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 40,
+      "claim": "Anthrax spores remain deadly until affected areas are decontaminated.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "CONCLUSIONS Bacillus anthracis spores used in a recent terrorist incident reaerosolized under common office activities.",
+      "evidence_doc_id": "33872649",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "Anthrax spores remain deadly until affected areas are decontaminated.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 41,
+      "claim": "Antidepressants increase the severity of migraines.",
+      "gold": "CONTRADICT",
+      "prediction": "CONTRADICT",
+      "verdict": "CONTRADICTED",
+      "evidence": "CONCLUSIONS Tricyclic antidepressants are effective in preventing migraine and tension-type headaches and are more effective than selective serotonin reuptake inhibitors, although with greater adverse effects.",
+      "evidence_doc_id": "14606752",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.0,
+      "statements": [
+        {
+          "statement": "Antidepressants increase the severity of migraines.",
+          "verdict": "CONTRADICTED",
+          "credit": 0.0
+        }
+      ]
+    },
+    {
+      "claim_index": 42,
+      "claim": "Antidepressants reduce the severity of migraines.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "SUPPORTED",
+      "evidence": "CONCLUSIONS Tricyclic antidepressants are effective in preventing migraine and tension-type headaches and are more effective than selective serotonin reuptake inhibitors, although with greater adverse effects.",
+      "evidence_doc_id": "14606752",
+      "strict_faithfulness": 1.0,
+      "weighted_faithfulness": 1.0,
+      "statements": [
+        {
+          "statement": "Antidepressants reduce the severity of migraines.",
+          "verdict": "SUPPORTED",
+          "credit": 1.0
+        }
+      ]
+    },
+    {
+      "claim_index": 43,
+      "claim": "Antimicrobial agents are less effective due to the pressure of antimicrobial usage.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "SUPPORTED",
+      "evidence": "These studies suggest that the antimicrobial drugs to which food animals are exposed provide selective pressure that leads to the appearance and persistence of resistant strains.",
+      "evidence_doc_id": "36497180",
+      "strict_faithfulness": 1.0,
+      "weighted_faithfulness": 1.0,
+      "statements": [
+        {
+          "statement": "Antimicrobial agents are less effective due to the pressure of antimicrobial usage.",
+          "verdict": "SUPPORTED",
+          "credit": 1.0
+        }
+      ]
+    },
+    {
+      "claim_index": 44,
+      "claim": "Antimicrobial agents are more effective due to the pressure of antimicrobial usage.",
+      "gold": "CONTRADICT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "The findings confirm that penicillin V is the most commonly prescribed antibiotic agent for treatment of patients with an acute respiratory tract infection in Danish general practice.",
+      "evidence_doc_id": "3272084",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "Antimicrobial agents are more effective due to the pressure of antimicrobial usage.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 45,
+      "claim": "Antiretroviral therapy increases rates of tuberculosis across a broad range of CD4 strata.",
+      "gold": "CONTRADICT",
+      "prediction": "CONTRADICT",
+      "verdict": "CONTRADICTED",
+      "evidence": "CONCLUSIONS Antiretroviral therapy is strongly associated with a reduction in the incidence of tuberculosis across all CD4 count strata.",
+      "evidence_doc_id": "4883040",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.0,
+      "statements": [
+        {
+          "statement": "Antiretroviral therapy increases rates of tuberculosis across a broad range of CD4 strata.",
+          "verdict": "CONTRADICTED",
+          "credit": 0.0
+        }
+      ]
+    },
+    {
+      "claim_index": 46,
+      "claim": "Asymptomatic visual impairment screening in elderly populations leads to improved vision.",
+      "gold": "CONTRADICT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "OBJECTIVE To assess whether population screening for impaired vision among older people in the community leads to improvements in vision.",
+      "evidence_doc_id": "26016929",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "Asymptomatic visual impairment screening in elderly populations leads to improved vision.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 47,
+      "claim": "Autologous transplantation of mesenchymal stem cells has better graft function than induction therapy with anti-interleukin-2 receptor antibodies.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "Reportedly, mesenchymal stem cells (MSCs) have successfully treated graft-vs-host disease.",
+      "evidence_doc_id": "10582939",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "Autologous transplantation of mesenchymal stem cells has better graft function than induction therapy with anti-interleukin-2 receptor antibodies.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 48,
+      "claim": "Autophagy deficiency in the liver increases vulnerability to insulin resistance.",
+      "gold": "CONTRADICT",
+      "prediction": "CONTRADICT",
+      "verdict": "CONTRADICTED",
+      "evidence": "We also observed induction of Fgf21, resistance to diet-induced obesity and amelioration of insulin resistance in mice with autophagy deficiency in the liver, another insulin target tissue.",
+      "evidence_doc_id": "6227220",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.0,
+      "statements": [
+        {
+          "statement": "Autophagy deficiency in the liver increases vulnerability to insulin resistance.",
+          "verdict": "CONTRADICTED",
+          "credit": 0.0
+        }
+      ]
+    },
+    {
+      "claim_index": 49,
+      "claim": "B cells go though plasmablast differentiation and antibody production by continuous expression of EBI2.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "EBI2 therefore provides a previously uncharacterized dimension to B cell migration that is crucial for coordinating rapid versus long-term antibody responses.",
+      "evidence_doc_id": "15488881",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "B cells go though plasmablast differentiation and antibody production by continuous expression of EBI2.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    },
+    {
+      "claim_index": 50,
+      "claim": "BCL-2 activation antagonizes the apoptotic effects of c-Myc.",
+      "gold": "SUPPORT",
+      "prediction": "SUPPORT",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "evidence": "These data indicate that c-myc expression is a necessary component of activation-induced apoptosis.",
+      "evidence_doc_id": "34436231",
+      "strict_faithfulness": 0.0,
+      "weighted_faithfulness": 0.5,
+      "statements": [
+        {
+          "statement": "BCL-2 activation antagonizes the apoptotic effects of c-Myc.",
+          "verdict": "PARTIALLY_SUPPORTED",
+          "credit": 0.5
+        }
+      ]
+    }
+  ]
+}
