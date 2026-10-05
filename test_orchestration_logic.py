@@ -36,7 +36,9 @@ class MockRetriever:
     def retrieve(self, claim):
         return self.documents
 
-def mock_extract(claim, candidates, model):
+# **kwargs absorbs extract_best_evidence's optional evidence_mode/max_sentences
+# arguments; this mock only ever stands in for the single-sentence baseline.
+def mock_extract(claim, candidates, model, **kwargs):
     if not candidates:
         return {"sentence": "", "doc_id": None}
     first_doc = candidates[0]

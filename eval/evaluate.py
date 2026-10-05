@@ -15,6 +15,12 @@ from src.data_loader import (
     build_document_corpus,
 )
 from src.pipeline import JurisVerifyPipeline
+from src.extraction import (
+    DEFAULT_EVIDENCE_MODE,
+    DEFAULT_MAX_SENTENCES,
+    EVIDENCE_MODES,
+    MAX_BUNDLE_SENTENCES,
+)
 from src.verification import NLIVerifier, normalize_for_scifact_eval
 
 PRONOUNS_PATTERN = r"^(?:it|this|that|they|these|those)\b"
@@ -197,6 +203,8 @@ def run_eval(
     seed: int = 42,
     output_dir: str = "eval",
     save_json: bool = True,
+    evidence_mode: str = DEFAULT_EVIDENCE_MODE,
+    max_sentences: int = DEFAULT_MAX_SENTENCES,
 ):
     """Run evaluation over the SciFact dataset with accuracy and dual faithfulness reporting."""
     claims_dataset, corpus_dataset = load_scifact()
@@ -204,7 +212,9 @@ def run_eval(
     unique_claims = get_unique_claims(valid_claims)
     documents = build_document_corpus(corpus_dataset)
 
-    pipeline = JurisVerifyPipeline(documents)
+    pipeline = JurisVerifyPipeline(
+        documents, evidence_mode=evidence_mode, max_sentences=max_sentences
+    )
 
     eval_claims = get_eval_subset(unique_claims, n_claims=n_claims, stratified=stratified, seed=seed)
 
@@ -300,6 +310,8 @@ def run_eval(
             "total_available_unique_claims": len(unique_claims),
             "stratified": stratified,
             "seed": seed,
+            "evidence_mode": evidence_mode,
+            "max_sentences": max_sentences if evidence_mode == "multi" else None,
             "runtime_seconds": round(elapsed, 2),
             "seconds_per_claim": round(sec_per_claim, 4),
         },
@@ -328,13 +340,20 @@ def run_eval(
     if save_json:
         os.makedirs(output_dir, exist_ok=True)
         timestamp_str = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-        out_filename = os.path.join(output_dir, f"results_{timestamp_str}_n{len(eval_claims)}.json")
+        # Non-baseline runs get a mode suffix so experimental artifacts can
+        # never be confused with the validated single-sentence results.
+        mode_suffix = "" if evidence_mode == "single" else f"_{evidence_mode}{max_sentences}"
+        out_filename = os.path.join(
+            output_dir, f"results_{timestamp_str}_n{len(eval_claims)}{mode_suffix}.json"
+        )
         with open(out_filename, "w", encoding="utf-8") as f:
             json.dump(results_payload, f, indent=2, ensure_ascii=False)
         print(f"Saved evaluation results to: {out_filename}")
 
-        # If evaluating first 50 claims unstratified, update/archive results_n50.json
-        if len(eval_claims) == 50 and not stratified:
+        # If evaluating first 50 claims unstratified, update/archive results_n50.json.
+        # Baseline mode only: an experimental run must not overwrite the
+        # tracked reference artifact.
+        if len(eval_claims) == 50 and not stratified and evidence_mode == "single":
             n50_file = os.path.join(output_dir, "results_n50.json")
             with open(n50_file, "w", encoding="utf-8") as f:
                 json.dump(results_payload, f, indent=2, ensure_ascii=False)
@@ -373,6 +392,26 @@ def parse_args():
         action="store_true",
         help="Disable saving JSON results file",
     )
+    parser.add_argument(
+        "--evidence_mode",
+        type=str,
+        default=DEFAULT_EVIDENCE_MODE,
+        choices=list(EVIDENCE_MODES),
+        help=(
+            "Evidence extraction mode: 'single' (validated baseline, default) "
+            "or 'multi' (experimental multi-sentence bundle)"
+        ),
+    )
+    parser.add_argument(
+        "--max_sentences",
+        type=int,
+        default=DEFAULT_MAX_SENTENCES,
+        help=(
+            f"Bundle size cap for --evidence_mode multi "
+            f"(1..{MAX_BUNDLE_SENTENCES}, default: {DEFAULT_MAX_SENTENCES}); "
+            "ignored in single mode"
+        ),
+    )
     return parser.parse_args()
 
 
@@ -385,5 +424,7 @@ if __name__ == "__main__":
         seed=args.seed,
         output_dir=args.output_dir,
         save_json=not args.no_save,
+        evidence_mode=args.evidence_mode,
+        max_sentences=args.max_sentences,
     )
 

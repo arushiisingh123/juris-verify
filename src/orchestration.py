@@ -12,7 +12,11 @@ from langchain_core.runnables.config import RunnableConfig
 
 from src.verification import NLIVerifier, map_to_matrix_label
 from src.retrieval import HybridRetriever
-from src.extraction import extract_best_evidence
+from src.extraction import (
+    DEFAULT_EVIDENCE_MODE,
+    DEFAULT_MAX_SENTENCES,
+    extract_best_evidence,
+)
 from src.matrix import insert_record
 
 class AgentState(TypedDict):
@@ -146,8 +150,19 @@ def build_graph():
     return workflow.compile()
 
 
-def run_pipeline(claim: str, documents: list, max_retries: int = 3) -> dict:
-    """Wires the LangGraph loop into the existing retriever + extractor."""
+def run_pipeline(
+    claim: str,
+    documents: list,
+    max_retries: int = 3,
+    evidence_mode: str = DEFAULT_EVIDENCE_MODE,
+    max_sentences: int = DEFAULT_MAX_SENTENCES,
+) -> dict:
+    """Wires the LangGraph loop into the existing retriever + extractor.
+
+    evidence_mode defaults to "single" (the validated baseline). Pass
+    evidence_mode="multi" to opt into the experimental multi-sentence
+    evidence bundle; max_sentences applies to that mode only.
+    """
     retriever = HybridRetriever(documents)
     candidate_docs = retriever.retrieve(claim)
     
@@ -157,7 +172,11 @@ def run_pipeline(claim: str, documents: list, max_retries: int = 3) -> dict:
     ]
     
     extraction = extract_best_evidence(
-        claim, truncated_candidates, retriever.embedding_model
+        claim,
+        truncated_candidates,
+        retriever.embedding_model,
+        evidence_mode=evidence_mode,
+        max_sentences=max_sentences,
     )
     evidence = extraction["sentence"]
     evidence_doc_id = str(extraction["doc_id"]) if extraction["doc_id"] is not None else None
