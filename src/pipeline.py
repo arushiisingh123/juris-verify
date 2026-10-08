@@ -7,13 +7,16 @@ This is the VALIDATED baseline (88% accuracy, see eval/evaluate.py):
 
 evidence_mode defaults to "single", which is exactly that baseline. Passing
 evidence_mode="multi" opts into the experimental multi-sentence evidence
-bundle (see src/extraction.py); nothing enables it implicitly.
+bundle, and evidence_mode="section" into the experimental section-aware
+ranking on top of it (see src/extraction.py). Nothing enables either
+implicitly.
 """
 
 from src.retrieval import HybridRetriever
 from src.extraction import (
     DEFAULT_EVIDENCE_MODE,
     DEFAULT_MAX_SENTENCES,
+    DEFAULT_SECTION_WEIGHT,
     extract_best_evidence,
 )
 from src.verification import NLIVerifier, map_to_matrix_label
@@ -25,24 +28,30 @@ class JurisVerifyPipeline:
         documents,
         evidence_mode=DEFAULT_EVIDENCE_MODE,
         max_sentences=DEFAULT_MAX_SENTENCES,
+        section_weight=DEFAULT_SECTION_WEIGHT,
     ):
         """
         Args:
             documents: list of {"doc_id": ..., "text": ...} dicts
-            evidence_mode: "single" (validated baseline, default) or "multi"
-            max_sentences: bundle size cap for evidence_mode="multi" only
+            evidence_mode: "single" (validated baseline, default), "multi", or
+                "section"
+            max_sentences: bundle size cap for "multi"/"section" modes only
+            section_weight: section-prior magnitude for evidence_mode="section"
+                only; ignored by "single" and "multi"
         """
         self.retriever = HybridRetriever(documents)
         self.verifier = NLIVerifier()
         self.evidence_mode = evidence_mode
         self.max_sentences = max_sentences
+        self.section_weight = section_weight
 
     def predict_claim(self, claim):
         """Run the full pipeline on a single claim.
 
         Returns:
             dict with claim, evidence, evidence_doc_id, verdict, and matrix_label.
-            With evidence_mode="multi", also evidence_spans and evidence_doc_ids.
+            With evidence_mode="multi"/"section", also evidence_spans and
+            evidence_doc_ids.
         """
         candidate_docs = self.retriever.retrieve(claim)
 
@@ -57,6 +66,7 @@ class JurisVerifyPipeline:
             self.retriever.embedding_model,
             evidence_mode=self.evidence_mode,
             max_sentences=self.max_sentences,
+            section_weight=self.section_weight,
         )
         evidence = extraction["sentence"]
         evidence_doc_id = extraction["doc_id"]
@@ -72,7 +82,7 @@ class JurisVerifyPipeline:
             "matrix_label": matrix_label,
         }
 
-        # Extra provenance only in the experimental mode, so baseline output
+        # Extra provenance only in the experimental modes, so baseline output
         # keeps exactly the keys it had before.
         if "spans" in extraction:
             result["evidence_spans"] = extraction["spans"]

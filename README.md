@@ -48,6 +48,190 @@ is the first unbiased, validated reference benchmark for this pipeline.
   scoring 78.97% overall (93.05% on SUPPORT, 52.02% on CONTRADICT) — don't swap
   the verifier without re-running `eval/evaluate.py` and comparing.
 
+## Experimental evidence selection (opt-in, not yet validated)
+
+The validated pipeline above picks **one** sentence: the highest cosine
+similarity to the claim. `eval/evaluate.py` exposes two opt-in experimental
+alternatives to that choice. Both are **measurement tools, not results** —
+nothing below has been validated, and `evidence_mode` defaults to `single`
+everywhere, so the validated baseline is what you get unless you ask otherwise.
+
+### Why touch evidence selection at all
+
+The $N=504$ audit (item #6 below) attributes **84% of missed contradictions to
+evidence extraction, not to the verifier**: the retrieved document *did* contain
+a sentence the existing `NLIVerifier` scores as `CONTRADICTED`, but
+`extract_best_evidence` returned a different one. That makes selection, not
+verification, the place to spend effort on CONTRADICT accuracy.
+
+### Task B — Multi-sentence MMR bundle (`evidence_mode="multi"`)
+
+Greedy Maximal Marginal Relevance over the pooled candidate sentences:
+relevance to the claim minus redundancy against what is already selected,
+`mmr_lambda=0.7`, bundle size 1–4. Rank 0 is always the sentence `single` would
+have returned, so a bundle is a superset of the baseline evidence and the two
+stay directly comparable. See `src/extraction.py`.
+
+### Task C — Section-aware ranking (`evidence_mode="section"`)
+
+**Hypothesis.** The 84% extraction failures are not random — they are
+*structurally* biased. A sentence like
+
+> `OBJECTIVE To determine whether high doses of folic acid and B vitamins`
+> `administered daily reduce mortality in patients with chronic kidney disease.`
+
+restates the research question in almost the claim's own words, so cosine
+similarity loves it, while carrying no finding at all and therefore no way to
+resolve the claim either way. The sentence that *does* conflict with the claim
+lives under `RESULTS` or `CONCLUSIONS` and is phrased in outcome language, which
+scores lower on surface similarity. If that is right, then knowing **which
+section a candidate came from** should be enough to break the tie in favour of
+the sentence that can actually settle the claim — with no new model, no new
+dependency, and no change to the verifier.
+
+**Does SciFact expose section headings?** Not as a metadata field — the HF
+`allenai/scifact` corpus schema has no per-sentence section label, and
+`build_document_corpus` flattens each record to `title + abstract`. But its
+structured abstracts carry headings *inline*, as an ALL-CAPS prefix on the
+sentence that opens each section. Verbatim from
+`eval/results_20260907_095418_n504.json`:
+
+```
+OBJECTIVE To determine whether high doses of folic acid and B vitamins ...
+RESULTS Of the 32,441 appendix samples 16 were positive for abnormal PrP ...
+DESIGN, SETTING, AND PATIENTS Retrospective analysis of German and US cohorts ...
+CONCLUSIONS A dosage of folic acid of 0.8 mg/d appears necessary ...
+```
+
+So `src/sections.py` reads the headings the documents really do expose. It is a
+deterministic, documented heuristic — no model, no learned component, no
+per-claim special-casing:
+
+1. Take the sentence's leading run of **upper-case** tokens (trailing `:`/`,`
+   stripped, max 6 tokens). Upper case is required, so `Results showed ...` is
+   not a heading and `RESULTS Of the ...` is.
+2. Longest-match that run against a **closed vocabulary** of ~90 structured-
+   abstract headings, shortening from the right until a phrase is known.
+   `METHODS AND RESULTS ...` binds as the 3-token compound (→ results), and
+   `CONCLUSIONS A dosage ...` falls back to the 1-gram (→ conclusions).
+3. No match → the sentence does not open a section and **inherits** the most
+   recent heading seen earlier in the same document (sticky carry-forward).
+   Only the first sentence of a section carries its heading, so carry-forward is
+   what labels the rest of it. Labels never cross a document boundary.
+4. Sentences before any heading — and every sentence of an unstructured
+   abstract — are `unknown`.
+
+The vocabulary is deliberately **closed** rather than "any ALL-CAPS prefix":
+auditing the $N=504$ artifact found `PTEN`, `IFI16`, `IL-10`, `IL-18`, `AMPK`,
+`CD28`, `EBI2`, `FGF21`, `DUSP4`, `PDPN`, `HAND2`, `DNA` and `FISH` all opening
+sentences and all matching a permissive rule. The closed vocabulary rejects
+every one, at the cost of returning `unknown` for an unlisted heading — the safe
+direction, since `unknown` carries a zero prior and therefore cannot change the
+ranking.
+
+*Known limitation:* `split_sentences` drops fragments of ≤20 characters, so a
+corpus that put headings on their own short line (rather than inline, as SciFact
+does) would lose them and fall back to carry-forward / `unknown`.
+
+**How section information modifies ranking.** One additive term on the cosine
+scale, and nothing else:
+
+```
+ranking_score(i) = cosine(claim, sentence_i) + section_weight * section_prior(i)
+```
+
+`section_prior` is a fixed ordinal table (`src/sections.py`) carrying the
+*direction* of the preference; `section_weight` (default **0.05**) is the single
+scalar carrying its *magnitude*:
+
+| section | prior | adjustment at `section_weight=0.05` | reasoning |
+|---|---|---|---|
+| `results`, `conclusions` | **+1.0** | +0.05 | reports an outcome; a contradiction of a factual claim is almost always stated here |
+| `unknown` | **0.0** | 0.00 | no heading recovered — stay neutral, never penalize a document for being unstructured |
+| `methods` | **−0.5** | −0.025 | high topical overlap, low chance of resolving the claim; penalized less than background because it at least states concrete study facts |
+| `background` | **−1.0** | −0.05 | Background / Objective / Introduction — the documented worst case: restates the question in the claim's own words |
+
+*Why 0.05:* MiniLM claim-to-sentence cosines on SciFact abstracts sit in a
+narrow band (~0.3–0.65), so the gap between a Background sentence that parrots
+the claim and the Results sentence that answers it is typically well under 0.1.
+A weight of 0.05 gives a ±0.1 swing between the extreme sections — enough to
+reorder those near-ties, far too small to promote a genuinely irrelevant
+sentence. It is a documented starting point to be swept, **not a tuned value**.
+
+Three deliberate scoping choices:
+
+- The prior applies at **rank 0**, not only to the MMR extensions — otherwise
+  section-aware *single*-sentence selection (arm C) would be impossible.
+- The `min_relevance` floor is tested against the **raw cosine**, never the
+  adjusted score: a section bonus must not smuggle an off-topic sentence past
+  the floor, and a penalty must not evict an on-topic one.
+- `section_weight=0.0` is an **exact** no-op (the prior term is skipped, not
+  computed as `+0.0`), so `section` reduces bit-for-bit to `multi`. That is what
+  makes it a valid control arm. `evidence_mode="multi"` is pinned to `0.0`
+  internally and cannot be perturbed by the knob; `evidence_mode="single"`
+  ignores it entirely.
+
+Bundles report the scoring per span (`section`, `section_prior`,
+`ranking_score`, plus the unchanged raw `relevance`), and `eval/evaluate.py`
+records `primary_evidence_section` per claim for experimental modes only — so
+any ranking decision can be read off the artifact without re-running extraction.
+Baseline (`single`) records keep exactly the key set they had before.
+
+### Intended ablation (to be run in Colab, not locally)
+
+`section` is a superset knob rather than a fourth code path: with
+`--max_sentences 1` it is section-aware *single*-sentence selection, and with
+`--max_sentences 2` it is Multi-2 plus section-aware ranking. All four arms are
+therefore two orthogonal knobs over one implementation:
+
+| arm | description | command |
+|---|---|---|
+| **A** | Single baseline (validated reference) | `--evidence_mode single` |
+| **B** | Multi-2 (MMR, no section prior) | `--evidence_mode multi --max_sentences 2` |
+| **C** | Section-aware single | `--evidence_mode section --max_sentences 1 --section_weight 0.05` |
+| **D** | Multi-2 + section-aware ranking | `--evidence_mode section --max_sentences 2 --section_weight 0.05` |
+
+Primary metric: **CONTRADICT accuracy**. Regression checks: SUPPORT accuracy and
+overall accuracy — a CONTRADICT gain that costs more SUPPORT accuracy than it
+wins is not an improvement. Strict / Weighted Faithfulness are reported
+unchanged; the evidence mode only selects how the premise is extracted before
+the identical verifier and the identical faithfulness computation run on it,
+which is what makes the arms comparable.
+
+Secondary sweeps worth running once A–D are in: `section_weight` ∈
+{0.0, 0.025, 0.05, 0.10} — where 0.0 must reproduce A/B exactly, a correctness
+check on the harness rather than a result — and `section_weight=-0.05` as an
+**anti-prior control**: if inverting the prior does *not* hurt CONTRADICT
+accuracy, the section signal is not doing what this hypothesis claims.
+
+Artifacts are named by arm (`results_<ts>_n504_section2_w0.05.json`), and the
+tracked `eval/results_n50.json` reference is only ever overwritten by
+`--evidence_mode single`, so experimental runs cannot be mistaken for the
+validated baseline.
+
+### What is NOT yet known
+
+**No accuracy claim and no novelty claim attaches to any of this.** The only
+evidence in hand is *observational*, and correlational by construction —
+re-running `src/sections.py` over the baseline's own selected evidence in
+`eval/results_20260907_095418_n504.json`, grouped by the section of whatever
+sentence the baseline happened to pick (91 of 504 selected sentences carry a
+detectable heading):
+
+| section of selected evidence | n | overall acc | CONTRADICT n | CONTRADICT acc |
+|---|---|---|---|---|
+| `results` / `conclusions` | 39 | 87.2% | 21 | **81.0%** |
+| `methods` | 14 | 64.3% | 6 | 16.7% |
+| `background` | 38 | 57.9% | 22 | **27.3%** |
+
+That is consistent with the hypothesis and is why the feature was built, but it
+**cannot** be read as the feature working: the selection was not randomized, the
+groups differ in claim difficulty and document structure, and a claim whose
+answer happens to sit in a Results sentence may simply be an easier claim.
+Whether *steering* selection toward those sections actually moves CONTRADICT
+accuracy is exactly the open question arms C and D exist to answer. Until that
+experiment runs, `single` remains the only validated mode.
+
 ## What's NOT built yet — the actual next-phase work
 
 1. **LangGraph orchestration.** `langgraph` is a dependency but nothing uses
@@ -128,9 +312,23 @@ an actual orchestration layer instead of a flat function call chain.
 src/
   data_loader.py   - SciFact loading (claims + corpus)
   retrieval.py     - HybridRetriever: semantic + BM25 + rerank
-  extraction.py     - embedding-based sentence extractor
+  extraction.py    - sentence extractor: single (validated) / multi / section
+  sections.py      - scientific section detection + ranking prior (Task C)
   verification.py  - NLIVerifier + label mapping
-  pipeline.py       - orchestrates retrieve -> extract -> verify
+  pipeline.py      - orchestrates retrieve -> extract -> verify
+  orchestration.py - LangGraph Synthesizer -> Prosecutor -> Adjudicator loop
+  matrix.py        - persisted Contradiction Matrix records
 eval/
-  evaluate.py       - reproduces the 88% accuracy result + error analysis
+  evaluate.py      - N=504 accuracy + faithfulness harness, error analysis
+
+test_extraction_modes.py        - Task B: single baseline + multi-sentence MMR
+test_section_aware_evidence.py  - Task C: section detection + section-aware ranking
+```
+
+Both test files are CPU-only and offline (a deterministic fake embedder maps
+known sentences onto hand-written unit vectors, so the real `cos_sim` still does
+the similarity math):
+
+```
+pytest test_extraction_modes.py test_section_aware_evidence.py
 ```

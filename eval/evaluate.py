@@ -18,6 +18,7 @@ from src.pipeline import JurisVerifyPipeline
 from src.extraction import (
     DEFAULT_EVIDENCE_MODE,
     DEFAULT_MAX_SENTENCES,
+    DEFAULT_SECTION_WEIGHT,
     EVIDENCE_MODES,
     MAX_BUNDLE_SENTENCES,
 )
@@ -205,15 +206,26 @@ def run_eval(
     save_json: bool = True,
     evidence_mode: str = DEFAULT_EVIDENCE_MODE,
     max_sentences: int = DEFAULT_MAX_SENTENCES,
+    section_weight: float = DEFAULT_SECTION_WEIGHT,
 ):
-    """Run evaluation over the SciFact dataset with accuracy and dual faithfulness reporting."""
+    """Run evaluation over the SciFact dataset with accuracy and dual faithfulness reporting.
+
+    The accuracy and faithfulness methodology is unchanged by the evidence
+    mode: `evidence_mode` / `max_sentences` / `section_weight` only select how
+    the evidence premise is extracted before the identical verifier and the
+    identical faithfulness computation run on it. That is what makes ablation
+    arms A/B/C/D comparable.
+    """
     claims_dataset, corpus_dataset = load_scifact()
     valid_claims = get_valid_claims(claims_dataset)
     unique_claims = get_unique_claims(valid_claims)
     documents = build_document_corpus(corpus_dataset)
 
     pipeline = JurisVerifyPipeline(
-        documents, evidence_mode=evidence_mode, max_sentences=max_sentences
+        documents,
+        evidence_mode=evidence_mode,
+        max_sentences=max_sentences,
+        section_weight=section_weight,
     )
 
     eval_claims = get_eval_subset(unique_claims, n_claims=n_claims, stratified=stratified, seed=seed)
@@ -262,6 +274,20 @@ def run_eval(
             "weighted_faithfulness": weighted_score,
             "statements": weighted_details,
         }
+
+        # Experimental modes only: record which scientific section each
+        # selected sentence came from, so the ablation can be analysed by
+        # section without re-running extraction. Baseline ("single") records
+        # keep exactly the key set they had before.
+        spans = result.get("evidence_spans")
+        if spans is not None:
+            claim_record["evidence_spans"] = spans
+            claim_record["evidence_sections"] = [span["section"] for span in spans]
+            primary = next((sp for sp in spans if sp["rank"] == 0), None)
+            claim_record["primary_evidence_section"] = (
+                primary["section"] if primary else None
+            )
+
         all_eval_details.append(claim_record)
 
         if prediction == gold:
@@ -311,7 +337,10 @@ def run_eval(
             "stratified": stratified,
             "seed": seed,
             "evidence_mode": evidence_mode,
-            "max_sentences": max_sentences if evidence_mode == "multi" else None,
+            "max_sentences": (
+                max_sentences if evidence_mode in ("multi", "section") else None
+            ),
+            "section_weight": section_weight if evidence_mode == "section" else None,
             "runtime_seconds": round(elapsed, 2),
             "seconds_per_claim": round(sec_per_claim, 4),
         },
@@ -342,7 +371,14 @@ def run_eval(
         timestamp_str = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
         # Non-baseline runs get a mode suffix so experimental artifacts can
         # never be confused with the validated single-sentence results.
-        mode_suffix = "" if evidence_mode == "single" else f"_{evidence_mode}{max_sentences}"
+        if evidence_mode == "single":
+            mode_suffix = ""
+        elif evidence_mode == "section":
+            # Weight goes in the filename too: two "section" arms that differ
+            # only by section_weight are different experiments.
+            mode_suffix = f"_section{max_sentences}_w{section_weight:g}"
+        else:
+            mode_suffix = f"_{evidence_mode}{max_sentences}"
         out_filename = os.path.join(
             output_dir, f"results_{timestamp_str}_n{len(eval_claims)}{mode_suffix}.json"
         )
@@ -398,8 +434,9 @@ def parse_args():
         default=DEFAULT_EVIDENCE_MODE,
         choices=list(EVIDENCE_MODES),
         help=(
-            "Evidence extraction mode: 'single' (validated baseline, default) "
-            "or 'multi' (experimental multi-sentence bundle)"
+            "Evidence extraction mode: 'single' (validated baseline, default), "
+            "'multi' (experimental multi-sentence MMR bundle) or 'section' "
+            "(experimental: that bundle with section-aware ranking)"
         ),
     )
     parser.add_argument(
@@ -407,9 +444,20 @@ def parse_args():
         type=int,
         default=DEFAULT_MAX_SENTENCES,
         help=(
-            f"Bundle size cap for --evidence_mode multi "
+            f"Bundle size cap for --evidence_mode multi/section "
             f"(1..{MAX_BUNDLE_SENTENCES}, default: {DEFAULT_MAX_SENTENCES}); "
             "ignored in single mode"
+        ),
+    )
+    parser.add_argument(
+        "--section_weight",
+        type=float,
+        default=DEFAULT_SECTION_WEIGHT,
+        help=(
+            f"Section-prior magnitude for --evidence_mode section "
+            f"(default: {DEFAULT_SECTION_WEIGHT}); 0.0 reduces it exactly to "
+            "multi, negative inverts the prior (control arm). Ignored in "
+            "single/multi modes"
         ),
     )
     return parser.parse_args()
@@ -426,5 +474,6 @@ if __name__ == "__main__":
         save_json=not args.no_save,
         evidence_mode=args.evidence_mode,
         max_sentences=args.max_sentences,
+        section_weight=args.section_weight,
     )
 

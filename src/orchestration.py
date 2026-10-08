@@ -15,6 +15,7 @@ from src.retrieval import HybridRetriever
 from src.extraction import (
     DEFAULT_EVIDENCE_MODE,
     DEFAULT_MAX_SENTENCES,
+    DEFAULT_SECTION_WEIGHT,
     extract_best_evidence,
 )
 from src.matrix import insert_record
@@ -156,12 +157,15 @@ def run_pipeline(
     max_retries: int = 3,
     evidence_mode: str = DEFAULT_EVIDENCE_MODE,
     max_sentences: int = DEFAULT_MAX_SENTENCES,
+    section_weight: float = DEFAULT_SECTION_WEIGHT,
 ) -> dict:
     """Wires the LangGraph loop into the existing retriever + extractor.
 
     evidence_mode defaults to "single" (the validated baseline). Pass
-    evidence_mode="multi" to opt into the experimental multi-sentence
-    evidence bundle; max_sentences applies to that mode only.
+    evidence_mode="multi" to opt into the experimental multi-sentence evidence
+    bundle, or evidence_mode="section" for that bundle with section-aware
+    ranking. max_sentences applies to those two modes only, and section_weight
+    to "section" only.
     """
     retriever = HybridRetriever(documents)
     candidate_docs = retriever.retrieve(claim)
@@ -177,6 +181,7 @@ def run_pipeline(
         retriever.embedding_model,
         evidence_mode=evidence_mode,
         max_sentences=max_sentences,
+        section_weight=section_weight,
     )
     evidence = extraction["sentence"]
     evidence_doc_id = str(extraction["doc_id"]) if extraction["doc_id"] is not None else None
