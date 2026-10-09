@@ -237,6 +237,13 @@ def build_embedder():
     emb.register(S_RESULTS_PRIMARY, axis_vector(0.56, 2))
     emb.register(S_RESULTS_COUNTER, axis_vector(0.40, 3))
     emb.register(S_METHODS, axis_vector(0.30, 4))
+    # test_cross_document_provenance_is_recorded puts the counter-evidence in a
+    # second document where it OPENS the section, so the pool sees it with its
+    # "RESULTS " heading still attached. Register that exact string too, with
+    # the same geometry as the bare sentence: otherwise it falls through to
+    # FakeEmbedder's abs(hash(text)) fallback, which is randomized per process
+    # and made the test depend on PYTHONHASHSEED.
+    emb.register("RESULTS " + S_RESULTS_COUNTER, axis_vector(0.40, 3))
     return emb
 
 
