@@ -18,9 +18,15 @@ Claim -> HybridRetriever (semantic + BM25 -> CrossEncoder rerank)
       -> label (SUPPORT / CONTRADICT / NEI)
 ```
 
-**Validated result:** 78.97% accuracy (398/504) on the full SciFact unique
+**Validated baseline:** 78.97% accuracy (398/504) on the full SciFact unique
 labeled population (`eval/evaluate.py`), with Strict Faithfulness of 0.1766
-and Weighted Faithfulness of 0.4762.
+and Weighted Faithfulness of 0.4762. This is `evidence_mode="single"`, the
+default.
+
+**Current best configuration:** 83.53% overall / 66.47% CONTRADICT with
+section-aware multi-2 evidence selection (`--evidence_mode section
+--max_sentences 2 --section_weight 0.05`), validated at $N=504$ — see
+**Ablation result** below.
 
 *Note on Earlier Figures:* The earlier 86% figure (43/50) and 88% prototype
 figure were measured on an unstratified first-50-claims slice (`unique_claims[:50]`)
@@ -48,13 +54,13 @@ is the first unbiased, validated reference benchmark for this pipeline.
   scoring 78.97% overall (93.05% on SUPPORT, 52.02% on CONTRADICT) — don't swap
   the verifier without re-running `eval/evaluate.py` and comparing.
 
-## Experimental evidence selection (opt-in, not yet validated)
+## Evidence selection modes (opt-in; arms A-D validated at N=504)
 
 The validated pipeline above picks **one** sentence: the highest cosine
 similarity to the claim. `eval/evaluate.py` exposes two opt-in experimental
-alternatives to that choice. Both are **measurement tools, not results** —
-nothing below has been validated, and `evidence_mode` defaults to `single`
-everywhere, so the validated baseline is what you get unless you ask otherwise.
+alternatives to that choice. Both have now been measured at $N=504$ (see
+**Ablation result** below); `evidence_mode` still defaults to `single`
+everywhere, so nothing changes for existing callers unless they ask.
 
 ### Why touch evidence selection at all
 
@@ -177,7 +183,7 @@ records `primary_evidence_section` per claim for experimental modes only — so
 any ranking decision can be read off the artifact without re-running extraction.
 Baseline (`single`) records keep exactly the key set they had before.
 
-### Intended ablation (to be run in Colab, not locally)
+### Ablation design
 
 `section` is a superset knob rather than a fourth code path: with
 `--max_sentences 1` it is section-aware *single*-sentence selection, and with
@@ -198,22 +204,51 @@ unchanged; the evidence mode only selects how the premise is extracted before
 the identical verifier and the identical faithfulness computation run on it,
 which is what makes the arms comparable.
 
-Secondary sweeps worth running once A–D are in: `section_weight` ∈
-{0.0, 0.025, 0.05, 0.10} — where 0.0 must reproduce A/B exactly, a correctness
-check on the harness rather than a result — and `section_weight=-0.05` as an
-**anti-prior control**: if inverting the prior does *not* hurt CONTRADICT
-accuracy, the section signal is not doing what this hypothesis claims.
+Controls: `section_weight=0.0` must reproduce A/B exactly — a correctness check
+on the harness, not a result — and `section_weight=-0.05` is the **anti-prior
+control**, on the reasoning that if inverting the prior does *not* hurt
+CONTRADICT accuracy then the section signal is not doing what the hypothesis
+claims. (It does hurt; see below.)
 
 Artifacts are named by arm (`results_<ts>_n504_section2_w0.05.json`), and the
 tracked `eval/results_n50.json` reference is only ever overwritten by
-`--evidence_mode single`, so experimental runs cannot be mistaken for the
-validated baseline.
+`--evidence_mode single --prosecution_mode off`, so experimental runs cannot be
+mistaken for the validated baseline.
 
-### What is NOT yet known
+### Ablation result (validated, $N=504$)
 
-**No accuracy claim and no novelty claim attaches to any of this.** The only
-evidence in hand is *observational*, and correlational by construction —
-re-running `src/sections.py` over the baseline's own selected evidence in
+The ablation has now run. Section-aware ranking helps, and it helps most where
+it was predicted to:
+
+| arm | configuration | overall | CONTRADICT | SUPPORT |
+|---|---|---|---|---|
+| **A** | single baseline | 78.97% | 52.02% | 93.05% |
+| **B** | multi-2 | 83.13% | 64.16% | — |
+| **C** | section-aware single | 80.36% | 56.07% | — |
+| **D** | **section-aware multi-2** | **83.53%** | **66.47%** (115/173) | **92.45%** (306/331) |
+| — | inverted section prior, multi-2 (control) | 81.55% | 59.54% | — |
+
+Reading it:
+
+- Section-awareness alone (A→C) moves CONTRADICT +4.05pp, so the section prior
+  carries signal on its own rather than only as an MMR tiebreaker.
+- Multi-sentence alone (A→B) moves it +12.14pp — the larger single effect.
+- Together (D) they reach 66.47%, **+14.45pp over the baseline**, at a cost of
+  0.6pp SUPPORT accuracy.
+- The **inverted-prior control** lands at 59.54%, below B's 64.16%. Flipping the
+  prior's sign makes multi-2 worse, which is the evidence that the section
+  signal is directional stance-relevant information and not an incidental
+  reranking perturbation. This control is what distinguishes "the prior works"
+  from "any change to the ranking works".
+
+Arm D is the current best configuration and the reference for everything that
+follows. The original motivating observation below was correlational; the
+ablation above is what actually establishes the effect.
+
+<details>
+<summary>The original correlational observation that motivated the feature</summary>
+
+Re-running `src/sections.py` over the *baseline's* own selected evidence in
 `eval/results_20260907_095418_n504.json`, grouped by the section of whatever
 sentence the baseline happened to pick (91 of 504 selected sentences carry a
 detectable heading):
@@ -224,13 +259,123 @@ detectable heading):
 | `methods` | 14 | 64.3% | 6 | 16.7% |
 | `background` | 38 | 57.9% | 22 | **27.3%** |
 
-That is consistent with the hypothesis and is why the feature was built, but it
-**cannot** be read as the feature working: the selection was not randomized, the
-groups differ in claim difficulty and document structure, and a claim whose
-answer happens to sit in a Results sentence may simply be an easier claim.
-Whether *steering* selection toward those sections actually moves CONTRADICT
-accuracy is exactly the open question arms C and D exist to answer. Until that
-experiment runs, `single` remains the only validated mode.
+This was never evidence the feature worked — the selection was not randomized
+and the groups differ in claim difficulty. It is kept here as the record of why
+arms C and D were worth running.
+
+</details>
+
+## Novelty Layer 2 — Adversarial Claim Prosecution (in progress)
+
+### Arm H — oracle ceiling (diagnostic, complete)
+
+Before building anything, `inspect_oracle_ceiling.py` scored **every** sentence
+in arm D's own candidate pool with the existing verifier, recording where a
+contradiction was available without acting on it. Results at $N=504$:
+
+- **158/173 gold CONTRADICT claims (91.33%)** already have at least one
+  raw-`CONTRADICTED` candidate in the current retrieval pool.
+- Of arm D's **58** CONTRADICT misses, **44 (75.86%)** have contradictory
+  evidence already in the pool — **36 selection failures** plus **8
+  premise-dilution** cases (the contradictory sentence was inside the
+  2-sentence bundle, but the joined premise still verified neutral).
+- Only **14/58** misses require evidence that was never retrieved.
+
+**Conclusion: the next problem is calibration, not retrieval.** `top_n=2` is
+not the binding constraint, so retrieval is left untouched.
+
+Arm H equally showed that *acting* on the raw signal does not work:
+
+| rule | overall | CONTRADICT | SUPPORT |
+|---|---|---|---|
+| arm D (reference) | 83.53% | 66.47% | 92.45% |
+| any candidate CONTRADICTED → CONTRADICT | — | — | **60.73%** (precision 54.86%) |
+| best raw threshold, `tau=0.95` | 82.14% | 86.13% | **80.06%** |
+
+Both buy CONTRADICT accuracy with a larger SUPPORT loss. **Raw NLI
+contradiction is therefore not an acceptable decision rule**, which is exactly
+why the arm below overrides nothing.
+
+### Arm E — Passive Prosecutor (`prosecution_mode="passive"`)
+
+An evidence-finding and verification component, **not** an override engine.
+Per claim it inspects the same candidate pool arm D ranks over, independently
+verifies every candidate with the already-loaded NLI model, identifies the
+strongest contradictory candidate, and **records** it:
+
+```
+claim
+ ├─ arm D evidence selection ─> baseline NLI ─> verdict ─> prediction
+ └─ Passive Prosecutor ─> same pool ─> verify each ─> strongest
+                                      contradiction ─> recorded only
+```
+
+It may discover a contradiction on a claim arm D called SUPPORT. That
+discovery is recorded and nothing else happens.
+
+**Why a passive arm exists at all.** It is the measured control. If arm E's
+predictions differ from arm D's by even one claim, the instrumentation is
+perturbing the measured path and every later arm built on it is
+uninterpretable. Three guarantees enforce that:
+
+1. Prosecution runs only after every prediction-bearing field is final.
+2. `attach_prosecution` **raises** rather than overwriting, if a prosecution
+   key ever collides with a baseline key.
+3. `prosecution_mode="off"` (the default) executes none of it, so arm D's
+   output keeps exactly the key set it had before.
+
+**No tuning happens here.** Counter-evidence is gated on the model's own argmax
+verdict being `CONTRADICTED` — the same definition arm H used, so the two are
+directly comparable. There is no threshold. The full class distribution,
+`P(contradiction)` and a margin over the runner-up are recorded per claim so a
+later arm can study decision rules offline without re-running the model.
+
+**Reuse, not reconstruction.** `src/prosecution.py` imports nothing but
+`src/extraction.py`'s pool helpers: no retriever, no embedder, no second
+DeBERTa, no new dependency. The caller's already-constructed `NLIVerifier` is
+passed in and its public `nli_pipeline` is read with `top_k=None` to obtain the
+distribution `verify()` discards — `src/verification.py` is untouched, and the
+label mapping's parity with `NLIVerifier.verify` is asserted in tests against
+the real implementation. `retrieve()` is still called exactly once per claim.
+
+**Cost:** one extra NLI forward pass per pool sentence, batched.
+
+**Diagnostics** (reported in a separate block; the existing accuracy and
+faithfulness metrics are untouched): claims prosecuted, claims with
+counter-evidence and the rate, the rate split by gold label, counter-verdict
+and counter-section distributions, candidate pool size, counter rank, how often
+the counter-evidence was already inside the baseline bundle, and
+confidence/`P(contradiction)` histograms.
+
+### Running arms D and E
+
+```
+# A = single baseline
+python eval/evaluate.py --evidence_mode single
+
+# D = section-aware Multi-2 (current best)
+python eval/evaluate.py --evidence_mode section --max_sentences 2 --section_weight 0.05
+
+# E = D + Passive Prosecutor (predictions must match D exactly)
+python eval/evaluate.py --evidence_mode section --max_sentences 2 --section_weight 0.05 \
+                        --prosecution_mode passive
+
+# Acceptance check: runs both modes on one pipeline and exits non-zero
+# if any prediction differs
+python verify_arm_e_identity.py --n_claims 504
+```
+
+Arm E artifacts carry a `_prospassive` suffix so they can never be mistaken for
+their arm D twin, and `eval/results_n50.json` is written only when
+`--evidence_mode single --prosecution_mode off`.
+
+### Not built, deliberately
+
+No adjudication, no override, no threshold tuning, no claim rewriting, no
+Conflict Footnotes, no memory, no LangGraph integration, no persistence
+(`src/matrix.py` untouched). Arm E is instrumentation only. An adjudicating arm
+needs a discriminator better than raw NLI contradiction — arm H established
+that much — and arm E exists to collect the data for designing one.
 
 ## What's NOT built yet — the actual next-phase work
 
@@ -314,6 +459,7 @@ src/
   retrieval.py     - HybridRetriever: semantic + BM25 + rerank
   extraction.py    - sentence extractor: single (validated) / multi / section
   sections.py      - scientific section detection + ranking prior (Task C)
+  prosecution.py   - Passive Prosecutor: counter-evidence search (arm E)
   verification.py  - NLIVerifier + label mapping
   pipeline.py      - orchestrates retrieve -> extract -> verify
   orchestration.py - LangGraph Synthesizer -> Prosecutor -> Adjudicator loop
@@ -323,6 +469,10 @@ eval/
 
 test_extraction_modes.py        - Task B: single baseline + multi-sentence MMR
 test_section_aware_evidence.py  - Task C: section detection + section-aware ranking
+test_passive_prosecution.py     - Arm E: passive prosecution + prediction invariance
+
+inspect_oracle_ceiling.py       - Arm H diagnostic: contradiction headroom in the pool
+verify_arm_e_identity.py        - Arm E acceptance: arm D vs arm E prediction identity
 ```
 
 Both test files are CPU-only and offline (a deterministic fake embedder maps
@@ -330,5 +480,13 @@ known sentences onto hand-written unit vectors, so the real `cos_sim` still does
 the similarity math):
 
 ```
-pytest test_extraction_modes.py test_section_aware_evidence.py
+pytest test_extraction_modes.py test_section_aware_evidence.py test_passive_prosecution.py
+```
+
+The two diagnostic scripts carry offline self-tests that need neither models
+nor the dataset:
+
+```
+python inspect_oracle_ceiling.py --selftest
+python verify_arm_e_identity.py --selftest
 ```

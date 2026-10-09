@@ -22,6 +22,11 @@ from src.extraction import (
     EVIDENCE_MODES,
     MAX_BUNDLE_SENTENCES,
 )
+from src.prosecution import (
+    DEFAULT_PROSECUTION_MODE,
+    PROSECUTION_MODES,
+    PROSECUTION_RESULT_KEYS,
+)
 from src.verification import NLIVerifier, normalize_for_scifact_eval
 
 PRONOUNS_PATTERN = r"^(?:it|this|that|they|these|those)\b"
@@ -167,6 +172,135 @@ def compute_weighted_nli_faithfulness(claim: str, evidence: str, verifier: NLIVe
     return score
 
 
+def _histogram(values, width=0.1):
+    """Bin values in [0, 1] into fixed-width buckets, lowest bucket first."""
+    bins = {}
+    n_bins = int(round(1.0 / width))
+    for i in range(n_bins):
+        lo = round(i * width, 4)
+        bins[f"{lo:.1f}-{min(lo + width, 1.0):.1f}"] = 0
+    for value in values:
+        if value is None:
+            continue
+        index = min(int(max(0.0, min(1.0, value)) / width), n_bins - 1)
+        lo = round(index * width, 4)
+        bins[f"{lo:.1f}-{min(lo + width, 1.0):.1f}"] += 1
+    return bins
+
+
+def compute_prosecution_diagnostics(records: list) -> dict:
+    """Aggregate arm E's per-claim prosecution records.
+
+    Diagnostics only. Nothing here feeds a prediction, and none of the
+    existing accuracy/faithfulness metrics are recomputed or replaced.
+    """
+    attempted = [r for r in records if r.get("prosecution_attempted")]
+    found = [r for r in attempted if r.get("counter_evidence")]
+
+    def by_gold(label, rows):
+        return [r for r in rows if r.get("gold") == label]
+
+    verdict_distribution = {}
+    for record in attempted:
+        key = record.get("counter_verdict") or "NONE_FOUND"
+        verdict_distribution[key] = verdict_distribution.get(key, 0) + 1
+
+    section_distribution = {}
+    for record in found:
+        key = record.get("counter_section") or "unknown"
+        section_distribution[key] = section_distribution.get(key, 0) + 1
+
+    pool_sizes = [r.get("candidate_pool_size", 0) for r in attempted]
+    counter_ranks = [r["counter_rank"] for r in found if r.get("counter_rank") is not None]
+    in_selection = [r for r in found if r.get("counter_in_d_selection")]
+
+    def mean(values):
+        return round(sum(values) / len(values), 4) if values else 0.0
+
+    def rate(numerator, denominator):
+        return round(numerator / denominator * 100, 2) if denominator else 0.0
+
+    diagnostics = {
+        "claims_prosecuted": len(attempted),
+        "claims_with_counter_evidence": len(found),
+        "counter_evidence_rate": rate(len(found), len(attempted)),
+        "counter_evidence_by_gold_label": {},
+        "counter_verdict_distribution": verdict_distribution,
+        "counter_section_distribution": section_distribution,
+        "mean_candidate_pool_size": mean(pool_sizes),
+        "min_candidate_pool_size": min(pool_sizes) if pool_sizes else 0,
+        "max_candidate_pool_size": max(pool_sizes) if pool_sizes else 0,
+        "mean_counter_rank": mean(counter_ranks),
+        "counter_rank_zero_count": sum(1 for r in counter_ranks if r == 0),
+        "counter_already_in_baseline_bundle": len(in_selection),
+        "counter_confidence_histogram": _histogram(
+            [r.get("counter_confidence") for r in found]
+        ),
+        "counter_p_contradiction_histogram": _histogram(
+            [r.get("counter_p_contradiction") for r in found]
+        ),
+        "mean_counter_confidence": mean(
+            [r["counter_confidence"] for r in found if r.get("counter_confidence") is not None]
+        ),
+        "mean_counter_score_margin": mean(
+            [r["counter_score"] for r in found if r.get("counter_score") is not None]
+        ),
+    }
+
+    for label in ["SUPPORT", "CONTRADICT", "NEI"]:
+        label_attempted = by_gold(label, attempted)
+        label_found = by_gold(label, found)
+        if not label_attempted:
+            continue
+        diagnostics["counter_evidence_by_gold_label"][label] = {
+            "prosecuted": len(label_attempted),
+            "with_counter_evidence": len(label_found),
+            "rate": rate(len(label_found), len(label_attempted)),
+        }
+
+    return diagnostics
+
+
+def print_prosecution_diagnostics(diagnostics: dict) -> None:
+    """Print arm E's diagnostics as a block separate from the eval metrics."""
+    print("\n============================ PASSIVE PROSECUTION DIAGNOSTICS ============================")
+    print("(arm E: counter-evidence is recorded only; no prediction was modified)")
+    print(f"  Claims prosecuted:            {diagnostics['claims_prosecuted']}")
+    print(f"  With counter-evidence:        {diagnostics['claims_with_counter_evidence']}"
+          f" ({diagnostics['counter_evidence_rate']}%)")
+    print(f"  Candidate pool size:          mean {diagnostics['mean_candidate_pool_size']}"
+          f", range {diagnostics['min_candidate_pool_size']}-{diagnostics['max_candidate_pool_size']}")
+    print(f"  Mean counter rank:            {diagnostics['mean_counter_rank']}"
+          f" (rank 0 on {diagnostics['counter_rank_zero_count']} claims)")
+    print(f"  Already in baseline bundle:   {diagnostics['counter_already_in_baseline_bundle']}")
+    print(f"  Mean counter confidence:      {diagnostics['mean_counter_confidence']}")
+    print(f"  Mean counter margin:          {diagnostics['mean_counter_score_margin']}")
+
+    print("\n  Counter-evidence rate by gold label:")
+    for label, stats in diagnostics["counter_evidence_by_gold_label"].items():
+        print(f"    - {label:<12} {stats['with_counter_evidence']:>4}/{stats['prosecuted']:<4}"
+              f" ({stats['rate']}%)")
+
+    print("\n  Counter-verdict distribution:")
+    for verdict, count in sorted(
+        diagnostics["counter_verdict_distribution"].items(), key=lambda kv: -kv[1]
+    ):
+        print(f"    - {verdict:<22} {count}")
+
+    if diagnostics["counter_section_distribution"]:
+        print("\n  Counter-evidence section distribution:")
+        for section, count in sorted(
+            diagnostics["counter_section_distribution"].items(), key=lambda kv: -kv[1]
+        ):
+            print(f"    - {section:<22} {count}")
+
+    print("\n  P(contradiction) histogram for found counter-evidence:")
+    for bucket, count in diagnostics["counter_p_contradiction_histogram"].items():
+        if count:
+            print(f"    - {bucket:<12} {count}")
+    print("=========================================================================================\n")
+
+
 def get_eval_subset(unique_claims: list, n_claims=None, stratified: bool = False, seed: int = 42) -> list:
     """Select a subset of claims for evaluation, optionally with stratified sampling by gold label."""
     if n_claims is None or n_claims >= len(unique_claims):
@@ -207,6 +341,7 @@ def run_eval(
     evidence_mode: str = DEFAULT_EVIDENCE_MODE,
     max_sentences: int = DEFAULT_MAX_SENTENCES,
     section_weight: float = DEFAULT_SECTION_WEIGHT,
+    prosecution_mode: str = DEFAULT_PROSECUTION_MODE,
 ):
     """Run evaluation over the SciFact dataset with accuracy and dual faithfulness reporting.
 
@@ -215,6 +350,12 @@ def run_eval(
     the evidence premise is extracted before the identical verifier and the
     identical faithfulness computation run on it. That is what makes ablation
     arms A/B/C/D comparable.
+
+    `prosecution_mode="passive"` (arm E) changes no prediction at all: it adds
+    a counter-evidence search whose findings are recorded alongside the
+    unchanged metrics. Its accuracy/faithfulness numbers must match the same
+    configuration run with prosecution_mode="off"; the prosecution diagnostics
+    are reported in a separate block and replace nothing.
     """
     claims_dataset, corpus_dataset = load_scifact()
     valid_claims = get_valid_claims(claims_dataset)
@@ -226,6 +367,7 @@ def run_eval(
         evidence_mode=evidence_mode,
         max_sentences=max_sentences,
         section_weight=section_weight,
+        prosecution_mode=prosecution_mode,
     )
 
     eval_claims = get_eval_subset(unique_claims, n_claims=n_claims, stratified=stratified, seed=seed)
@@ -235,6 +377,7 @@ def run_eval(
 
     correct = 0
     wrong_cases = []
+    prosecution_records = []
     strict_faithfulness_scores = []
     weighted_faithfulness_scores = []
     strict_by_label = {"SUPPORT": [], "CONTRADICT": [], "NEI": []}
@@ -279,6 +422,14 @@ def run_eval(
         # selected sentence came from, so the ablation can be analysed by
         # section without re-running extraction. Baseline ("single") records
         # keep exactly the key set they had before.
+        # Arm E only: carry the prosecution record onto the claim record.
+        # Purely additive -- the prediction fields above are already final.
+        if prosecution_mode != "off":
+            for key in sorted(PROSECUTION_RESULT_KEYS):
+                if key in result:
+                    claim_record[key] = result[key]
+            prosecution_records.append(claim_record)
+
         spans = result.get("evidence_spans")
         if spans is not None:
             claim_record["evidence_spans"] = spans
@@ -329,6 +480,14 @@ def run_eval(
         print(f"  - {label:<12} ({len(s_scores):>3} claims): Strict = {s_avg:.4f} | Weighted = {w_avg:.4f}")
     print(f"=================================================================================\n")
 
+    prosecution_diagnostics = (
+        compute_prosecution_diagnostics(prosecution_records)
+        if prosecution_mode != "off"
+        else None
+    )
+    if prosecution_diagnostics is not None:
+        print_prosecution_diagnostics(prosecution_diagnostics)
+
     results_payload = {
         "metadata": {
             "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -341,6 +500,7 @@ def run_eval(
                 max_sentences if evidence_mode in ("multi", "section") else None
             ),
             "section_weight": section_weight if evidence_mode == "section" else None,
+            "prosecution_mode": prosecution_mode,
             "runtime_seconds": round(elapsed, 2),
             "seconds_per_claim": round(sec_per_claim, 4),
         },
@@ -366,6 +526,10 @@ def run_eval(
         "eval_details": all_eval_details,
     }
 
+    # Separate block: the existing "metrics" above are untouched by arm E.
+    if prosecution_diagnostics is not None:
+        results_payload["prosecution_diagnostics"] = prosecution_diagnostics
+
     if save_json:
         os.makedirs(output_dir, exist_ok=True)
         timestamp_str = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
@@ -379,6 +543,10 @@ def run_eval(
             mode_suffix = f"_section{max_sentences}_w{section_weight:g}"
         else:
             mode_suffix = f"_{evidence_mode}{max_sentences}"
+        if prosecution_mode != "off":
+            # Arm E artifacts must never be mistaken for their arm D twin,
+            # even though the prediction metrics are identical by design.
+            mode_suffix += f"_pros{prosecution_mode}"
         out_filename = os.path.join(
             output_dir, f"results_{timestamp_str}_n{len(eval_claims)}{mode_suffix}.json"
         )
@@ -389,7 +557,12 @@ def run_eval(
         # If evaluating first 50 claims unstratified, update/archive results_n50.json.
         # Baseline mode only: an experimental run must not overwrite the
         # tracked reference artifact.
-        if len(eval_claims) == 50 and not stratified and evidence_mode == "single":
+        if (
+            len(eval_claims) == 50
+            and not stratified
+            and evidence_mode == "single"
+            and prosecution_mode == "off"
+        ):
             n50_file = os.path.join(output_dir, "results_n50.json")
             with open(n50_file, "w", encoding="utf-8") as f:
                 json.dump(results_payload, f, indent=2, ensure_ascii=False)
@@ -460,6 +633,18 @@ def parse_args():
             "single/multi modes"
         ),
     )
+    parser.add_argument(
+        "--prosecution_mode",
+        type=str,
+        default=DEFAULT_PROSECUTION_MODE,
+        choices=list(PROSECUTION_MODES),
+        help=(
+            "Passive Prosecutor mode (ablation arm E): 'off' (default) or "
+            "'passive'. 'passive' records counter-evidence found in the same "
+            "candidate pool and changes no prediction, so its accuracy and "
+            "faithfulness numbers must match the identical run with 'off'"
+        ),
+    )
     return parser.parse_args()
 
 
@@ -475,5 +660,6 @@ if __name__ == "__main__":
         evidence_mode=args.evidence_mode,
         max_sentences=args.max_sentences,
         section_weight=args.section_weight,
+        prosecution_mode=args.prosecution_mode,
     )
 
