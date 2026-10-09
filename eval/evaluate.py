@@ -23,6 +23,8 @@ from src.extraction import (
     MAX_BUNDLE_SENTENCES,
 )
 from src.prosecution import (
+    ADJUDICATION_RESULT_KEYS,
+    ADJUDICATION_STATUSES,
     DEFAULT_PROSECUTION_MODE,
     PROSECUTION_MODES,
     PROSECUTION_RESULT_KEYS,
@@ -301,6 +303,180 @@ def print_prosecution_diagnostics(diagnostics: dict) -> None:
     print("=========================================================================================\n")
 
 
+def compute_adjudication_diagnostics(records: list) -> dict:
+    """Aggregate arm F's adjudication decisions and the accuracy tradeoff.
+
+    Diagnostics only. The accuracy metrics computed elsewhere are not touched;
+    this block re-reads the recorded `baseline_prediction` so a single arm-F
+    run yields both arm D's predictions and arm F's.
+
+    The headline numbers are deliberately the tradeoff, not peak CONTRADICT
+    accuracy: `contradict_rescued` against `support_regressions`.
+    """
+    adjudicated = [r for r in records if r.get("adjudication_status")]
+    overrides = [r for r in adjudicated if r.get("override_applied")]
+
+    def rate(numerator, denominator):
+        return round(numerator / denominator * 100, 2) if denominator else 0.0
+
+    status_counts = {status: 0 for status in ADJUDICATION_STATUSES}
+    for record in adjudicated:
+        status = record["adjudication_status"]
+        status_counts[status] = status_counts.get(status, 0) + 1
+
+    reason_counts = {}
+    for record in adjudicated:
+        reason = record.get("adjudication_reason") or "unknown"
+        reason_counts[reason] = reason_counts.get(reason, 0) + 1
+
+    gate_failures = {}
+    for record in adjudicated:
+        for gate, passed in (record.get("adjudication_gates") or {}).items():
+            if passed is False:
+                gate_failures[gate] = gate_failures.get(gate, 0) + 1
+
+    # The tradeoff. An override is a rescue when it turns a wrong SUPPORT into
+    # a right CONTRADICT, and a regression when it turns a right SUPPORT wrong.
+    rescued = [
+        r for r in overrides
+        if r.get("gold") == "CONTRADICT" and r.get("baseline_prediction") == "SUPPORT"
+    ]
+    regressions = [
+        r for r in overrides
+        if r.get("gold") == "SUPPORT" and r.get("baseline_prediction") == "SUPPORT"
+    ]
+    neutral_overrides = [
+        r for r in overrides if r not in rescued and r not in regressions
+    ]
+
+    # Baseline vs adjudicated accuracy, from the same records.
+    def accuracy(field):
+        scored = [r for r in records if r.get("gold") in ("SUPPORT", "CONTRADICT")]
+        by_label = {}
+        correct = 0
+        for record in scored:
+            gold = record["gold"]
+            predicted = record.get(field)
+            hit = predicted == gold
+            correct += hit
+            bucket = by_label.setdefault(gold, {"n": 0, "correct": 0})
+            bucket["n"] += 1
+            bucket["correct"] += hit
+        return {
+            "overall": rate(correct, len(scored)),
+            "correct": correct,
+            "total": len(scored),
+            "by_label": {
+                label: {
+                    "n": stats["n"],
+                    "correct": stats["correct"],
+                    "accuracy": rate(stats["correct"], stats["n"]),
+                }
+                for label, stats in sorted(by_label.items())
+            },
+        }
+
+    has_baseline = any("baseline_prediction" in r for r in records)
+
+    return {
+        "claims_adjudicated": len(adjudicated),
+        "overrides_applied": len(overrides),
+        "override_rate": rate(len(overrides), len(adjudicated)),
+        "adjudication_status_counts": status_counts,
+        "adjudication_reason_counts": reason_counts,
+        "gate_failure_counts": gate_failures,
+        "contradict_rescued": len(rescued),
+        "support_regressions": len(regressions),
+        "other_overrides": len(neutral_overrides),
+        "net_claims_gained": len(rescued) - len(regressions),
+        "override_precision": round(
+            len(rescued) / len(overrides), 4
+        ) if overrides else 0.0,
+        "arm_h_recoverable_misses": 44,
+        "share_of_arm_h_recoverable_rescued": rate(len(rescued), 44),
+        "baseline_accuracy": accuracy("baseline_prediction") if has_baseline else None,
+        "adjudicated_accuracy": accuracy("prediction"),
+        "overridden_claims": [
+            {
+                "claim_index": r.get("claim_index"),
+                "gold": r.get("gold"),
+                "baseline_prediction": r.get("baseline_prediction"),
+                "prediction": r.get("prediction"),
+                "adjudication_reason": r.get("adjudication_reason"),
+                "counter_section": r.get("counter_section"),
+                "counter_evidence_doc_id": r.get("counter_evidence_doc_id"),
+                "evidence_doc_id": r.get("evidence_doc_id"),
+                "counter_evidence": r.get("counter_evidence"),
+            }
+            for r in overrides
+        ],
+    }
+
+
+def print_adjudication_diagnostics(diagnostics: dict) -> None:
+    """Print arm F's adjudication block, tradeoff first."""
+    print("\n============================ ADJUDICATION DIAGNOSTICS (ARM F) ============================")
+    print(f"  Claims adjudicated:           {diagnostics['claims_adjudicated']}")
+    print(f"  Overrides applied:            {diagnostics['overrides_applied']}"
+          f" ({diagnostics['override_rate']}% of adjudicated)")
+
+    print("\n  THE TRADEOFF (the metric that matters):")
+    print(f"    CONTRADICT rescued:         +{diagnostics['contradict_rescued']}")
+    print(f"    SUPPORT regressions:        -{diagnostics['support_regressions']}")
+    if diagnostics["other_overrides"]:
+        print(f"    other overrides:             {diagnostics['other_overrides']}")
+    print(f"    net claims gained:          {diagnostics['net_claims_gained']:+d}")
+    print(f"    override precision:         {diagnostics['override_precision']}")
+    print(f"    share of arm H's 44 recoverable misses rescued: "
+          f"{diagnostics['share_of_arm_h_recoverable_rescued']}%")
+
+    baseline = diagnostics.get("baseline_accuracy")
+    adjudicated = diagnostics["adjudicated_accuracy"]
+    if baseline:
+        print("\n  ARM D (baseline_verdict) vs ARM F (adjudicated):")
+        header = f"    {'metric':<14}{'arm D':>10}{'arm F':>10}{'delta':>10}"
+        print(header)
+        print(f"    {'overall':<14}{baseline['overall']:>9}%{adjudicated['overall']:>9}%"
+              f"{adjudicated['overall'] - baseline['overall']:>+9.2f}")
+        for label in sorted(set(baseline["by_label"]) | set(adjudicated["by_label"])):
+            b = baseline["by_label"].get(label, {"accuracy": 0.0, "correct": 0, "n": 0})
+            a = adjudicated["by_label"].get(label, {"accuracy": 0.0, "correct": 0, "n": 0})
+            print(f"    {label:<14}{b['accuracy']:>9}%{a['accuracy']:>9}%"
+                  f"{a['accuracy'] - b['accuracy']:>+9.2f}"
+                  f"   ({b['correct']}/{b['n']} -> {a['correct']}/{a['n']})")
+
+    print("\n  Adjudication statuses:")
+    for status, count in sorted(
+        diagnostics["adjudication_status_counts"].items(), key=lambda kv: -kv[1]
+    ):
+        print(f"    - {status:<22} {count}")
+
+    if diagnostics["gate_failure_counts"]:
+        print("\n  Gate failures (which gate blocked an override):")
+        for gate, count in sorted(
+            diagnostics["gate_failure_counts"].items(), key=lambda kv: -kv[1]
+        ):
+            print(f"    - {gate:<28} {count}")
+
+    print("\n  Adjudication reasons:")
+    for reason, count in sorted(
+        diagnostics["adjudication_reason_counts"].items(), key=lambda kv: -kv[1]
+    ):
+        print(f"    - {count:>4}  {reason}")
+
+    if diagnostics["overridden_claims"]:
+        print("\n  Overridden claims (every override has a recorded reason):")
+        for record in diagnostics["overridden_claims"][:20]:
+            mark = "OK " if record["gold"] == "CONTRADICT" else "REG"
+            print(f"    [{mark}] claim {record['claim_index']} gold={record['gold']}"
+                  f" {record['baseline_prediction']} -> {record['prediction']}")
+            print(f"           {record['adjudication_reason']}")
+            print(f"           counter[{record['counter_section']}"
+                  f" doc={record['counter_evidence_doc_id']}]:"
+                  f" {str(record['counter_evidence'])[:92]}")
+    print("==========================================================================================\n")
+
+
 def get_eval_subset(unique_claims: list, n_claims=None, stratified: bool = False, seed: int = 42) -> list:
     """Select a subset of claims for evaluation, optionally with stratified sampling by gold label."""
     if n_claims is None or n_claims >= len(unique_claims):
@@ -425,9 +601,17 @@ def run_eval(
         # Arm E only: carry the prosecution record onto the claim record.
         # Purely additive -- the prediction fields above are already final.
         if prosecution_mode != "off":
-            for key in sorted(PROSECUTION_RESULT_KEYS):
+            for key in sorted(PROSECUTION_RESULT_KEYS | ADJUDICATION_RESULT_KEYS):
                 if key in result:
                     claim_record[key] = result[key]
+            # Arm F only: what arm D WOULD have predicted, so the tradeoff can
+            # be read off a single arm-F run. The scored `prediction` above is
+            # untouched and still comes from result["verdict"] via the
+            # unchanged normalize_for_scifact_eval.
+            if "baseline_verdict" in result:
+                claim_record["baseline_prediction"] = normalize_for_scifact_eval(
+                    result["baseline_verdict"]
+                )
             prosecution_records.append(claim_record)
 
         spans = result.get("evidence_spans")
@@ -488,6 +672,14 @@ def run_eval(
     if prosecution_diagnostics is not None:
         print_prosecution_diagnostics(prosecution_diagnostics)
 
+    adjudication_diagnostics = (
+        compute_adjudication_diagnostics(prosecution_records)
+        if prosecution_mode == "active"
+        else None
+    )
+    if adjudication_diagnostics is not None:
+        print_adjudication_diagnostics(adjudication_diagnostics)
+
     results_payload = {
         "metadata": {
             "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -526,9 +718,11 @@ def run_eval(
         "eval_details": all_eval_details,
     }
 
-    # Separate block: the existing "metrics" above are untouched by arm E.
+    # Separate blocks: the existing "metrics" above are untouched by arms E/F.
     if prosecution_diagnostics is not None:
         results_payload["prosecution_diagnostics"] = prosecution_diagnostics
+    if adjudication_diagnostics is not None:
+        results_payload["adjudication_diagnostics"] = adjudication_diagnostics
 
     if save_json:
         os.makedirs(output_dir, exist_ok=True)
@@ -639,10 +833,11 @@ def parse_args():
         default=DEFAULT_PROSECUTION_MODE,
         choices=list(PROSECUTION_MODES),
         help=(
-            "Passive Prosecutor mode (ablation arm E): 'off' (default) or "
-            "'passive'. 'passive' records counter-evidence found in the same "
-            "candidate pool and changes no prediction, so its accuracy and "
-            "faithfulness numbers must match the identical run with 'off'"
+            "Prosecution mode: 'off' (default, arm D), 'passive' (arm E -- "
+            "records counter-evidence and changes no prediction, so its "
+            "numbers must match the identical run with 'off') or 'active' "
+            "(arm F -- the Adjudicator may flip a baseline SUPPORT to "
+            "CONTRADICT when it validates the contradiction)"
         ),
     )
     return parser.parse_args()

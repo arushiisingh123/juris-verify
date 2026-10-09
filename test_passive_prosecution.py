@@ -564,11 +564,19 @@ def test_prosecution_module_imports_no_model_or_retriever():
 
     assert not (imported & heavy), f"prosecution imports {imported & heavy}"
     assert not (called & heavy), f"prosecution constructs {called & heavy}"
-    # Only the extraction pool helpers are imported from the project.
+    # Only lightweight project modules are imported: the extraction pool
+    # helpers, and (since arm F) the section constants. src/sections.py itself
+    # has zero imports, so this adds no weight.
     assert imported == {
         "src.extraction",
         "_collect_candidate_sentences",
         "_normalize_candidates",
+        "src.sections",
+        "SECTION_BACKGROUND",
+        "SECTION_CONCLUSIONS",
+        "SECTION_METHODS",
+        "SECTION_RESULTS",
+        "SECTION_UNKNOWN",
     }
     # And nothing from transformers / sentence_transformers at all.
     assert not any(
@@ -636,7 +644,7 @@ def test_default_prosecution_mode_is_off_everywhere():
     import src.pipeline
 
     assert DEFAULT_PROSECUTION_MODE == "off"
-    assert PROSECUTION_MODES == ("off", "passive")
+    assert PROSECUTION_MODES == ("off", "passive", "active")
 
     pipeline_sig = inspect.signature(src.pipeline.JurisVerifyPipeline.__init__)
     assert pipeline_sig.parameters["prosecution_mode"].default == "off"

@@ -1,5 +1,5 @@
 """
-Passive Prosecutor (Novelty Layer 2, ablation arm E) for Juris-Verify.
+Prosecutor and Adjudicator (Novelty Layer 2, ablation arms E and F).
 
 WHAT THIS IS
 ------------
@@ -60,16 +60,125 @@ calls `nli_pipeline` with `top_k=None`. `src/verification.py` is left untouched.
 `verdict_from_top_label` below reproduces `verify`'s label mapping exactly, and
 `test_passive_prosecution.py` asserts that parity against the real
 NLIVerifier.verify implementation (with a stub pipeline, no model load).
+
+=========================================================================
+ARM F -- THE ADJUDICATOR (prosecution_mode="active")
+=========================================================================
+
+WHY A THRESHOLD CANNOT WORK, FROM THE ARM E DATA
+------------------------------------------------
+Arm E measured counter-evidence on 289/504 claims: 158/173 gold CONTRADICT and
+131/331 gold SUPPORT, at a mean counter confidence of 0.9254. Both populations
+carry high-confidence counter-evidence, so P(contradiction) is near-constant
+across the very distinction a decision rule has to make. No cut point on that
+number can separate them -- arm H's sweep confirmed it empirically, with the
+best threshold (tau=0.95) still costing SUPPORT 12.4 points.
+
+So the Adjudicator does not read magnitudes. It asks four categorical
+questions about the RELATIONSHIP between claim, primary evidence and
+counter-evidence, three of which require information the Prosecutor never
+computed.
+
+THE FOUR GATES
+--------------
+Let C = claim, P = primary (baseline) evidence premise, X = counter-evidence.
+Arm E only ever computed NLI(premise=X, hypothesis=C). The Adjudicator adds
+NLI(premise=C, hypothesis=X) and NLI(premise=P, hypothesis=X).
+
+1. SYMMETRY -- is this a contradiction at all?
+       requires verdict(premise=C, hypothesis=X) == CONTRADICTED
+   Logical contradiction is symmetric: if X refutes C then C refutes X. A
+   sentence that is merely topical, contextual, or contradictory to some OTHER
+   statement is typically asymmetric under NLI -- it conflicts in one direction
+   because it carries scope the claim never addresses (a different subgroup, a
+   different endpoint, a different comparison), and the reverse direction comes
+   back neutral. This gate is the direct implementation of "does the
+   counter-evidence actually establish a contradiction to the claim".
+
+2. COHERENCE -- does the retrieved evidence agree with itself?
+       requires verdict(premise=P, hypothesis=X) != CONTRADICTED
+   If the baseline premise contradicts the counter-evidence, the pool is
+   internally inconsistent: two retrieved sentences disagree with each other, so
+   the counter cannot be taken to represent the source's position on the claim.
+   This is the cross-study case -- `retrieve()` returns top_n=2 documents, and
+   the second may describe a different study that genuinely disagrees with the
+   first. Overriding there would be adjudicating a disagreement between papers,
+   not a refutation of the claim.
+
+3. UNCONTESTED SUPPORT -- is there positive support to overturn?
+       requires primary_verdict != SUPPORTED
+   If the baseline premise ENTAILS the claim, the source positively supports it
+   and a contradictory fragment elsewhere in the pool is not grounds to flip the
+   label. This gate protects exactly the population that has the most to lose:
+   in the N=504 baseline artifact 86 gold-SUPPORT claims verify as SUPPORTED
+   against only 3 gold-CONTRADICT, so the gate is strongly asymmetric in favour
+   of preserving SUPPORT accuracy.
+
+4. FINDING-GROUNDED -- is the counter-evidence reporting a result?
+       requires the counter-evidence section to be results/conclusions, or --
+       when no heading is recoverable -- to come from the same document the
+       baseline cited.
+   A Background sentence can contradict a claim while describing prior
+   literature or the open question rather than this study's finding
+   ("Previous trials suggested no benefit"). A Methods sentence describes design.
+   Neither refutes the claim on the study's own evidence. This reuses
+   src/sections.py, whose directional signal the arm C/D ablation already
+   validated: inverting the section prior drops CONTRADICT accuracy from 64.16%
+   to 59.54%, so section identity carries stance-relevant information rather
+   than incidental reranking noise.
+
+STATUS AND OVERRIDE
+-------------------
+Gates are evaluated in that order and the FIRST failure determines the status
+and the recorded reason:
+
+    no counter-evidence          -> INSUFFICIENT
+    symmetry fails               -> NOT_CONTRADICTION  (merely topical)
+    coherence fails              -> NOT_CONTRADICTION  (inconsistent pool)
+    uncontested-support fails    -> INSUFFICIENT       (source entails claim)
+    finding-grounded fails       -> INSUFFICIENT       (not a reported finding)
+    all four pass                -> TRUE_CONTRADICTION
+
+Only TRUE_CONTRADICTION may change a prediction, and only in one direction:
+baseline SUPPORT -> CONTRADICT. A baseline CONTRADICT is never downgraded, so
+the 115 CONTRADICT claims arm D already gets right cannot be lost. Every other
+status preserves the baseline verdict byte-for-byte.
+
+Every gate outcome is recorded, not just the deciding one, so the 50-claim
+diagnostic shows which gate rejects what. There is no implicit
+"counter-evidence exists, therefore override": `override_applied` is True only
+alongside an explicit `adjudication_status` and `adjudication_reason`.
+
+WHAT ARM F DOES NOT DO
+----------------------
+No LLM call, no threshold, no tuned constant -- every gate is an argmax label
+comparison or a set membership test, so the whole decision is deterministic and
+auditable. It costs 3 extra NLI forward passes per claim that has
+counter-evidence, batched into one call, on the same already-loaded model.
+
+Arm F deliberately does NOT rewrite `result["evidence"]` on override. The
+premise reported to the evaluator stays the baseline premise, because
+`eval/evaluate.py` computes faithfulness from that field and changing it would
+change the measured methodology. See the README for why that leaves an
+overridden claim citing a premise that no longer matches its verdict, and why
+fixing that belongs to the deferred Conflict Footnote work.
 """
 
 from src.extraction import _collect_candidate_sentences, _normalize_candidates
+from src.sections import (
+    SECTION_BACKGROUND,
+    SECTION_CONCLUSIONS,
+    SECTION_METHODS,
+    SECTION_RESULTS,
+    SECTION_UNKNOWN,
+)
 
 
 # --- configuration ----------------------------------------------------------
 # "off" is the default everywhere. Arm D must stay reproducible without opting
 # out of anything.
 DEFAULT_PROSECUTION_MODE = "off"
-PROSECUTION_MODES = ("off", "passive")
+PROSECUTION_MODES = ("off", "passive", "active")
 
 # Verdict strings, matching src/verification.py.
 SUPPORTED = "SUPPORTED"
@@ -368,6 +477,207 @@ def prosecute(
     }
 
 
+# ==========================================================================
+# The Adjudicator (arm F)
+# ==========================================================================
+
+# Adjudication statuses. Only TRUE_CONTRADICTION may change a prediction.
+TRUE_CONTRADICTION = "TRUE_CONTRADICTION"
+NOT_CONTRADICTION = "NOT_CONTRADICTION"
+INSUFFICIENT = "INSUFFICIENT"
+
+ADJUDICATION_STATUSES = (TRUE_CONTRADICTION, NOT_CONTRADICTION, INSUFFICIENT)
+
+# Sections whose sentences report a finding, and so can ground an override.
+FINDING_SECTIONS = frozenset({SECTION_RESULTS, SECTION_CONCLUSIONS})
+# Sections whose sentences describe prior literature, the open question, or
+# study design. These can contradict a claim without the study's own evidence
+# refuting it, so they cannot ground an override.
+NON_FINDING_SECTIONS = frozenset({SECTION_BACKGROUND, SECTION_METHODS})
+
+ADJUDICATION_RESULT_KEYS = frozenset(
+    {
+        "adjudication_status",
+        "adjudication_reason",
+        "adjudication_gates",
+        "baseline_verdict",
+        "adjudicated_verdict",
+        "override_applied",
+        "primary_verdict_distribution",
+        "primary_p_contradiction",
+        "primary_confidence",
+        "reverse_verdict",
+        "reverse_p_contradiction",
+        "primary_counter_verdict",
+        "primary_counter_p_contradiction",
+    }
+)
+
+
+def _empty_adjudication(baseline_verdict, reason):
+    return {
+        "adjudication_status": INSUFFICIENT,
+        "adjudication_reason": reason,
+        "adjudication_gates": {
+            "counter_evidence_present": False,
+            "symmetric_contradiction": None,
+            "pool_coherent": None,
+            "uncontested_support": None,
+            "finding_grounded": None,
+        },
+        "baseline_verdict": baseline_verdict,
+        "adjudicated_verdict": baseline_verdict,
+        "override_applied": False,
+        "primary_verdict_distribution": None,
+        "primary_p_contradiction": None,
+        "primary_confidence": None,
+        "reverse_verdict": None,
+        "reverse_p_contradiction": None,
+        "primary_counter_verdict": None,
+        "primary_counter_p_contradiction": None,
+    }
+
+
+def is_finding_grounded(counter_section, counter_doc_id, primary_doc_id):
+    """Gate 4: can this counter-evidence section ground an override?
+
+    results/conclusions   -> yes, it reports a finding.
+    background/methods    -> no, it reports prior work, the open question, or
+                             study design.
+    unknown               -> undecidable from the heading, so fall back to
+                             provenance: allow it only when it comes from the
+                             document the baseline itself cited. A cross-document
+                             counter whose section cannot even be read is the
+                             weakest possible ground for flipping a label.
+    """
+    if counter_section in FINDING_SECTIONS:
+        return True
+    if counter_section in NON_FINDING_SECTIONS:
+        return False
+    return counter_doc_id is not None and counter_doc_id == primary_doc_id
+
+
+def adjudicate(
+    claim,
+    primary_evidence,
+    primary_verdict,
+    primary_doc_id,
+    prosecution,
+    verifier,
+    batch_size=DEFAULT_PROSECUTION_BATCH_SIZE,
+):
+    """Decide whether the Prosecutor's counter-evidence actually refutes `claim`.
+
+    Deterministic: every gate is an argmax label comparison or a set membership
+    test. No threshold, no tuned constant, no sampling.
+
+    Args:
+        claim: the claim under test.
+        primary_evidence: the baseline premise (the joined bundle arm D built).
+        primary_verdict: the baseline NLI verdict on that premise.
+        primary_doc_id: doc_id the baseline cited, for the provenance fallback.
+        prosecution: the record returned by `prosecute`.
+        verifier: the caller's already-constructed NLIVerifier. Only its public
+            `nli_pipeline` is read; no model is created.
+        batch_size: NLI batch size.
+
+    Returns:
+        dict with exactly ADJUDICATION_RESULT_KEYS. `override_applied` is True
+        only when the status is TRUE_CONTRADICTION and the baseline verdict is
+        not already CONTRADICTED; `adjudicated_verdict` is the baseline verdict
+        in every other case.
+    """
+    counter_evidence = prosecution.get("counter_evidence")
+    if not counter_evidence:
+        return _empty_adjudication(primary_verdict, "no_counter_evidence")
+    if not primary_evidence:
+        return _empty_adjudication(primary_verdict, "no_primary_evidence")
+
+    # Three directions arm E never computed, in one batched call:
+    #   reverse   : does the claim refute the counter-evidence? (symmetry)
+    #   coherence : does the baseline premise refute it?        (consistency)
+    #   primary   : the baseline premise's own distribution     (auditability)
+    scored = nli_results(
+        verifier.nli_pipeline,
+        [
+            (claim, counter_evidence),
+            (primary_evidence, counter_evidence),
+            (primary_evidence, claim),
+        ],
+        batch_size=batch_size,
+    )
+    (reverse_label, reverse_dist) = scored[0]
+    (coherence_label, coherence_dist) = scored[1]
+    (primary_label, primary_dist) = scored[2]
+
+    reverse_verdict = verdict_from_top_label(reverse_label)
+    primary_counter_verdict = verdict_from_top_label(coherence_label)
+
+    gates = {
+        "counter_evidence_present": True,
+        # 1. Contradiction holds in BOTH directions, so it is not merely topical.
+        "symmetric_contradiction": reverse_verdict == CONTRADICTED,
+        # 2. The baseline premise does not itself refute the counter-evidence.
+        "pool_coherent": primary_counter_verdict != CONTRADICTED,
+        # 3. The source does not positively entail the claim.
+        "uncontested_support": primary_verdict != SUPPORTED,
+        # 4. The counter-evidence reports a finding.
+        "finding_grounded": is_finding_grounded(
+            prosecution.get("counter_section"),
+            prosecution.get("counter_evidence_doc_id"),
+            primary_doc_id,
+        ),
+    }
+
+    # First failure decides, in order of what the gate actually establishes.
+    if not gates["symmetric_contradiction"]:
+        status, reason = (
+            NOT_CONTRADICTION,
+            "asymmetric_contradiction_claim_does_not_refute_counter_evidence",
+        )
+    elif not gates["pool_coherent"]:
+        status, reason = (
+            NOT_CONTRADICTION,
+            "primary_evidence_contradicts_counter_evidence_pool_inconsistent",
+        )
+    elif not gates["uncontested_support"]:
+        status, reason = INSUFFICIENT, "primary_evidence_entails_claim"
+    elif not gates["finding_grounded"]:
+        section = prosecution.get("counter_section") or SECTION_UNKNOWN
+        status, reason = (
+            INSUFFICIENT,
+            "counter_evidence_not_finding_grounded_section_" + str(section),
+        )
+    else:
+        section = prosecution.get("counter_section") or SECTION_UNKNOWN
+        status, reason = (
+            TRUE_CONTRADICTION,
+            "symmetric_contradiction_grounded_in_" + str(section),
+        )
+
+    # Only a validated contradiction may flip a prediction, and only upward:
+    # a baseline CONTRADICT is never downgraded.
+    override_applied = status == TRUE_CONTRADICTION and primary_verdict != CONTRADICTED
+    if status == TRUE_CONTRADICTION and primary_verdict == CONTRADICTED:
+        reason = reason + "_baseline_already_contradicted"
+
+    return {
+        "adjudication_status": status,
+        "adjudication_reason": reason,
+        "adjudication_gates": gates,
+        "baseline_verdict": primary_verdict,
+        "adjudicated_verdict": CONTRADICTED if override_applied else primary_verdict,
+        "override_applied": override_applied,
+        "primary_verdict_distribution": primary_dist,
+        "primary_p_contradiction": p_contradiction(primary_dist),
+        "primary_confidence": float(primary_dist.get(primary_label, 0.0)),
+        "reverse_verdict": reverse_verdict,
+        "reverse_p_contradiction": p_contradiction(reverse_dist),
+        "primary_counter_verdict": primary_counter_verdict,
+        "primary_counter_p_contradiction": p_contradiction(coherence_dist),
+    }
+
+
 def attach_prosecution(result, prosecution):
     """Merge a prosecution record into a baseline result, in place.
 
@@ -381,7 +691,8 @@ def attach_prosecution(result, prosecution):
             "prosecution keys would overwrite baseline result keys: "
             + str(collisions)
         )
-    unexpected = sorted(set(prosecution) - PROSECUTION_RESULT_KEYS)
+    allowed = PROSECUTION_RESULT_KEYS | ADJUDICATION_RESULT_KEYS
+    unexpected = sorted(set(prosecution) - allowed)
     if unexpected:
         raise RuntimeError(
             "prosecution record has undeclared keys: " + str(unexpected)

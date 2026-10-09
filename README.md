@@ -265,7 +265,7 @@ arms C and D were worth running.
 
 </details>
 
-## Novelty Layer 2 — Adversarial Claim Prosecution (in progress)
+## Novelty Layer 2 — Adversarial Claim Prosecution
 
 ### Arm H — oracle ceiling (diagnostic, complete)
 
@@ -313,6 +313,11 @@ claim
 It may discover a contradiction on a claim arm D called SUPPORT. That
 discovery is recorded and nothing else happens.
 
+**Validated at $N=504$:** prediction identity passed exactly — arm E
+reproduces 83.53% / 66.47% / 92.45%. Counter-evidence was found on **289/504**
+claims: **158/173** gold CONTRADICT and **131/331** gold SUPPORT, at a mean
+counter confidence of **0.9254**.
+
 **Why a passive arm exists at all.** It is the measured control. If arm E's
 predictions differ from arm D's by even one claim, the instrumentation is
 perturbing the measured path and every later arm built on it is
@@ -347,35 +352,132 @@ and counter-section distributions, candidate pool size, counter rank, how often
 the counter-evidence was already inside the baseline bundle, and
 confidence/`P(contradiction)` histograms.
 
-### Running arms D and E
+### Arm E acceptance check
 
 ```
-# A = single baseline
-python eval/evaluate.py --evidence_mode single
-
-# D = section-aware Multi-2 (current best)
-python eval/evaluate.py --evidence_mode section --max_sentences 2 --section_weight 0.05
-
-# E = D + Passive Prosecutor (predictions must match D exactly)
-python eval/evaluate.py --evidence_mode section --max_sentences 2 --section_weight 0.05 \
-                        --prosecution_mode passive
-
-# Acceptance check: runs both modes on one pipeline and exits non-zero
-# if any prediction differs
+# Runs both modes on one pipeline and exits non-zero if any prediction differs
 python verify_arm_e_identity.py --n_claims 504
 ```
 
-Arm E artifacts carry a `_prospassive` suffix so they can never be mistaken for
-their arm D twin, and `eval/results_n50.json` is written only when
-`--evidence_mode single --prosecution_mode off`.
+Arm E/F artifacts carry a `_prospassive` / `_prosactive` suffix so they can
+never be mistaken for their arm D twin, and `eval/results_n50.json` is written
+only when `--evidence_mode single --prosecution_mode off`.
+
+### Arm F — the Adjudicator (`prosecution_mode="active"`)
+
+**Why no threshold can work, proven by arm E.** Counter-evidence turns up on
+158/173 gold CONTRADICT *and* 131/331 gold SUPPORT, at a mean confidence of
+0.9254. Both populations carry high-confidence counter-evidence, so
+`P(contradiction)` is near-constant across the very distinction a decision rule
+has to make. There is no cut point to find — arm H's sweep confirmed it, with
+the best threshold (`tau=0.95`) still costing SUPPORT 12.4 points.
+
+So the Adjudicator reads **no magnitudes at all**. Arm E computed exactly one
+NLI direction: `NLI(premise=counter, hypothesis=claim)`. The Adjudicator adds
+two more and asks four categorical questions about the *relationship* between
+claim (C), primary evidence (P) and counter-evidence (X):
+
+| # | gate | test | what it rules out |
+|---|---|---|---|
+| 1 | **Symmetry** | `verdict(C → X) == CONTRADICTED` | Contradiction is symmetric: if X refutes C then C refutes X. A sentence that is merely topical, contextual, or contradictory to some *other* statement conflicts in one direction only — it carries scope the claim never addresses (a different subgroup, endpoint, or comparison) — and the reverse comes back neutral. **This is the "does it actually negate the claim" test.** |
+| 2 | **Coherence** | `verdict(P → X) != CONTRADICTED` | If the baseline premise refutes the counter-evidence, two retrieved sentences disagree with *each other*. `retrieve()` returns `top_n=2` documents, so this is the cross-study case — overriding there adjudicates a disagreement between papers, not a refutation of the claim. |
+| 3 | **Uncontested support** | `primary_verdict != SUPPORTED` | If the source positively entails the claim, a contradictory fragment elsewhere is not grounds to flip the label. Strongly asymmetric in our favour: in the $N=504$ baseline artifact 86 gold-SUPPORT claims verify as `SUPPORTED` against only 3 gold-CONTRADICT. |
+| 4 | **Finding-grounded** | counter section ∈ {`results`, `conclusions`}; or, when the heading is unrecoverable, counter doc == cited doc | A Background sentence can contradict a claim while describing prior literature or the open question ("Previous trials suggested no benefit"); a Methods sentence describes design. Neither refutes the claim on the study's own evidence. |
+
+Gates are evaluated in that order and the **first failure** determines the
+status and the recorded reason:
+
+```
+no counter-evidence        -> INSUFFICIENT
+symmetry fails             -> NOT_CONTRADICTION   (merely topical)
+coherence fails            -> NOT_CONTRADICTION   (inconsistent pool)
+uncontested-support fails  -> INSUFFICIENT        (source entails claim)
+finding-grounded fails     -> INSUFFICIENT        (not a reported finding)
+all four pass              -> TRUE_CONTRADICTION
+```
+
+Only `TRUE_CONTRADICTION` may change a prediction, and only in one direction:
+**baseline SUPPORT → CONTRADICT**. A baseline CONTRADICT is never downgraded, so
+the 115 CONTRADICT claims arm D already gets right cannot be lost. Every other
+status preserves the baseline verdict byte-for-byte, and `baseline_verdict`
+always records what arm D would have said.
+
+**Why this is not naive thresholding.** Three independent reasons, each covered
+by a test:
+
+1. **It consumes information arm E never had.** Two of the four gates require
+   NLI directions that were not computed before. This is new evidence, not a
+   re-reading of the same number.
+2. **It is invariant to confidence.** Sweeping `P(contradiction)` from 0.52 to
+   0.999 with the directions held fixed produces the identical decision; and a
+   0.999 one-directional contradiction is still rejected. Confidence cannot buy
+   an override.
+3. **No number is compared anywhere.** A structural test walks the AST of
+   `adjudicate()` and `is_finding_grounded()` and asserts that no numeric
+   constant appears in any comparison. Every gate is a label equality or a set
+   membership test, so the rule cannot silently become a threshold.
+
+**The safety property.** Every override carries an explicit
+`adjudication_status` and `adjudication_reason`; there is no code path where
+counter-evidence existing is sufficient. All four gate outcomes are recorded
+even when the first failure already decided, so the diagnostic shows *which*
+gate rejected what.
+
+**Cost:** 3 extra NLI forward passes per claim that has counter-evidence,
+batched into one call, on the same already-loaded model. Claims with no
+counter-evidence skip adjudication entirely.
+
+### Running arms D, E and F
+
+```
+# D = reference (current best)
+python eval/evaluate.py --evidence_mode section --max_sentences 2 --section_weight 0.05
+
+# E = passive control (predictions must match D exactly)
+python eval/evaluate.py --evidence_mode section --max_sentences 2 --section_weight 0.05 \
+                        --prosecution_mode passive
+
+# F = active adjudication. START HERE, on 50 stratified claims.
+python eval/evaluate.py --n_claims 50 --stratified --seed 42 \
+                        --evidence_mode section --max_sentences 2 --section_weight 0.05 \
+                        --prosecution_mode active
+```
+
+Because arm F records `baseline_verdict` per claim, **a single arm F run yields
+both arm D's predictions and arm F's**, so the tradeoff table needs no second
+run.
+
+### The metric that decides whether arm F ships
+
+Not peak CONTRADICT accuracy. The reported headline is the tradeoff:
+
+```
+CONTRADICT rescued:   +N        (gold CONTRADICT, arm D said SUPPORT)
+SUPPORT regressions:  -M        (gold SUPPORT, arm D said SUPPORT)
+net claims gained:    +(N-M)
+override precision:   N / overrides
+share of arm H's 44 recoverable misses rescued
+```
+
+Arm H bounded the upside at **44 recoverable misses**. A rule that rescues 20
+while regressing 25 is a loss, however much CONTRADICT accuracy rises. The
+50-claim run is inspected before the full 504 is attempted.
 
 ### Not built, deliberately
 
-No adjudication, no override, no threshold tuning, no claim rewriting, no
-Conflict Footnotes, no memory, no LangGraph integration, no persistence
-(`src/matrix.py` untouched). Arm E is instrumentation only. An adjudicating arm
-needs a discriminator better than raw NLI contradiction — arm H established
-that much — and arm E exists to collect the data for designing one.
+No threshold tuning, no claim rewriting, no Conflict Footnotes, no memory, no
+LangGraph integration, no persistence (`src/matrix.py` untouched), and no LLM
+call anywhere in the adjudicator.
+
+**One known inconsistency, deliberately left alone.** On an overridden claim
+arm F changes `verdict` but *not* `evidence`: the premise reported to the
+evaluator stays the baseline premise, because `eval/evaluate.py` computes
+faithfulness from that field and rewriting it would change the measured
+methodology mid-ablation. So an overridden claim cites a premise that no longer
+matches its verdict. `counter_evidence` and `counter_evidence_doc_id` are
+recorded for exactly this reason — repairing the citation is the deferred
+Conflict Footnote work, and it needs its own arm so the accuracy effect and the
+citation change are not confounded.
 
 ## What's NOT built yet — the actual next-phase work
 
@@ -459,7 +561,7 @@ src/
   retrieval.py     - HybridRetriever: semantic + BM25 + rerank
   extraction.py    - sentence extractor: single (validated) / multi / section
   sections.py      - scientific section detection + ranking prior (Task C)
-  prosecution.py   - Passive Prosecutor: counter-evidence search (arm E)
+  prosecution.py   - Prosecutor (arm E) + Adjudicator (arm F)
   verification.py  - NLIVerifier + label mapping
   pipeline.py      - orchestrates retrieve -> extract -> verify
   orchestration.py - LangGraph Synthesizer -> Prosecutor -> Adjudicator loop
@@ -470,6 +572,7 @@ eval/
 test_extraction_modes.py        - Task B: single baseline + multi-sentence MMR
 test_section_aware_evidence.py  - Task C: section detection + section-aware ranking
 test_passive_prosecution.py     - Arm E: passive prosecution + prediction invariance
+test_active_prosecution.py      - Arm F: adjudication gates + override safety
 
 inspect_oracle_ceiling.py       - Arm H diagnostic: contradiction headroom in the pool
 verify_arm_e_identity.py        - Arm E acceptance: arm D vs arm E prediction identity
@@ -480,7 +583,8 @@ known sentences onto hand-written unit vectors, so the real `cos_sim` still does
 the similarity math):
 
 ```
-pytest test_extraction_modes.py test_section_aware_evidence.py test_passive_prosecution.py
+pytest test_extraction_modes.py test_section_aware_evidence.py \
+       test_passive_prosecution.py test_active_prosecution.py
 ```
 
 The two diagnostic scripts carry offline self-tests that need neither models
