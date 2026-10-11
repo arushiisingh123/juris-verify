@@ -149,6 +149,20 @@ diagnostic shows which gate rejects what. There is no implicit
 "counter-evidence exists, therefore override": `override_applied` is True only
 alongside an explicit `adjudication_status` and `adjudication_reason`.
 
+CONFIGURABLE GATE SELECTION (added for the D1 validation)
+---------------------------------------------------------
+`required_gates` selects which gates may BLOCK an override. It defaults to all
+four -- the shipped arm F rule -- and nothing enables a different selection
+implicitly. Every gate outcome is computed and recorded regardless, so an
+artifact produced with a reduced selection remains fully reconstructable for
+later ablation, exactly as the default-mode artifacts were.
+
+The D1 ablation over the 504-claim arm F artifact found G4 to be the only
+net-harmful gate (-3 claims) and G1+G2+G3 the best subset (+0.99pp vs arm D,
+versus +0.40pp for all four). `required_gates=("g1","g2","g3")` exists to
+validate that reconstruction against a real run. It is not a redesign: G1, G2
+and G3 keep their exact semantics and evaluation order.
+
 WHAT ARM F DOES NOT DO
 ----------------------
 No LLM call, no threshold, no tuned constant -- every gate is an argmax label
@@ -488,6 +502,65 @@ INSUFFICIENT = "INSUFFICIENT"
 
 ADJUDICATION_STATUSES = (TRUE_CONTRADICTION, NOT_CONTRADICTION, INSUFFICIENT)
 
+# --- which gates are REQUIRED to override -------------------------------
+# Short name -> the key its outcome is recorded under. Every gate's outcome is
+# always computed and recorded regardless of this setting; the selection only
+# controls which ones are allowed to BLOCK an override. That is what kept the
+# D1 gate-subset ablation reconstructable offline, and it stays true here.
+ADJUDICATION_GATE_KEYS = {
+    "g1": "symmetric_contradiction",
+    "g2": "pool_coherent",
+    "g3": "uncontested_support",
+    "g4": "finding_grounded",
+}
+ADJUDICATION_GATE_NAMES = ("g1", "g2", "g3", "g4")
+
+# The shipped arm F rule. Must stay the default everywhere.
+DEFAULT_ADJUDICATION_GATES = ("g1", "g2", "g3", "g4")
+
+
+def parse_adjudication_gates(spec):
+    """Normalise a gate selection to a canonically-ordered tuple.
+
+    Accepts a comma-separated string ("g1,g2,g3") or any iterable of names.
+    Case- and whitespace-insensitive. Returns the names in ADJUDICATION_GATE_NAMES
+    order so the value is canonical regardless of how it was written.
+
+    Raises ValueError on an unknown name, a duplicate, or an empty selection.
+    An empty selection would be arm H's naive "any counter-evidence" rule, which
+    the D1 ablation already measured offline (71.23% overall, -62 claims); it is
+    rejected here so it cannot be reached by an accidental config.
+    """
+    if spec is None:
+        raise ValueError("adjudication_gates must not be None")
+    if isinstance(spec, str):
+        tokens = [token.strip().lower() for token in spec.split(",")]
+    else:
+        tokens = [str(token).strip().lower() for token in spec]
+    tokens = [token for token in tokens if token]
+
+    if not tokens:
+        raise ValueError(
+            "adjudication_gates must name at least one of "
+            + str(ADJUDICATION_GATE_NAMES)
+            + "; an empty selection is arm H's naive rule and is not runnable"
+        )
+
+    unknown = sorted(set(tokens) - set(ADJUDICATION_GATE_NAMES))
+    if unknown:
+        raise ValueError(
+            "unknown adjudication gate(s) " + str(unknown)
+            + "; valid names are " + str(ADJUDICATION_GATE_NAMES)
+        )
+
+    duplicates = sorted({token for token in tokens if tokens.count(token) > 1})
+    if duplicates:
+        raise ValueError(
+            "duplicate adjudication gate(s) " + str(duplicates)
+        )
+
+    return tuple(name for name in ADJUDICATION_GATE_NAMES if name in set(tokens))
+
 # Sections whose sentences report a finding, and so can ground an override.
 FINDING_SECTIONS = frozenset({SECTION_RESULTS, SECTION_CONCLUSIONS})
 # Sections whose sentences describe prior literature, the open question, or
@@ -500,6 +573,7 @@ ADJUDICATION_RESULT_KEYS = frozenset(
         "adjudication_status",
         "adjudication_reason",
         "adjudication_gates",
+        "adjudication_required_gates",
         "baseline_verdict",
         "adjudicated_verdict",
         "override_applied",
@@ -514,10 +588,11 @@ ADJUDICATION_RESULT_KEYS = frozenset(
 )
 
 
-def _empty_adjudication(baseline_verdict, reason):
+def _empty_adjudication(baseline_verdict, reason, required_gates):
     return {
         "adjudication_status": INSUFFICIENT,
         "adjudication_reason": reason,
+        "adjudication_required_gates": list(required_gates),
         "adjudication_gates": {
             "counter_evidence_present": False,
             "symmetric_contradiction": None,
@@ -565,6 +640,7 @@ def adjudicate(
     prosecution,
     verifier,
     batch_size=DEFAULT_PROSECUTION_BATCH_SIZE,
+    required_gates=DEFAULT_ADJUDICATION_GATES,
 ):
     """Decide whether the Prosecutor's counter-evidence actually refutes `claim`.
 
@@ -580,6 +656,10 @@ def adjudicate(
         verifier: the caller's already-constructed NLIVerifier. Only its public
             `nli_pipeline` is read; no model is created.
         batch_size: NLI batch size.
+        required_gates: which gates may BLOCK an override, as canonical names
+            (see parse_adjudication_gates). Defaults to all four -- the shipped
+            arm F rule. Disabling a gate does NOT stop its outcome being
+            computed and recorded, only its power to veto.
 
     Returns:
         dict with exactly ADJUDICATION_RESULT_KEYS. `override_applied` is True
@@ -587,11 +667,12 @@ def adjudicate(
         not already CONTRADICTED; `adjudicated_verdict` is the baseline verdict
         in every other case.
     """
+    required = tuple(required_gates)
     counter_evidence = prosecution.get("counter_evidence")
     if not counter_evidence:
-        return _empty_adjudication(primary_verdict, "no_counter_evidence")
+        return _empty_adjudication(primary_verdict, "no_counter_evidence", required)
     if not primary_evidence:
-        return _empty_adjudication(primary_verdict, "no_primary_evidence")
+        return _empty_adjudication(primary_verdict, "no_primary_evidence", required)
 
     # Three directions arm E never computed, in one batched call:
     #   reverse   : does the claim refute the counter-evidence? (symmetry)
@@ -629,20 +710,23 @@ def adjudicate(
         ),
     }
 
-    # First failure decides, in order of what the gate actually establishes.
-    if not gates["symmetric_contradiction"]:
+    # First failure among the REQUIRED gates decides, in the same order as
+    # before. A gate that is not required cannot veto, but its outcome above is
+    # still recorded. With the default selection this chain is identical to the
+    # pre-configuration one, branch for branch.
+    if "g1" in required and not gates["symmetric_contradiction"]:
         status, reason = (
             NOT_CONTRADICTION,
             "asymmetric_contradiction_claim_does_not_refute_counter_evidence",
         )
-    elif not gates["pool_coherent"]:
+    elif "g2" in required and not gates["pool_coherent"]:
         status, reason = (
             NOT_CONTRADICTION,
             "primary_evidence_contradicts_counter_evidence_pool_inconsistent",
         )
-    elif not gates["uncontested_support"]:
+    elif "g3" in required and not gates["uncontested_support"]:
         status, reason = INSUFFICIENT, "primary_evidence_entails_claim"
-    elif not gates["finding_grounded"]:
+    elif "g4" in required and not gates["finding_grounded"]:
         section = prosecution.get("counter_section") or SECTION_UNKNOWN
         status, reason = (
             INSUFFICIENT,
@@ -650,10 +734,20 @@ def adjudicate(
         )
     else:
         section = prosecution.get("counter_section") or SECTION_UNKNOWN
-        status, reason = (
-            TRUE_CONTRADICTION,
-            "symmetric_contradiction_grounded_in_" + str(section),
-        )
+        if required == DEFAULT_ADJUDICATION_GATES:
+            # Byte-identical to the shipped reason string, so default-mode
+            # artifacts stay comparable with every previous arm F run.
+            status, reason = (
+                TRUE_CONTRADICTION,
+                "symmetric_contradiction_grounded_in_" + str(section),
+            )
+        else:
+            # Self-describing for ablation runs: name the gates that actually
+            # had to pass, so a reason string cannot overstate what was checked.
+            status, reason = (
+                TRUE_CONTRADICTION,
+                "passed_" + "+".join(required) + "_section_" + str(section),
+            )
 
     # Only a validated contradiction may flip a prediction, and only upward:
     # a baseline CONTRADICT is never downgraded.
@@ -664,6 +758,7 @@ def adjudicate(
     return {
         "adjudication_status": status,
         "adjudication_reason": reason,
+        "adjudication_required_gates": list(required),
         "adjudication_gates": gates,
         "baseline_verdict": primary_verdict,
         "adjudicated_verdict": CONTRADICTED if override_applied else primary_verdict,

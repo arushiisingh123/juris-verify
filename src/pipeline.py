@@ -35,8 +35,10 @@ from src.extraction import (
     extract_best_evidence,
 )
 from src.prosecution import (
+    DEFAULT_ADJUDICATION_GATES,
     DEFAULT_PROSECUTION_MODE,
     adjudicate,
+    parse_adjudication_gates,
     attach_prosecution,
     prosecute,
     validate_prosecution_mode,
@@ -52,6 +54,7 @@ class JurisVerifyPipeline:
         max_sentences=DEFAULT_MAX_SENTENCES,
         section_weight=DEFAULT_SECTION_WEIGHT,
         prosecution_mode=DEFAULT_PROSECUTION_MODE,
+        adjudication_gates=DEFAULT_ADJUDICATION_GATES,
     ):
         """
         Args:
@@ -66,6 +69,9 @@ class JurisVerifyPipeline:
                 prediction; "active" additionally lets the Adjudicator flip a
                 baseline SUPPORT to CONTRADICT when it validates the
                 contradiction.
+            adjudication_gates: which gates may block an override in "active"
+                mode. Defaults to all four (the shipped arm F rule); every
+                gate's outcome is recorded regardless of the selection.
         """
         self.retriever = HybridRetriever(documents)
         self.verifier = NLIVerifier()
@@ -73,6 +79,7 @@ class JurisVerifyPipeline:
         self.max_sentences = max_sentences
         self.section_weight = section_weight
         self.prosecution_mode = validate_prosecution_mode(prosecution_mode)
+        self.adjudication_gates = parse_adjudication_gates(adjudication_gates)
 
     def predict_claim(self, claim):
         """Run the full pipeline on a single claim.
@@ -145,6 +152,7 @@ class JurisVerifyPipeline:
                     evidence_doc_id,
                     record,
                     self.verifier,
+                    required_gates=self.adjudication_gates,
                 )
                 record.update(adjudication)
 

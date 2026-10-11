@@ -30,8 +30,11 @@ import src.prosecution
 import src.verification
 from src.pipeline import JurisVerifyPipeline
 from src.prosecution import (
+    ADJUDICATION_GATE_KEYS,
+    ADJUDICATION_GATE_NAMES,
     ADJUDICATION_RESULT_KEYS,
     ADJUDICATION_STATUSES,
+    DEFAULT_ADJUDICATION_GATES,
     CONTRADICTED,
     INSUFFICIENT,
     NOT_CONTRADICTION,
@@ -42,6 +45,7 @@ from src.prosecution import (
     TRUE_CONTRADICTION,
     adjudicate,
     is_finding_grounded,
+    parse_adjudication_gates,
     prosecute,
 )
 from src.sections import (
@@ -259,6 +263,9 @@ def build_pipeline(prosecution_mode="off", pipe=None, documents=None, arm=None):
     pipeline.max_sentences = config["max_sentences"]
     pipeline.section_weight = config["section_weight"]
     pipeline.prosecution_mode = prosecution_mode
+    # predict_claim reads this in active mode; the real __init__ sets it, and
+    # this fixture bypasses __init__, so it must mirror the production default.
+    pipeline.adjudication_gates = DEFAULT_ADJUDICATION_GATES
     return pipeline
 
 
@@ -1015,3 +1022,254 @@ def test_eval_cli_accepts_all_three_modes():
             assert E.parse_args().prosecution_mode == mode
     finally:
         sys.argv = argv
+
+
+# ==========================================================================
+# Configurable gate selection (D1 validation support)
+# ==========================================================================
+
+def build_pipeline_with_gates(gates, prosecution_mode="active", pipe=None,
+                              documents=None, arm=None):
+    pipeline = build_pipeline(prosecution_mode, pipe=pipe, documents=documents, arm=arm)
+    pipeline.adjudication_gates = parse_adjudication_gates(gates)
+    return pipeline
+
+
+# --- 1. default mode is unchanged ---------------------------------------
+
+def test_default_gate_selection_is_all_four():
+    assert DEFAULT_ADJUDICATION_GATES == ("g1", "g2", "g3", "g4")
+    assert ADJUDICATION_GATE_NAMES == ("g1", "g2", "g3", "g4")
+    assert set(ADJUDICATION_GATE_KEYS) == set(ADJUDICATION_GATE_NAMES)
+
+    import eval.evaluate
+    import src.pipeline
+
+    pipeline_sig = inspect.signature(src.pipeline.JurisVerifyPipeline.__init__)
+    assert pipeline_sig.parameters["adjudication_gates"].default == DEFAULT_ADJUDICATION_GATES
+    eval_sig = inspect.signature(eval.evaluate.run_eval)
+    assert eval_sig.parameters["adjudication_gates"].default == DEFAULT_ADJUDICATION_GATES
+
+
+def test_explicit_default_selection_matches_implicit_default():
+    """Requirement 1: naming all four gates explicitly must be identical to not
+    naming any, down to the reason string, so previous arm F artifacts stay
+    comparable."""
+    implicit = build_pipeline("active").predict_claim(CLAIM)
+    explicit = build_pipeline_with_gates("g1,g2,g3,g4").predict_claim(CLAIM)
+
+    assert explicit["adjudication_required_gates"] == ["g1", "g2", "g3", "g4"]
+    for key in set(implicit) - {"adjudication_required_gates"}:
+        assert explicit[key] == implicit[key], key
+    assert explicit["adjudication_reason"] == (
+        "symmetric_contradiction_grounded_in_results"
+    )
+
+
+def test_adjudicate_default_argument_preserves_shipped_behaviour():
+    record, adjudication = adjudication_for(DirectionalNLIPipeline(SYMMETRIC))
+    assert adjudication["adjudication_required_gates"] == ["g1", "g2", "g3", "g4"]
+    assert adjudication["adjudication_status"] == TRUE_CONTRADICTION
+    assert adjudication["override_applied"] is True
+
+
+@pytest.mark.parametrize(
+    "scenario, pipe_factory",
+    [
+        ("asymmetric", lambda: DirectionalNLIPipeline({(S_RESULTS_COUNTER, CLAIM): 0.95})),
+        ("incoherent", lambda: DirectionalNLIPipeline(
+            {**SYMMETRIC, (PRIMARY_PREMISE, S_RESULTS_COUNTER): 0.95})),
+        ("no_counter", lambda: DirectionalNLIPipeline({})),
+        ("symmetric", lambda: DirectionalNLIPipeline(SYMMETRIC)),
+    ],
+)
+def test_default_selection_unchanged_across_scenarios(scenario, pipe_factory):
+    implicit = build_pipeline("active", pipe=pipe_factory()).predict_claim(CLAIM)
+    explicit = build_pipeline_with_gates(
+        "g1,g2,g3,g4", pipe=pipe_factory()
+    ).predict_claim(CLAIM)
+    for key in set(implicit) - {"adjudication_required_gates"}:
+        assert explicit[key] == implicit[key], f"{scenario}:{key}"
+
+
+# --- 2. G4-disabled mode requires G1+G2+G3 ------------------------------
+
+def test_g4_disabled_still_requires_g1():
+    """With g4 dropped, an asymmetric contradiction must still be refused."""
+    pipe = DirectionalNLIPipeline({(S_RESULTS_COUNTER, CLAIM): 0.95})
+    result = build_pipeline_with_gates("g1,g2,g3", pipe=pipe).predict_claim(CLAIM)
+    assert result["adjudication_status"] == NOT_CONTRADICTION
+    assert result["adjudication_reason"] == (
+        "asymmetric_contradiction_claim_does_not_refute_counter_evidence"
+    )
+    assert result["override_applied"] is False
+
+
+def test_g4_disabled_still_requires_g2():
+    pipe = DirectionalNLIPipeline(
+        {**SYMMETRIC, (PRIMARY_PREMISE, S_RESULTS_COUNTER): 0.95}
+    )
+    result = build_pipeline_with_gates("g1,g2,g3", pipe=pipe).predict_claim(CLAIM)
+    assert result["adjudication_status"] == NOT_CONTRADICTION
+    assert result["adjudication_reason"] == (
+        "primary_evidence_contradicts_counter_evidence_pool_inconsistent"
+    )
+    assert result["override_applied"] is False
+
+
+def test_g4_disabled_still_requires_g3():
+    pipe = EntailingNLIPipeline(SYMMETRIC, entailing={PRIMARY_PREMISE})
+    result = build_pipeline_with_gates("g1,g2,g3", pipe=pipe).predict_claim(CLAIM)
+    assert result["adjudication_status"] == INSUFFICIENT
+    assert result["adjudication_reason"] == "primary_evidence_entails_claim"
+    assert result["override_applied"] is False
+
+
+def test_g4_disabled_admits_a_background_counter_the_default_refuses():
+    """The one behavioural difference: a symmetric, coherent, uncontested
+    contradiction in a Background section is refused by the default rule and
+    admitted with g4 dropped."""
+    scripted = {(S_OBJECTIVE, CLAIM): 0.96, (CLAIM, S_OBJECTIVE): 0.94}
+    default = build_pipeline(
+        "active", pipe=DirectionalNLIPipeline(dict(scripted))
+    ).predict_claim(CLAIM)
+    reduced = build_pipeline_with_gates(
+        "g1,g2,g3", pipe=DirectionalNLIPipeline(dict(scripted))
+    ).predict_claim(CLAIM)
+
+    assert default["counter_section"] == SECTION_BACKGROUND
+    assert default["adjudication_status"] == INSUFFICIENT
+    assert default["override_applied"] is False
+    assert normalize_for_scifact_eval(default["verdict"]) == "SUPPORT"
+
+    assert reduced["counter_section"] == SECTION_BACKGROUND
+    assert reduced["adjudication_status"] == TRUE_CONTRADICTION
+    assert reduced["override_applied"] is True
+    assert normalize_for_scifact_eval(reduced["verdict"]) == "CONTRADICT"
+    # The reason names what actually had to pass, so it cannot overstate.
+    assert reduced["adjudication_reason"] == "passed_g1+g2+g3_section_background"
+
+
+def test_every_gate_outcome_is_still_recorded_when_disabled():
+    """Dropping a gate must not stop its outcome being computed -- that is what
+    keeps the artifact reconstructable for later ablation."""
+    pipe = DirectionalNLIPipeline(
+        {(S_OBJECTIVE, CLAIM): 0.96, (CLAIM, S_OBJECTIVE): 0.94}
+    )
+    result = build_pipeline_with_gates("g1,g2,g3", pipe=pipe).predict_claim(CLAIM)
+    gates = result["adjudication_gates"]
+    for name, key in ADJUDICATION_GATE_KEYS.items():
+        assert isinstance(gates[key], bool), name
+    # g4 was evaluated and failed, yet did not veto.
+    assert gates["finding_grounded"] is False
+    assert result["override_applied"] is True
+    assert result["adjudication_required_gates"] == ["g1", "g2", "g3"]
+
+
+@pytest.mark.parametrize("gates", ["g3", "g1,g3", "g2,g3", "g1,g2", "g4", "g2,g3,g4"])
+def test_only_configured_gates_can_veto(gates):
+    """Requirement 4, generally: a gate outside the selection must never block,
+    and a gate inside it must block when it fails."""
+    required = parse_adjudication_gates(gates)
+    # A counter that fails g1 (asymmetric) and g4 (background); passes g2, g3.
+    pipe = DirectionalNLIPipeline({(S_OBJECTIVE, CLAIM): 0.96})
+    result = build_pipeline_with_gates(gates, pipe=pipe).predict_claim(CLAIM)
+    failing = {
+        name for name, key in ADJUDICATION_GATE_KEYS.items()
+        if result["adjudication_gates"][key] is False
+    }
+    blocked = bool(failing & set(required))
+    assert result["override_applied"] is not blocked
+    if not blocked:
+        assert result["adjudication_status"] == TRUE_CONTRADICTION
+
+
+# --- 3. baseline CONTRADICT is never downgraded -------------------------
+
+@pytest.mark.parametrize("gates", ["g1,g2,g3", "g1,g2,g3,g4", "g3", "g1", "g2,g4"])
+def test_baseline_contradict_never_downgraded_under_any_selection(gates):
+    record = {
+        "counter_evidence": S_RESULTS_COUNTER,
+        "counter_section": SECTION_RESULTS,
+        "counter_evidence_doc_id": DOC_ID,
+    }
+    adjudication = adjudicate(
+        CLAIM, PRIMARY_PREMISE, CONTRADICTED, DOC_ID, record,
+        FakeVerifier(DirectionalNLIPipeline(SYMMETRIC)),
+        required_gates=parse_adjudication_gates(gates),
+    )
+    assert adjudication["adjudicated_verdict"] == CONTRADICTED
+    assert adjudication["override_applied"] is False
+
+
+@pytest.mark.parametrize("gates", ["g1,g2,g3", "g3"])
+def test_reduced_selection_never_changes_a_contradict_prediction(gates):
+    """End to end: whatever the selection, a baseline CONTRADICT survives."""
+    scripted = dict(SYMMETRIC)
+    scripted[(PRIMARY_PREMISE, CLAIM)] = 0.97
+    pipeline = build_pipeline_with_gates(gates, pipe=DirectionalNLIPipeline(scripted))
+    result = pipeline.predict_claim(CLAIM)
+    assert result["baseline_verdict"] == CONTRADICTED
+    assert result["verdict"] == CONTRADICTED
+    assert result["override_applied"] is False
+
+
+# --- 5. invalid configurations fail clearly -----------------------------
+
+@pytest.mark.parametrize(
+    "spec", ["", "   ", "g5", "g0", "G9", "g1,g5", "g1,g1", "symmetry", ",", None, []]
+)
+def test_invalid_gate_specs_rejected(spec):
+    with pytest.raises(ValueError):
+        parse_adjudication_gates(spec)
+
+
+@pytest.mark.parametrize(
+    "spec, expected",
+    [
+        ("g1,g2,g3", ("g1", "g2", "g3")),
+        ("g3,g1", ("g1", "g3")),
+        (" G3 , g1 ", ("g1", "g3")),
+        (["g2", "g4"], ("g2", "g4")),
+        ("g4", ("g4",)),
+        ("g1,g2,g3,g4", ("g1", "g2", "g3", "g4")),
+    ],
+)
+def test_valid_gate_specs_normalised_canonically(spec, expected):
+    assert parse_adjudication_gates(spec) == expected
+
+
+def test_empty_selection_is_rejected_as_the_naive_rule():
+    with pytest.raises(ValueError, match="at least one"):
+        parse_adjudication_gates([])
+
+
+def test_pipeline_rejects_an_invalid_gate_selection():
+    with pytest.raises(ValueError):
+        parse_adjudication_gates("g7")
+    pipeline = JurisVerifyPipeline.__new__(JurisVerifyPipeline)
+    with pytest.raises(ValueError):
+        pipeline.adjudication_gates = parse_adjudication_gates("nope")
+
+
+def test_eval_cli_exposes_adjudication_gates():
+    import sys
+
+    import eval.evaluate as E
+
+    argv = sys.argv
+    try:
+        sys.argv = ["evaluate.py"]
+        assert E.parse_args().adjudication_gates == "g1,g2,g3,g4"
+        sys.argv = ["evaluate.py", "--adjudication_gates", "g1,g2,g3"]
+        assert E.parse_args().adjudication_gates == "g1,g2,g3"
+    finally:
+        sys.argv = argv
+
+
+def test_reduced_selection_is_deterministic():
+    results = [
+        build_pipeline_with_gates("g1,g2,g3").predict_claim(CLAIM) for _ in range(5)
+    ]
+    for other in results[1:]:
+        assert other == results[0]

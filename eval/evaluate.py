@@ -23,8 +23,10 @@ from src.extraction import (
     MAX_BUNDLE_SENTENCES,
 )
 from src.prosecution import (
+    ADJUDICATION_GATE_NAMES,
     ADJUDICATION_RESULT_KEYS,
     ADJUDICATION_STATUSES,
+    DEFAULT_ADJUDICATION_GATES,
     DEFAULT_PROSECUTION_MODE,
     PROSECUTION_MODES,
     PROSECUTION_RESULT_KEYS,
@@ -518,6 +520,7 @@ def run_eval(
     max_sentences: int = DEFAULT_MAX_SENTENCES,
     section_weight: float = DEFAULT_SECTION_WEIGHT,
     prosecution_mode: str = DEFAULT_PROSECUTION_MODE,
+    adjudication_gates=DEFAULT_ADJUDICATION_GATES,
 ):
     """Run evaluation over the SciFact dataset with accuracy and dual faithfulness reporting.
 
@@ -544,6 +547,7 @@ def run_eval(
         max_sentences=max_sentences,
         section_weight=section_weight,
         prosecution_mode=prosecution_mode,
+        adjudication_gates=adjudication_gates,
     )
 
     eval_claims = get_eval_subset(unique_claims, n_claims=n_claims, stratified=stratified, seed=seed)
@@ -693,6 +697,10 @@ def run_eval(
             ),
             "section_weight": section_weight if evidence_mode == "section" else None,
             "prosecution_mode": prosecution_mode,
+            "adjudication_gates": (
+                list(pipeline.adjudication_gates)
+                if prosecution_mode == "active" else None
+            ),
             "runtime_seconds": round(elapsed, 2),
             "seconds_per_claim": round(sec_per_claim, 4),
         },
@@ -741,6 +749,12 @@ def run_eval(
             # Arm E artifacts must never be mistaken for their arm D twin,
             # even though the prediction metrics are identical by design.
             mode_suffix += f"_pros{prosecution_mode}"
+        if (
+            prosecution_mode == "active"
+            and tuple(pipeline.adjudication_gates) != DEFAULT_ADJUDICATION_GATES
+        ):
+            # A reduced gate selection is a different experiment.
+            mode_suffix += "_gates" + "".join(pipeline.adjudication_gates)
         out_filename = os.path.join(
             output_dir, f"results_{timestamp_str}_n{len(eval_claims)}{mode_suffix}.json"
         )
@@ -840,6 +854,21 @@ def parse_args():
             "CONTRADICT when it validates the contradiction)"
         ),
     )
+    parser.add_argument(
+        "--adjudication_gates",
+        type=str,
+        default=",".join(DEFAULT_ADJUDICATION_GATES),
+        help=(
+            "Comma-separated gates that may BLOCK an override in "
+            "--prosecution_mode active: any of "
+            + ",".join(ADJUDICATION_GATE_NAMES)
+            + " (g1=symmetry, g2=coherence, g3=uncontested support, "
+            "g4=finding-grounded). Default "
+            + ",".join(DEFAULT_ADJUDICATION_GATES)
+            + " = the shipped arm F rule. Every gate's outcome is recorded "
+            "regardless of this setting; it only controls which may veto"
+        ),
+    )
     return parser.parse_args()
 
 
@@ -856,5 +885,6 @@ if __name__ == "__main__":
         max_sentences=args.max_sentences,
         section_weight=args.section_weight,
         prosecution_mode=args.prosecution_mode,
+        adjudication_gates=args.adjudication_gates,
     )
 
