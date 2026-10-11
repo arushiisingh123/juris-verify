@@ -1,0 +1,885 @@
+{
+  "metadata": {
+    "study": "blind re-annotation of arm F G1+G2+G3 overrides",
+    "purpose": "The published scope-alignment failure analysis was labelled by one annotator who knew each case's outcome and was looking for a scope pattern. This dataset re-presents the same cases with every outcome signal removed, so the pattern can be tested against labels that could not have been fitted to it.",
+    "source_artifact": "eval/results_20261011_160640_n504_section2_w0.05_prosactive_gatesg1g2g3.json",
+    "n_cases": 42,
+    "case_composition": "The 42 claims whose prediction the G1+G2+G3 adjudicator changed. The split between correct and incorrect overrides is deliberately not stated here.",
+    "exposed_fields": [
+      "case_id",
+      "claim",
+      "primary_evidence",
+      "counter_evidence"
+    ],
+    "withheld_fields": [
+      "adjudicated_verdict",
+      "adjudication_gates",
+      "adjudication_reason",
+      "adjudication_required_gates",
+      "adjudication_status",
+      "baseline_prediction",
+      "baseline_verdict",
+      "claim_index",
+      "counter_confidence",
+      "counter_evidence_doc_id",
+      "counter_in_d_selection",
+      "counter_p_contradiction",
+      "counter_score",
+      "counter_section",
+      "evidence_doc_id",
+      "gold",
+      "matrix_label",
+      "override_applied",
+      "override_correct",
+      "prediction",
+      "primary_counter_p_contradiction",
+      "reverse_p_contradiction",
+      "strict_faithfulness",
+      "verdict",
+      "weighted_faithfulness"
+    ],
+    "ordering": "Deterministic: cases sorted by sha256(SALT|claim|counter_evidence). Not a seeded RNG, so the case_id -> claim_index mapping can be recomputed from the artifact alone and no key file needs to exist.",
+    "ordering_salt": "juris-verify-blind-2026-10-11",
+    "annotation_schema": {
+      "population_alignment": {
+        "allowed_values": [
+          "SAME",
+          "DIFFERENT",
+          "NOT_APPLICABLE",
+          "UNCLEAR"
+        ],
+        "question": "Do the claim and the counter-evidence concern the same population, subjects, cells, or study group?"
+      },
+      "intervention_alignment": {
+        "allowed_values": [
+          "SAME",
+          "DIFFERENT",
+          "NOT_APPLICABLE",
+          "UNCLEAR"
+        ],
+        "question": "Do they concern the same intervention, exposure, agent, gene, drug, or programme?"
+      },
+      "outcome_alignment": {
+        "allowed_values": [
+          "SAME",
+          "DIFFERENT",
+          "NOT_APPLICABLE",
+          "UNCLEAR"
+        ],
+        "question": "Do they concern the same outcome or phenomenon?"
+      },
+      "endpoint_alignment": {
+        "allowed_values": [
+          "SAME",
+          "DIFFERENT",
+          "NOT_APPLICABLE",
+          "UNCLEAR"
+        ],
+        "question": "Do they use the same specific measured endpoint? (An outcome can match while the endpoint differs -- e.g. 'cancer risk' vs 'mammographic density'.)"
+      },
+      "context_alignment": {
+        "allowed_values": [
+          "SAME",
+          "DIFFERENT",
+          "NOT_APPLICABLE",
+          "UNCLEAR"
+        ],
+        "question": "Do they share the same setting or conditions -- in vivo vs in vitro, species, disease state, dose regime?"
+      },
+      "causal_relation_alignment": {
+        "allowed_values": [
+          "SAME",
+          "DIFFERENT",
+          "NOT_APPLICABLE",
+          "UNCLEAR"
+        ],
+        "question": "Do they assert the same kind of relation between the same entities (causes / is required for / is associated with / interacts with)?"
+      },
+      "direction": {
+        "allowed_values": [
+          "OPPOSITE",
+          "SAME",
+          "NOT_APPLICABLE",
+          "UNCLEAR"
+        ],
+        "question": "Relative to the claim, does the counter-evidence point the OPPOSITE way on a shared axis, or the SAME way?"
+      },
+      "overall_scope_match": {
+        "allowed_values": [
+          "YES",
+          "NO",
+          "UNCLEAR"
+        ],
+        "question": "Taken together, are the claim and the counter-evidence about the same proposition -- i.e. could one in principle confirm or refute the other?"
+      },
+      "genuine_contradiction": {
+        "allowed_values": [
+          "YES",
+          "NO",
+          "UNCLEAR"
+        ],
+        "question": "Does the counter-evidence actually contradict the claim?"
+      }
+    },
+    "free_text_field": "annotator_notes",
+    "annotations_performed": false
+  },
+  "cases": [
+    {
+      "case_id": "C01",
+      "claim": "Most termination events in Okazaki fragments are dictated by initiation patterns.",
+      "primary_evidence": "Via the deep sequencing of Okazaki fragments, we comprehensively document replication fork directionality throughout the S. Using a strain in which late origins can be induced to fire early, we show that replication termination is a largely passive phenomenon that does not rely on cis-acting sequences or replication fork pausing.",
+      "counter_evidence": "The replication profile is predominantly determined by the kinetics of origin firing, allowing us to reconstruct chromosome-wide timing profiles from an asynchronous culture.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C02",
+      "claim": "Reducing H3k4me3 methylation induces mouse epiblast stem cells to naive pluripotency efficiently.",
+      "primary_evidence": "Here, we show that blocking histone H3K4 methyltransferase MLL1 activity with the small-molecule inhibitor MM-401 reprograms mouse epiblast stem cells (EpiSCs) to naive pluripotency. These findings show that discrete perturbation of H3K4 methylation is sufficient to drive reprogramming to naive pluripotency.",
+      "counter_evidence": "Upon withdrawal of 2i/LIF, naive mouse ES cells can drift towards a primed pluripotent state resembling that of the post-implantation epiblast.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C03",
+      "claim": "Women with a lower birth weight are more likely to develop breast cancer later in life.",
+      "primary_evidence": "We reviewed the available evidence on the association between birthweight and the risk of breast cancer. Birth weight is a significant predictor of breast cancer risk in adult life and mammary gland mass could be an intermediate stage in this long process.",
+      "counter_evidence": "Compared to women weighing 3001-3500 grams at birth, women with birth weights >4000g were at almost 3-fold risk of developing high mammographic density (odds ratio: 2.9, 95% confidence interval 1.1 to 7.9).",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C04",
+      "claim": "Citrullinated proteins externalized in neutrophil extracellular traps act indirectly to disrupt the inflammatory cycle.",
+      "primary_evidence": "Neutrophils isolated from patients with various autoimmune diseases display enhanced neutrophil extracellular trap (NET) formation, a phenomenon that exposes autoantigens in the context of immunostimulatory molecules. CONCLUSIONS Citrullinated H4 from activated neutrophils and NETs is a target of antibodies in RA, and synthetic citrullinated H4-derived peptides are a new substrate for ACPA detection.",
+      "counter_evidence": "In turn, NETs significantly augmented inflammatory responses in RA and OA synovial fibroblasts, including induction of IL-6, IL-8, chemokines, and adhesion molecules.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C05",
+      "claim": "Charcoal is an effective treatment for acute paraquat poisoning.",
+      "primary_evidence": "The present study retrospectively analyzed 19 patients diagnosed with paraquat (PQ) poisoning with the aim to investigate the effect of activated charcoal hemoperfusion on renal function and PQ elimination. There was a linear correlation between plasma and urine paraquat concentration prior to and during activated charcoal hemoperfusion.",
+      "counter_evidence": "Activated charcoal hemoperfusion had little effect on avoiding acute kidney injury in patients with severe PQ poisoning.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C06",
+      "claim": "Klf4 is not required for proper myeloid cell differentiation.",
+      "primary_evidence": "In addition, inducible expression of KLF4 in the HL60 human acute myeloid leukemia cell line stimulated monocytic differentiation and enhanced 12-O-tetradecanoylphorbol 13-acetate induced macrophage differentiation, but blocked all-trans-retinoic acid induced granulocytic differentiation of HL60 cells. Simultaneous depletion of Klf2, Klf4 and Klf5 lead to ES cell differentiation.",
+      "counter_evidence": "The inflammation-selective effects of loss-of-KLF4 and the gain-of-KLF4-induced monocytic differentiation in HL60 cells identify KLF4 as a key regulator of monocytic differentiation and a potential target for translational immune modulation.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C07",
+      "claim": "Diminished ovarian reserve is a reliable indicator of infertility in a non-infertile population.",
+      "primary_evidence": "Objective To determine the associations between biomarkers of ovarian reserve and reproductive potential among women of late reproductive age. Conclusions and Relevance Among women aged 30 to 44 years without a history of infertility who had been trying to conceive for 3 months or less, biomarkers indicating diminished ovarian reserve compared with normal ovarian reserve were not associated with reduced fertility.",
+      "counter_evidence": "Conclusions and Relevance Among women aged 30 to 44 years without a history of infertility who had been trying to conceive for 3 months or less, biomarkers indicating diminished ovarian reserve compared with normal ovarian reserve were not associated with reduced fertility.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C08",
+      "claim": "Cholesterol loading induces KLF4 expression in VSMCs, resulting in the expression of pro-inflammatory cytokines.",
+      "primary_evidence": "We used a pan-DC, CD11c-specific cre-lox gene knockout mouse model to assess the role of KLF2 in DC activation, function, and control of inflammation in the context of hypercholesterolemia and atherosclerosis. Membrane cholesterol modulates a variety of cell signaling pathways and functions.",
+      "counter_evidence": "Here we show overt pro-inflammatory effects of HDL-mediated passive cholesterol depletion and lipid raft disruption in murine and human primary macrophages in vitro.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C09",
+      "claim": "Patients with common epithelial cancers are less likely to have an emergency event as their first hospital admission if they live in resource-deprived areas.",
+      "primary_evidence": "RESULTS Patients from deprived areas, older people, and women were more likely to be admitted as emergencies. Patients with colonic cancer were very significantly less likely to receive any treatment if they came from any but the most affluent area (ORs 0.639, 0.603 and 0.544 in increasingly deprived quartiles), this may have been exacerbated if the hospital was distant from their residence (OR for forth quartile for both travel and deprivation 0.731, not significant).",
+      "counter_evidence": "RESULTS Patients from deprived areas, older people, and women were more likely to be admitted as emergencies.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C10",
+      "claim": "Human embryonic stem cells give rise to cell types from the outer embryonic germ layer, but not the other two layers.",
+      "primary_evidence": "When grafted into SCID mice, both lines give rise to teratomas containing derivatives of all three embryonic germ layers. Embryonic stem cells provide a model to study early human embryology, an investigational tool for discovery of novel growth factors and medicines, and a potential source of cells for use in transplantation therapy.",
+      "counter_evidence": "After undifferentiated proliferation in vitro for 4 to 5 months, these cells still maintained the developmental potential to form trophoblast and derivatives of all three embryonic germ layers, including gut epithelium (endoderm); cartilage, bone, smooth muscle, and striated muscle (mesoderm); and neural epithelium, embryonic ganglia, and stratified squamous epithelium (ectoderm).",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C11",
+      "claim": "Bariatric surgery increases rates of postmenopausal breast cancer.",
+      "primary_evidence": "Bariatric surgery was, however, consistently associated with postoperative decreases in the prevalence of depression (7 studies; 8%-74% decrease) and the severity of depressive symptoms (6 studies; 40%-70% decrease). Widening the availability of bariatric surgery could lead to substantial health b",
+      "counter_evidence": "No association was detected between bariatric surgery and fractures, cancer, or stroke.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C12",
+      "claim": "CD28 initiates tonic signaling in conventional T cells, which causes an exhaustion phenotype and limited efficiency.",
+      "primary_evidence": "CD28 is one of the molecules that provide costimulatory signals for T cells. To our knowledge, this is the first report describing an essential role for CD28 in protective immunity against an intracellular microbial pathogen.",
+      "counter_evidence": "We further determine that CD28 costimulation augments, whereas 4-1BB costimulation reduces, exhaustion induced by persistent CAR signaling.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C13",
+      "claim": "Commelina yellow mottle virus (ComYMV) has three typical badnavirus ORFs, capable of encoding proteins 23, 15, and 216 kD.",
+      "primary_evidence": "We have characterized the viral transcript and determined the complete sequence of the genome of Commelina mellow mottle virus (CoYMV), a member of this group. A new badnavirus was discovered from pagoda trees showing yellow mosaic symptoms on the leaves by high throughput sequencing of small RNAs.",
+      "counter_evidence": "Analysis of the viral transcript indicates that the virus encodes a single terminally-redundant genome-length plus 120 nucleotide transcript.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C14",
+      "claim": "Deltex has no known interactions with eIF3f.",
+      "primary_evidence": "We show that eIF3f has an intrinsic DUB activity. Knocking down eIF3f leads to an accumulation of monoubiquitinated forms of activated Notch, an effect counteracted by murine WT eIF3f but not by a catalytically inactive mutant.",
+      "counter_evidence": "We also show that eIF3f is recruited to activated Notch on endocytic vesicles by the putative E3 ubiquitin ligase Deltex1, which serves as a bridging factor.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C15",
+      "claim": "Pyridostatin reduces proliferation of homologous recombination - defective cells.",
+      "primary_evidence": "Treatment with the G4-stabilizing compound pyridostatin (PDS) increases telomere fragility in BRCA2-deficient cells, suggesting that G4 formation drives telomere instability. BLM, WRN, and p53 are involved in the homologous DNA recombination pathway.",
+      "counter_evidence": "Treatment with the G4-stabilizing compound pyridostatin (PDS) increases telomere fragility in BRCA2-deficient cells, suggesting that G4 formation drives telomere instability.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C16",
+      "claim": "Cognitive behavioral therapy is an ineffective treatment for insomnia",
+      "primary_evidence": "OBJECTIVE To examine short- and long-term clinical efficacy of cognitive behavioral therapy (CBT) and pharmacological treatment in older adults experiencing chronic primary insomnia. Data from this study on the treatment of chronic, severe insomnia (a small subset of all insomnia) are not generalizable to the typical insomnia patient.",
+      "counter_evidence": "RESULTS CBT resulted in improved short- and long-term outcomes compared with zopiclone on 3 out of 4 outcome measures.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C17",
+      "claim": "Removal of H3K9me3 by ectopic expression of other H3K9 demethylases decreases reprogramming efficiency in SCNT experiments.",
+      "primary_evidence": "Here we show that overexpression of a related H3K9me3 demethylase KDM4A improves human SCNT, and that, as in mice, H3K9me3 in the human somatic cell genome is an SCNT reprogramming barrier. Furthermore, we show that interactions between RNA and KDM4E are essential for H3K9 demethylation during EGA.",
+      "counter_evidence": "Here we show that overexpression of a related H3K9me3 demethylase KDM4A improves human SCNT, and that, as in mice, H3K9me3 in the human somatic cell genome is an SCNT reprogramming barrier.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C18",
+      "claim": "Bariatric surgery increases rates of colorectal cancer.",
+      "primary_evidence": "Widening the availability of bariatric surgery could lead to substantial health b Bariatric surgery was, however, consistently associated with postoperative decreases in the prevalence of depression (7 studies; 8%-74% decrease) and the severity of depressive symptoms (6 studies; 40%-70% decrease).",
+      "counter_evidence": "No association was detected between bariatric surgery and fractures, cancer, or stroke.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C19",
+      "claim": "Medications to treat obesity are highly effective.",
+      "primary_evidence": "To succeed in developing drugs that control body weight to the extent seen following surgical intervention, it seems obvious that a new paradigm is needed. OBJECTIVE To summarise the long term efficacy of anti-obesity drugs in reducing weight and improving health status.",
+      "counter_evidence": "It is therefore unsurprising that anti-obesity drug discovery programmes have been littered with false starts, failures in clinical development, and withdrawals due to adverse effects that were not fully appreciated at the time of launch.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C20",
+      "claim": "Human embryonic stem cells give rise to cell types from all three embryonic germ layers.",
+      "primary_evidence": "When grafted into SCID mice, both lines give rise to teratomas containing derivatives of all three embryonic germ layers. Embryonic stem cells provide a model to study early human embryology, an investigational tool for discovery of novel growth factors and medicines, and a potential source of cells for use in transplantation therapy.",
+      "counter_evidence": "Both cell lines differentiate in vitro into extraembryonic and somatic cell lineages.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C21",
+      "claim": "G-CSF increases the expansion and infiltration of MDSCs into tumors.",
+      "primary_evidence": "Inhibiting this pathway or its activators (for example, FGFR) impairs tumour progression, which is partially rescued by restoring MDSCs or G-CSF. Tumour-initiating cells (TICs) exhibit elevated G-CSF.",
+      "counter_evidence": "CSF1 produced by tumor cells caused HDAC2-mediated downregulation of granulocyte-specific chemokine expression in CAF, which limited migration of these cells to tumors.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C22",
+      "claim": "Notch signaling occurs between tumor cells and stromal cells.",
+      "primary_evidence": "We recently demonstrated that Notch signaling is involved in proliferation and survival of B cell-derived tumor cells of classic Hodgkin disease and described a novel mechanism for the oncogenic capacity of Notch. In this study we investigated whether Notch signaling is involved in the tight interactions between neoplastic plasma cells and their bone marrow microenvironment, which are essential for tumor cell growth in multiple myeloma (MM).",
+      "counter_evidence": "Notch receptors expressed on hematopoietic stem cells interact with their ligands on bone marrow stromal cells and thereby control cell fate decisions and survival.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C23",
+      "claim": "Taking 400mg of α-tocopheryl acetate in combination with vitamin C reduces the risk of prostate cancer.",
+      "primary_evidence": "CONCLUSIONS In this large, long-term trial of male physicians, neither vitamin E nor C supplementation reduced the risk of prostate or total cancer. Some human and animal studies indicate that plasma concentrations of gamma-tocopherol are inversely associated with the incidence of cardiovascular disease and prostate cancer.",
+      "counter_evidence": "CONCLUSIONS In this large, long-term trial of male physicians, neither vitamin E nor C supplementation reduced the risk of prostate or total cancer.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C24",
+      "claim": "Pioneer factor OCT3/4 interacts with major chromatin remodeling factors.",
+      "primary_evidence": "Purified Oct4, Sox2, and Klf4 proteins can bind nucleosomes in vitro, and in vivo they preferentially target silent sites enriched for nucleosomes. Our findings provide insight into how pioneer factors can target naive chromatin sites.",
+      "counter_evidence": "FoxA, the paradigm pioneer TF, has a winged helix DBD that resembles linker histone and thereby binds its target sites on nucleosomes and in compacted chromatin.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C25",
+      "claim": "Systemic immunosuppressive (IS) therapy increases the chance of cancer mortality in patients with inflammatory eye disease (IED)",
+      "primary_evidence": "DESIGN Retrospective cohort study evaluating overall and cancer mortality in relation to immunosuppressive drug exposure among patients with ocular inflammatory diseases. For patients unexposed to immunosuppressive treatment, risks of death overall (standardised mortality ratio 1.02, 95% confidence interval [CI] 0.94 to 1.11) and from cancer (1.10, 0.93 to 1.29) were similar to those of the US population.",
+      "counter_evidence": "Patients who used azathioprine, methotrexate, mycophenolate mofetil, ciclosporin, systemic corticosteroids, or dapsone had overall and cancer mortality similar to that of patients who never took immunosuppressive drugs.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C26",
+      "claim": "The DESMOND program demonstrates no significant impact on biochemical outcomes.",
+      "primary_evidence": "The overall evidence rating was low to very low for important outcomes such as pre-eclampsia, gestational diabetes, gestational hypertension, and preterm delivery. No patients received ALK inhibitor therapy.",
+      "counter_evidence": "Dietary intervention resulted in the largest reduction in maternal gestational weight gain (3.84 kg, 2.45 to 5.22 kg), with improved pregnancy outcomes compared with other interventions.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C27",
+      "claim": "32% of liver transplantation programs required patients to discontinue methadone treatment in 2001.",
+      "primary_evidence": "Patients receiving methadone maintenance are accepted by 56% of the responding programs. Approximately 180 patients receiving methadone maintenance are reported to have undergone liver transplantation.",
+      "counter_evidence": "Ninety-four percent have addiction treatment requirements.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C28",
+      "claim": "PKG-la does not have a large impact on expression of spinal long term potentiation in PGK-la knockout mice.",
+      "primary_evidence": "Here, we found that Protein Kinase G1 (PKG-I) localized presynaptically in nociceptor terminals plays an essential role in the expression of spinal LTP. Furthermore, we show that the knockout mice exhibited significant abnormalities in spine morphology and in synaptic function, including enhanced hippocampal long-term potentiation.",
+      "counter_evidence": "Patch clamp recordings showed that activity-induced LTP at identified synapses between nociceptors and spinal neurons projecting to the periaqueductal grey (PAG) was completely abolished in SNS-PKG-I(-/-) mice, although basal synaptic transmission was not affected.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C29",
+      "claim": "Incidence of heart failure increased by 10% in women since 1979.",
+      "primary_evidence": "RESULTS The incidence of heart failure was higher among men (378/100 000 persons; 95% confidence interval [CI], 361-395 for men; 289/100 000 persons; 95% CI, 277-300 for women) and did not change over time among men or women. CONCLUSION In this community-based cohort, the incidence of heart failure has not declined during 2 decades, but survival after onset of heart failure has increased overall, with less improvement among women and elderly persons.",
+      "counter_evidence": "RESULTS The incidence of heart failure was higher among men (378/100 000 persons; 95% confidence interval [CI], 361-395 for men; 289/100 000 persons; 95% CI, 277-300 for women) and did not change over time among men or women.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C30",
+      "claim": "Repressing IL-18 has negative effects on atherosclerotic lesion composition and progression.",
+      "primary_evidence": "IL-18 was highly expressed in the atherosclerotic plaques compared with control normal arteries and was localized mainly in plaque macrophages. CONCLUSIONS These results suggest, for the first time, a major role for IL-18 in atherosclerotic plaque destabilization leading to acute ischemic syndromes.",
+      "counter_evidence": "Interruption of IL18 action reduces atherosclerosis in mice.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C31",
+      "claim": "Pre-mRNAs associated with spliceosomal components are less stable than unassociated splicing substrates.",
+      "primary_evidence": "In order to provide both accuracy to the recognition of reactive splice sites in the pre-mRNA and flexibility to the choice of splice sites during alternative splicing, the spliceosome exhibits exceptional compositional and structural dynamics that are exploited during substrate-dependent complex assembly, catalytic activation, and active site remodeling. Furthermore, the process of transcription influences alternative splicing of newly synthesized pre-mRNAs.",
+      "counter_evidence": "Pol II-synthesized RNAs containing functional splice sites are protected from nuclear degradation, presumably because the local concentration of the splicing machinery is sufficiently high to ensure its association over interactions with nucleases.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C32",
+      "claim": "Cost effectiveness evaluations based on cRCT data accurately reflect prices for patients in actual clinical practice.",
+      "primary_evidence": "The objective of this study was to evaluate the external validity of published cost-effectiveness studies by comparing the data used in these studies (typically based on RCTs) to observational data from actual clinical practice. CONCLUSION Evaluating the cost effectiveness of prognostic biomarkers is important even when effects at an individual level are small.",
+      "counter_evidence": "CONCLUSIONS The published cost-effectiveness analyses of coxibs lacked external validity, did not represent patients in actual clinical practice, and should not have been used to inform prescribing policies.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C33",
+      "claim": "The density of cytokine receptor bearing cells has no effect on the distance over which cytokines act.",
+      "primary_evidence": "Here, we used theoretical considerations and experimental models of immune responses in vitro and in vivo to quantify the spatial extent of cytokine communications in dense tissues. Such heterogeneous distributions of cytokines were a source of non‐genetic cell‐to‐cell variability that is often overlooked in single‐cell studies.",
+      "counter_evidence": "The size of these self‐assembled niches scaled with the density of cytokine‐consuming cells, a parameter that gets tuned during immune responses.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C34",
+      "claim": "The recruitment of Wdr5 to its target loci depends on Kat8.",
+      "primary_evidence": "FISH showed that, although they were heterogeneous, breakpoints on 9p resulted in the partial or complete deletion of PAX5. This approach identified 5 fusion gene partners with PAX5: LOC392027 (7p12.1), SLCO1B3 (12p12), ASXL1 (20q11.1), KIF3B (20q11.21), and C20orf112 (20q11.1).",
+      "counter_evidence": "FISH showed that, although they were heterogeneous, breakpoints on 9p resulted in the partial or complete deletion of PAX5.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C35",
+      "claim": "Splenomegaly is observed in knockin mouse lacking the SHP-2 MAPK pathway.",
+      "primary_evidence": "The SHP2 signal-deficient mice (gp130F759/F759 were born normal but displayed splenomegaly and lymphadenopathy and an enhanced acute phase reaction. Neural cell-fate decisions were similarly perturbed in a mouse knockin model that phenocopies human NS.",
+      "counter_evidence": "Here, we demonstrate that genetic knockdown of SHP-2 in cultured cortical precursors or in the embryonic cortex inhibited basal neurogenesis and caused enhanced and precocious astrocyte formation.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C36",
+      "claim": "The DESMOND program demonstrates no significant impact on lifestyles outcomes.",
+      "primary_evidence": "With all interventions combined, there were no significant differences in birth weight (mean difference -50 g, -100 to 0 g) and the incidence of large for gestational age (relative risk 0.85, 0.66 to 1.09) or small for gestational age (1.00, 0.78 to 1.28) babies between the groups, though by itself physical activity was associated with reduced birth weight (mean difference -60 g, -120 to -10 g). The overall evidence rating was low to very low for important outcomes such as pre-eclampsia, gestational diabetes, gestational hypertension, and preterm delivery.",
+      "counter_evidence": "Dietary intervention resulted in the largest reduction in maternal gestational weight gain (3.84 kg, 2.45 to 5.22 kg), with improved pregnancy outcomes compared with other interventions.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C37",
+      "claim": "The risk of cancer rises with level of alcohol consumption.",
+      "primary_evidence": "RESULTS Drinkers of wine outside meals exhibited higher death rates from all causes, noncardiovascular diseases, and cancer, as compared to drinkers of wine with meals. It has been hypothesized, and preliminary data support the notion, that drinking pattern could have important influences on determining the health effects of alcohol (13,14).",
+      "counter_evidence": "Wine, particularly red wine, has high levels of phenolic compounds that favorably influence multiple biochemical systems, such as increased high-density lipoprotein cholesterol, antioxidant activity, decreased platelet aggregation and endothelial adhesion, suppression of cancer cell growth, and promotion of nitric oxide production.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C38",
+      "claim": "Asymptomatic visual impairment screening in elderly populations leads to improved vision.",
+      "primary_evidence": "OBJECTIVE To assess whether population screening for impaired vision among older people in the community leads to improvements in vision. Visual impairment in this age group can usually be reduced with treatment.",
+      "counter_evidence": "CONCLUSIONS Screening of asymptomatic older people in the community is not justified on present evidence.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C39",
+      "claim": "Chenodeoxycholic acid treatment decreases brown adipose tissue activity.",
+      "primary_evidence": "Brown fat is also able to utilize blood glucose and lipid and results in improved glucose metabolism and blood lipid independent of weight loss. The inducible brown adipocyte, beige adipocyte evolving by thermogenic activation of white adipose tissue have different origin and molecular signature from classical brown adipocytes but share the characteristics of high mitochondria content, UCP1 expression and thermogenic capacity when activated.",
+      "counter_evidence": "Treatment of 12 healthy female subjects with CDCA for 2 days resulted in increased BAT activity.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C40",
+      "claim": "The peak incidence of fractures occurs in toddlers.",
+      "primary_evidence": "CONCLUSIONS There has been a statistically significant increase in the incidence of distal forearm fractures in children and adolescents, but whether this is due to changing patterns of physical activity, decreased bone acquisition due to poor calcium intake, or both is unclear at present. Given the large number of childhood fractures, however, studies are needed to define the cause(s) of this increase.",
+      "counter_evidence": "CONTEXT The incidence of distal forearm fractures in children peaks around the time of the pubertal growth spurt, possibly because physical activity increases at the time of a transient deficit in cortical bone mass due to the increased calcium demand during maximal skeletal growth.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C41",
+      "claim": "A diminished ovarian reserve is a very strong indicator of infertility, even in an a priori non-infertile population.",
+      "primary_evidence": "Objective To determine the associations between biomarkers of ovarian reserve and reproductive potential among women of late reproductive age. Conclusions and Relevance Among women aged 30 to 44 years without a history of infertility who had been trying to conceive for 3 months or less, biomarkers indicating diminished ovarian reserve compared with normal ovarian reserve were not associated with reduced fertility.",
+      "counter_evidence": "Conclusions and Relevance Among women aged 30 to 44 years without a history of infertility who had been trying to conceive for 3 months or less, biomarkers indicating diminished ovarian reserve compared with normal ovarian reserve were not associated with reduced fertility.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    },
+    {
+      "case_id": "C42",
+      "claim": "Natriuretic peptides increase susceptibility to diabetes.",
+      "primary_evidence": "Further studies are needed to investigate the mechanisms underlying this association and possibilities for preventive interventions. This review considers research in the field of type 1 diabetes toward identifying disease mechanisms using genetic approaches.",
+      "counter_evidence": "In participants of our case-cohort study who were free of T2D and cardiovascular disease at baseline, we observed a 21% (95% CI 3%-36%) decreased risk of incident T2D per one standard deviation (SD) higher log-transformed NT-pro-BNP levels in analysis adjusted for age, sex, body mass index, systolic blood pressure, smoking, family history of T2D, history of hypertension, and levels of triglycerides, high-density lipoprotein cholesterol, and low-density lipoprotein cholesterol.",
+      "annotation": {
+        "population_alignment": null,
+        "intervention_alignment": null,
+        "outcome_alignment": null,
+        "endpoint_alignment": null,
+        "context_alignment": null,
+        "causal_relation_alignment": null,
+        "direction": null,
+        "overall_scope_match": null,
+        "genuine_contradiction": null,
+        "annotator_notes": null
+      }
+    }
+  ]
+}
