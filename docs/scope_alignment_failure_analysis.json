@@ -1,0 +1,2551 @@
+{
+  "metadata": {
+    "experiment": "scope_alignment_failure_analysis",
+    "analysis_only": true,
+    "rule_analysed": "G1+G2+G3 (G4 disabled)",
+    "source_artifact": "eval/results_20261009_085502_n504_section2_w0.05_prosactive.json",
+    "source_note": "The G4-off artifact eval/results_20261011_160640_n504_section2_w0.05_prosactive_gatesg1g2g3.json is NOT present in this repository. The G1+G2+G3 case list is reconstructed from the default-mode arm F artifact, which stores every gate outcome and all NLI distributions per claim. The reconstruction yields 24 rescues (matching the reported run) and 19 regressions (reported: 18) -- see metadata.reconciliation.",
+    "taxonomy": [
+      "population mismatch",
+      "intervention mismatch",
+      "outcome mismatch",
+      "endpoint mismatch",
+      "direction mismatch",
+      "temporal mismatch",
+      "context/condition mismatch",
+      "causal/relation mismatch",
+      "evidence granularity mismatch",
+      "ambiguous/other"
+    ],
+    "dimensions": [
+      "population",
+      "intervention",
+      "outcome",
+      "endpoint",
+      "temporal",
+      "context/condition",
+      "causal/relation"
+    ],
+    "label_provenance": "Case selection, provenance and NLI figures are computed from the artifact. Mismatch labels and preserved-dimension labels are human judgements assigned after reading all 43 claim/counter-evidence pairs."
+  },
+  "summary": {
+    "n_regressions": 19,
+    "n_rescues": 24,
+    "mismatch_label_counts": {
+      "population mismatch": {
+        "n": 7,
+        "pct_of_regressions": 36.8
+      },
+      "intervention mismatch": {
+        "n": 8,
+        "pct_of_regressions": 42.1
+      },
+      "outcome mismatch": {
+        "n": 8,
+        "pct_of_regressions": 42.1
+      },
+      "endpoint mismatch": {
+        "n": 2,
+        "pct_of_regressions": 10.5
+      },
+      "direction mismatch": {
+        "n": 2,
+        "pct_of_regressions": 10.5
+      },
+      "temporal mismatch": {
+        "n": 0,
+        "pct_of_regressions": 0.0
+      },
+      "context/condition mismatch": {
+        "n": 2,
+        "pct_of_regressions": 10.5
+      },
+      "causal/relation mismatch": {
+        "n": 2,
+        "pct_of_regressions": 10.5
+      },
+      "evidence granularity mismatch": {
+        "n": 5,
+        "pct_of_regressions": 26.3
+      },
+      "ambiguous/other": {
+        "n": 2,
+        "pct_of_regressions": 10.5
+      }
+    },
+    "preserved_dimension_counts": {
+      "population": {
+        "preserved": {
+          "n": 22,
+          "pct_of_rescues": 91.7
+        },
+        "mismatched": {
+          "n": 0,
+          "pct_of_rescues": 0.0
+        },
+        "n/a": {
+          "n": 2,
+          "pct_of_rescues": 8.3
+        }
+      },
+      "intervention": {
+        "preserved": {
+          "n": 18,
+          "pct_of_rescues": 75.0
+        },
+        "mismatched": {
+          "n": 0,
+          "pct_of_rescues": 0.0
+        },
+        "n/a": {
+          "n": 6,
+          "pct_of_rescues": 25.0
+        }
+      },
+      "outcome": {
+        "preserved": {
+          "n": 23,
+          "pct_of_rescues": 95.8
+        },
+        "mismatched": {
+          "n": 1,
+          "pct_of_rescues": 4.2
+        },
+        "n/a": {
+          "n": 0,
+          "pct_of_rescues": 0.0
+        }
+      },
+      "endpoint": {
+        "preserved": {
+          "n": 22,
+          "pct_of_rescues": 91.7
+        },
+        "mismatched": {
+          "n": 2,
+          "pct_of_rescues": 8.3
+        },
+        "n/a": {
+          "n": 0,
+          "pct_of_rescues": 0.0
+        }
+      },
+      "temporal": {
+        "preserved": {
+          "n": 1,
+          "pct_of_rescues": 4.2
+        },
+        "mismatched": {
+          "n": 1,
+          "pct_of_rescues": 4.2
+        },
+        "n/a": {
+          "n": 22,
+          "pct_of_rescues": 91.7
+        }
+      },
+      "context/condition": {
+        "preserved": {
+          "n": 24,
+          "pct_of_rescues": 100.0
+        },
+        "mismatched": {
+          "n": 0,
+          "pct_of_rescues": 0.0
+        },
+        "n/a": {
+          "n": 0,
+          "pct_of_rescues": 0.0
+        }
+      },
+      "causal/relation": {
+        "preserved": {
+          "n": 24,
+          "pct_of_rescues": 100.0
+        },
+        "mismatched": {
+          "n": 0,
+          "pct_of_rescues": 0.0
+        },
+        "n/a": {
+          "n": 0,
+          "pct_of_rescues": 0.0
+        }
+      }
+    },
+    "discriminative": {
+      "regressions_with_any_non_direction_mismatch": {
+        "n": 19,
+        "pct": 100.0
+      },
+      "rescues_with_core_dimension_mismatch": {
+        "n": 2,
+        "pct": 8.3,
+        "claim_indices": [
+          83,
+          494
+        ]
+      },
+      "rescues_with_direction_inversion": {
+        "n": 24,
+        "pct": 100.0
+      },
+      "regressions_with_direction_inversion": {
+        "n": 2,
+        "pct": 10.5,
+        "claim_indices": [
+          88,
+          368
+        ]
+      }
+    },
+    "provenance_crosstab": {
+      "rescues": {
+        "cross_document": 12,
+        "g4_would_have_blocked": 11,
+        "counter_in_baseline_bundle": 6,
+        "sections": {
+          "unknown": 15,
+          "conclusions": 3,
+          "results": 4,
+          "methods": 1,
+          "background": 1
+        }
+      },
+      "regressions": {
+        "cross_document": 8,
+        "g4_would_have_blocked": 8,
+        "counter_in_baseline_bundle": 2,
+        "sections": {
+          "unknown": 14,
+          "methods": 2,
+          "results": 2,
+          "conclusions": 1
+        }
+      }
+    },
+    "reconciliation": {
+      "reconstructed_regressions": 19,
+      "reported_regressions_in_g4off_run": 18,
+      "deviation": 1,
+      "reconstructed_rescues": 24,
+      "reported_rescues_in_g4off_run": 24,
+      "most_likely_to_have_flipped": [
+        {
+          "claim_index": 391,
+          "claim_to_counter_p_contradiction": 0.6410179138183594
+        },
+        {
+          "claim_index": 338,
+          "claim_to_counter_p_contradiction": 0.7129027843475342
+        },
+        {
+          "claim_index": 452,
+          "claim_to_counter_p_contradiction": 0.7429829835891724
+        },
+        {
+          "claim_index": 285,
+          "claim_to_counter_p_contradiction": 0.7716442346572876
+        }
+      ]
+    }
+  },
+  "regressions": [
+    {
+      "claim_index": 2,
+      "kind": "regression",
+      "gold": "SUPPORT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": false,
+      "claim": "32% of liver transplantation programs required patients to discontinue methadone treatment in 2001.",
+      "primary_evidence": "Patients receiving methadone maintenance are accepted by 56% of the responding programs. Approximately 180 patients receiving methadone maintenance are reported to have undergone liver transplantation.",
+      "primary_doc_id": "44265107",
+      "primary_section": "unknown",
+      "counter_evidence": "Ninety-four percent have addiction treatment requirements.",
+      "counter_doc_id": "44265107",
+      "counter_section": "unknown",
+      "cross_document": false,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.8638067841529846,
+        "claim_to_counter_p_contradiction": 0.9986521601676941,
+        "primary_to_counter_p_contradiction": 0.002087740693241358,
+        "primary_to_claim_p_contradiction": 0.0009942654287442565,
+        "counter_confidence": 0.8638067841529846,
+        "counter_margin": 0.7295141816139221,
+        "counter_distribution": {
+          "contradiction": 0.8638067841529846,
+          "neutral": 0.1342926025390625,
+          "entailment": 0.0019006739603355527
+        },
+        "primary_distribution": {
+          "neutral": 0.9986039996147156,
+          "contradiction": 0.0009942654287442565,
+          "entailment": 0.00040171953151002526
+        }
+      },
+      "candidate_pool_size": 29,
+      "mismatch_labels": [
+        "endpoint mismatch",
+        "evidence granularity mismatch"
+      ],
+      "analysis": "Claim is about the 32% of programs requiring methadone DISCONTINUATION; counter reports the 94% that have ANY addiction-treatment requirement. Two different statistics over the same survey, not opposing values of one."
+    },
+    {
+      "claim_index": 55,
+      "kind": "regression",
+      "gold": "SUPPORT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": false,
+      "claim": "Bariatric surgery increases rates of colorectal cancer.",
+      "primary_evidence": "Widening the availability of bariatric surgery could lead to substantial health b Bariatric surgery was, however, consistently associated with postoperative decreases in the prevalence of depression (7 studies; 8%-74% decrease) and the severity of depressive symptoms (6 studies; 40%-70% decrease).",
+      "primary_doc_id": "5824985",
+      "primary_section": "conclusions",
+      "counter_evidence": "No association was detected between bariatric surgery and fractures, cancer, or stroke.",
+      "counter_doc_id": "5824985",
+      "counter_section": "methods",
+      "cross_document": false,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": false
+      },
+      "g4_would_have_blocked": true,
+      "adjudication_status": "INSUFFICIENT",
+      "adjudication_reason_default_run": "counter_evidence_not_finding_grounded_section_methods",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.989433228969574,
+        "claim_to_counter_p_contradiction": 0.9994706511497498,
+        "primary_to_counter_p_contradiction": 0.0007278022239916027,
+        "primary_to_claim_p_contradiction": 0.05216635763645172,
+        "counter_confidence": 0.989433228969574,
+        "counter_margin": 0.9790195925161242,
+        "counter_distribution": {
+          "contradiction": 0.989433228969574,
+          "neutral": 0.010413636453449726,
+          "entailment": 0.00015315493510570377
+        },
+        "primary_distribution": {
+          "neutral": 0.9475236535072327,
+          "contradiction": 0.05216635763645172,
+          "entailment": 0.00030988972866907716
+        }
+      },
+      "candidate_pool_size": 31,
+      "mismatch_labels": [
+        "outcome mismatch",
+        "evidence granularity mismatch"
+      ],
+      "analysis": "Claim names colorectal cancer specifically; counter reports no association with aggregate 'fractures, cancer, or stroke'. An aggregate null does not negate a site-specific effect."
+    },
+    {
+      "claim_index": 56,
+      "kind": "regression",
+      "gold": "SUPPORT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": false,
+      "claim": "Bariatric surgery increases rates of postmenopausal breast cancer.",
+      "primary_evidence": "Bariatric surgery was, however, consistently associated with postoperative decreases in the prevalence of depression (7 studies; 8%-74% decrease) and the severity of depressive symptoms (6 studies; 40%-70% decrease). Widening the availability of bariatric surgery could lead to substantial health b",
+      "primary_doc_id": "5824985",
+      "primary_section": "conclusions",
+      "counter_evidence": "No association was detected between bariatric surgery and fractures, cancer, or stroke.",
+      "counter_doc_id": "5824985",
+      "counter_section": "methods",
+      "cross_document": false,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": false
+      },
+      "g4_would_have_blocked": true,
+      "adjudication_status": "INSUFFICIENT",
+      "adjudication_reason_default_run": "counter_evidence_not_finding_grounded_section_methods",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9751356244087219,
+        "claim_to_counter_p_contradiction": 0.9993133544921875,
+        "primary_to_counter_p_contradiction": 0.0003256236668676138,
+        "primary_to_claim_p_contradiction": 0.02077031508088112,
+        "counter_confidence": 0.9751356244087219,
+        "counter_margin": 0.9504960514605045,
+        "counter_distribution": {
+          "contradiction": 0.9751356244087219,
+          "neutral": 0.024639572948217392,
+          "entailment": 0.00022482714848592877
+        },
+        "primary_distribution": {
+          "neutral": 0.9789005517959595,
+          "contradiction": 0.02077031508088112,
+          "entailment": 0.00032902657403610647
+        }
+      },
+      "candidate_pool_size": 31,
+      "mismatch_labels": [
+        "outcome mismatch",
+        "evidence granularity mismatch"
+      ],
+      "analysis": "Same as 55 with postmenopausal breast cancer: specific site vs aggregate 'cancer' null."
+    },
+    {
+      "claim_index": 69,
+      "kind": "regression",
+      "gold": "SUPPORT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": false,
+      "claim": "CD28 initiates tonic signaling in conventional T cells, which causes an exhaustion phenotype and limited efficiency.",
+      "primary_evidence": "CD28 is one of the molecules that provide costimulatory signals for T cells. To our knowledge, this is the first report describing an essential role for CD28 in protective immunity against an intracellular microbial pathogen.",
+      "primary_doc_id": "35651106",
+      "primary_section": "unknown",
+      "counter_evidence": "We further determine that CD28 costimulation augments, whereas 4-1BB costimulation reduces, exhaustion induced by persistent CAR signaling.",
+      "counter_doc_id": 18231807,
+      "counter_section": "unknown",
+      "cross_document": true,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": false
+      },
+      "g4_would_have_blocked": true,
+      "adjudication_status": "INSUFFICIENT",
+      "adjudication_reason_default_run": "counter_evidence_not_finding_grounded_section_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9890685677528381,
+        "claim_to_counter_p_contradiction": 0.9810537695884705,
+        "primary_to_counter_p_contradiction": 0.00015354731294792145,
+        "primary_to_claim_p_contradiction": 0.0359298437833786,
+        "counter_confidence": 0.9890685677528381,
+        "counter_margin": 0.9793531242758036,
+        "counter_distribution": {
+          "contradiction": 0.9890685677528381,
+          "neutral": 0.009715443477034569,
+          "entailment": 0.0012160303303971887
+        },
+        "primary_distribution": {
+          "neutral": 0.9634386301040649,
+          "contradiction": 0.0359298437833786,
+          "entailment": 0.0006315555656328797
+        }
+      },
+      "candidate_pool_size": 13,
+      "mismatch_labels": [
+        "population mismatch",
+        "context/condition mismatch",
+        "causal/relation mismatch"
+      ],
+      "analysis": "Claim is CD28 tonic signalling in CONVENTIONAL T cells; counter is CD28 costimulation under PERSISTENT CAR signalling. Both say CD28 increases exhaustion, so the directions actually agree -- the NLI contradiction comes from the contrastive 'augments, whereas 4-1BB reduces' framing."
+    },
+    {
+      "claim_index": 88,
+      "kind": "regression",
+      "gold": "SUPPORT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": false,
+      "claim": "Cholesterol loading induces KLF4 expression in VSMCs, resulting in the expression of pro-inflammatory cytokines.",
+      "primary_evidence": "We used a pan-DC, CD11c-specific cre-lox gene knockout mouse model to assess the role of KLF2 in DC activation, function, and control of inflammation in the context of hypercholesterolemia and atherosclerosis. Membrane cholesterol modulates a variety of cell signaling pathways and functions.",
+      "primary_doc_id": "5979056",
+      "primary_section": "unknown",
+      "counter_evidence": "Here we show overt pro-inflammatory effects of HDL-mediated passive cholesterol depletion and lipid raft disruption in murine and human primary macrophages in vitro.",
+      "counter_doc_id": "29509926",
+      "counter_section": "unknown",
+      "cross_document": true,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": false
+      },
+      "g4_would_have_blocked": true,
+      "adjudication_status": "INSUFFICIENT",
+      "adjudication_reason_default_run": "counter_evidence_not_finding_grounded_section_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9979436993598938,
+        "claim_to_counter_p_contradiction": 0.997080385684967,
+        "primary_to_counter_p_contradiction": 0.2118167281150818,
+        "primary_to_claim_p_contradiction": 0.01088481955230236,
+        "counter_confidence": 0.9979436993598938,
+        "counter_margin": 0.9962049642344937,
+        "counter_distribution": {
+          "contradiction": 0.9979436993598938,
+          "neutral": 0.001738735125400126,
+          "entailment": 0.0003175761958118528
+        },
+        "primary_distribution": {
+          "neutral": 0.9879872798919678,
+          "contradiction": 0.01088481955230236,
+          "entailment": 0.001127811730839312
+        }
+      },
+      "candidate_pool_size": 15,
+      "mismatch_labels": [
+        "intervention mismatch",
+        "population mismatch",
+        "direction mismatch"
+      ],
+      "analysis": "Cholesterol LOADING in VSMCs vs HDL-mediated cholesterol DEPLETION in macrophages. Opposite exposure, different cell type; KLF4 absent from the counter entirely."
+    },
+    {
+      "claim_index": 95,
+      "kind": "regression",
+      "gold": "SUPPORT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": false,
+      "claim": "Commelina yellow mottle virus (ComYMV) has three typical badnavirus ORFs, capable of encoding proteins 23, 15, and 216 kD.",
+      "primary_evidence": "We have characterized the viral transcript and determined the complete sequence of the genome of Commelina mellow mottle virus (CoYMV), a member of this group. A new badnavirus was discovered from pagoda trees showing yellow mosaic symptoms on the leaves by high throughput sequencing of small RNAs.",
+      "primary_doc_id": "14376683",
+      "primary_section": "unknown",
+      "counter_evidence": "Analysis of the viral transcript indicates that the virus encodes a single terminally-redundant genome-length plus 120 nucleotide transcript.",
+      "counter_doc_id": "14376683",
+      "counter_section": "unknown",
+      "cross_document": false,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9440388083457947,
+        "claim_to_counter_p_contradiction": 0.9510303735733032,
+        "primary_to_counter_p_contradiction": 0.0009428987978026271,
+        "primary_to_claim_p_contradiction": 0.0007319112773984671,
+        "counter_confidence": 0.9440388083457947,
+        "counter_margin": 0.8891159817576408,
+        "counter_distribution": {
+          "contradiction": 0.9440388083457947,
+          "neutral": 0.05492282658815384,
+          "entailment": 0.0010383856715634465
+        },
+        "primary_distribution": {
+          "neutral": 0.9988993406295776,
+          "contradiction": 0.0007319112773984671,
+          "entailment": 0.00036874759825877845
+        }
+      },
+      "candidate_pool_size": 20,
+      "mismatch_labels": [
+        "endpoint mismatch",
+        "evidence granularity mismatch"
+      ],
+      "analysis": "Three ORFs (claim) vs a single genome-length transcript (counter). ORFs and transcripts are different molecular objects -- one transcript can carry three ORFs, so the counts are not in conflict."
+    },
+    {
+      "claim_index": 150,
+      "kind": "regression",
+      "gold": "SUPPORT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": false,
+      "claim": "G-CSF increases the expansion and infiltration of MDSCs into tumors.",
+      "primary_evidence": "Inhibiting this pathway or its activators (for example, FGFR) impairs tumour progression, which is partially rescued by restoring MDSCs or G-CSF. Tumour-initiating cells (TICs) exhibit elevated G-CSF.",
+      "primary_doc_id": "2014909",
+      "primary_section": "unknown",
+      "counter_evidence": "CSF1 produced by tumor cells caused HDAC2-mediated downregulation of granulocyte-specific chemokine expression in CAF, which limited migration of these cells to tumors.",
+      "counter_doc_id": "3559136",
+      "counter_section": "unknown",
+      "cross_document": true,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": false
+      },
+      "g4_would_have_blocked": true,
+      "adjudication_status": "INSUFFICIENT",
+      "adjudication_reason_default_run": "counter_evidence_not_finding_grounded_section_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9664375185966492,
+        "claim_to_counter_p_contradiction": 0.9372076392173767,
+        "primary_to_counter_p_contradiction": 0.10971369594335556,
+        "primary_to_claim_p_contradiction": 0.0006645856774412096,
+        "counter_confidence": 0.9664375185966492,
+        "counter_margin": 0.9353562630712986,
+        "counter_distribution": {
+          "contradiction": 0.9664375185966492,
+          "neutral": 0.03108125552535057,
+          "entailment": 0.002481275936588645
+        },
+        "primary_distribution": {
+          "neutral": 0.9981081485748291,
+          "entailment": 0.0012271442683413625,
+          "contradiction": 0.0006645856774412096
+        }
+      },
+      "candidate_pool_size": 14,
+      "mismatch_labels": [
+        "intervention mismatch",
+        "population mismatch"
+      ],
+      "analysis": "Claim concerns G-CSF and MDSCs; counter concerns CSF1, HDAC2 and granulocyte chemokines in CAFs. Different cytokine, different cell populations."
+    },
+    {
+      "claim_index": 179,
+      "kind": "regression",
+      "gold": "SUPPORT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": false,
+      "claim": "Human embryonic stem cells give rise to cell types from all three embryonic germ layers.",
+      "primary_evidence": "When grafted into SCID mice, both lines give rise to teratomas containing derivatives of all three embryonic germ layers. Embryonic stem cells provide a model to study early human embryology, an investigational tool for discovery of novel growth factors and medicines, and a potential source of cells for use in transplantation therapy.",
+      "primary_doc_id": "3360421",
+      "primary_section": "unknown",
+      "counter_evidence": "Both cell lines differentiate in vitro into extraembryonic and somatic cell lineages.",
+      "counter_doc_id": "3360421",
+      "counter_section": "unknown",
+      "cross_document": false,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9315764904022217,
+        "claim_to_counter_p_contradiction": 0.9078357815742493,
+        "primary_to_counter_p_contradiction": 0.09362685680389404,
+        "primary_to_claim_p_contradiction": 0.00960313156247139,
+        "counter_confidence": 0.9315764904022217,
+        "counter_margin": 0.8661296218633652,
+        "counter_distribution": {
+          "contradiction": 0.9315764904022217,
+          "neutral": 0.0654468685388565,
+          "entailment": 0.0029766084626317024
+        },
+        "primary_distribution": {
+          "neutral": 0.9824200868606567,
+          "contradiction": 0.00960313156247139,
+          "entailment": 0.007976840250194073
+        }
+      },
+      "candidate_pool_size": 8,
+      "mismatch_labels": [
+        "evidence granularity mismatch",
+        "context/condition mismatch"
+      ],
+      "analysis": "'All three embryonic germ layers' (in vivo teratoma) vs 'extraembryonic and somatic cell lineages' (in vitro). A different partition of cell types, not a denial of the claim."
+    },
+    {
+      "claim_index": 285,
+      "kind": "regression",
+      "gold": "SUPPORT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": false,
+      "claim": "Most termination events in Okazaki fragments are dictated by initiation patterns.",
+      "primary_evidence": "Via the deep sequencing of Okazaki fragments, we comprehensively document replication fork directionality throughout the S. Using a strain in which late origins can be induced to fire early, we show that replication termination is a largely passive phenomenon that does not rely on cis-acting sequences or replication fork pausing.",
+      "primary_doc_id": "36606083",
+      "primary_section": "unknown",
+      "counter_evidence": "The replication profile is predominantly determined by the kinetics of origin firing, allowing us to reconstruct chromosome-wide timing profiles from an asynchronous culture.",
+      "counter_doc_id": "36606083",
+      "counter_section": "unknown",
+      "cross_document": false,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.6332610845565796,
+        "claim_to_counter_p_contradiction": 0.7716442346572876,
+        "primary_to_counter_p_contradiction": 0.003034546272829175,
+        "primary_to_claim_p_contradiction": 0.020328883081674576,
+        "counter_confidence": 0.6332610845565796,
+        "counter_margin": 0.31257492303848267,
+        "counter_distribution": {
+          "contradiction": 0.6332610845565796,
+          "neutral": 0.3206861615180969,
+          "entailment": 0.04605282098054886
+        },
+        "primary_distribution": {
+          "neutral": 0.9605551958084106,
+          "contradiction": 0.020328883081674576,
+          "entailment": 0.019115878269076347
+        }
+      },
+      "candidate_pool_size": 15,
+      "mismatch_labels": [
+        "causal/relation mismatch",
+        "ambiguous/other"
+      ],
+      "analysis": "Claim: termination dictated by initiation patterns. Counter: replication profile determined by kinetics of ORIGIN FIRING -- which IS initiation. The two agree; this is an NLI error on paraphrased causal vocabulary. Lowest reverse-direction score in the set."
+    },
+    {
+      "claim_index": 306,
+      "kind": "regression",
+      "gold": "SUPPORT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": false,
+      "claim": "Notch signaling occurs between tumor cells and stromal cells.",
+      "primary_evidence": "We recently demonstrated that Notch signaling is involved in proliferation and survival of B cell-derived tumor cells of classic Hodgkin disease and described a novel mechanism for the oncogenic capacity of Notch. In this study we investigated whether Notch signaling is involved in the tight interactions between neoplastic plasma cells and their bone marrow microenvironment, which are essential for tumor cell growth in multiple myeloma (MM).",
+      "primary_doc_id": "16361581",
+      "primary_section": "unknown",
+      "counter_evidence": "Notch receptors expressed on hematopoietic stem cells interact with their ligands on bone marrow stromal cells and thereby control cell fate decisions and survival.",
+      "counter_doc_id": "16361581",
+      "counter_section": "unknown",
+      "cross_document": false,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9928931593894958,
+        "claim_to_counter_p_contradiction": 0.7823946475982666,
+        "primary_to_counter_p_contradiction": 0.0013700105482712388,
+        "primary_to_claim_p_contradiction": 0.005353700835257769,
+        "counter_confidence": 0.9928931593894958,
+        "counter_margin": 0.9865684080868959,
+        "counter_distribution": {
+          "contradiction": 0.9928931593894958,
+          "neutral": 0.006324751302599907,
+          "entailment": 0.0007820306927897036
+        },
+        "primary_distribution": {
+          "neutral": 0.647867739200592,
+          "entailment": 0.3467785716056824,
+          "contradiction": 0.005353700835257769
+        }
+      },
+      "candidate_pool_size": 10,
+      "mismatch_labels": [
+        "population mismatch"
+      ],
+      "analysis": "Notch signalling between TUMOUR cells and stroma (claim) vs between HAEMATOPOIETIC STEM cells and bone-marrow stroma (counter). Same relation, different participants; not contradictory."
+    },
+    {
+      "claim_index": 338,
+      "kind": "regression",
+      "gold": "SUPPORT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": false,
+      "claim": "Pioneer factor OCT3/4 interacts with major chromatin remodeling factors.",
+      "primary_evidence": "Purified Oct4, Sox2, and Klf4 proteins can bind nucleosomes in vitro, and in vivo they preferentially target silent sites enriched for nucleosomes. Our findings provide insight into how pioneer factors can target naive chromatin sites.",
+      "primary_doc_id": "11011905",
+      "primary_section": "unknown",
+      "counter_evidence": "FoxA, the paradigm pioneer TF, has a winged helix DBD that resembles linker histone and thereby binds its target sites on nucleosomes and in compacted chromatin.",
+      "counter_doc_id": "11011905",
+      "counter_section": "unknown",
+      "cross_document": false,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.5853667855262756,
+        "claim_to_counter_p_contradiction": 0.7129027843475342,
+        "primary_to_counter_p_contradiction": 0.008076254278421402,
+        "primary_to_claim_p_contradiction": 0.004798168782144785,
+        "counter_confidence": 0.5853667855262756,
+        "counter_margin": 0.1798950731754303,
+        "counter_distribution": {
+          "contradiction": 0.5853667855262756,
+          "neutral": 0.40547171235084534,
+          "entailment": 0.009161518886685371
+        },
+        "primary_distribution": {
+          "neutral": 0.991569459438324,
+          "contradiction": 0.004798168782144785,
+          "entailment": 0.0036324739921838045
+        }
+      },
+      "candidate_pool_size": 12,
+      "mismatch_labels": [
+        "intervention mismatch"
+      ],
+      "analysis": "Claim is about OCT3/4; counter is about FoxA. Different pioneer factor, so the counter says nothing about OCT3/4's interactions."
+    },
+    {
+      "claim_index": 356,
+      "kind": "regression",
+      "gold": "SUPPORT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": false,
+      "claim": "Pyridostatin reduces proliferation of homologous recombination - defective cells.",
+      "primary_evidence": "Treatment with the G4-stabilizing compound pyridostatin (PDS) increases telomere fragility in BRCA2-deficient cells, suggesting that G4 formation drives telomere instability. BLM, WRN, and p53 are involved in the homologous DNA recombination pathway.",
+      "primary_doc_id": "16472469",
+      "primary_section": "unknown",
+      "counter_evidence": "Treatment with the G4-stabilizing compound pyridostatin (PDS) increases telomere fragility in BRCA2-deficient cells, suggesting that G4 formation drives telomere instability.",
+      "counter_doc_id": "16472469",
+      "counter_section": "unknown",
+      "cross_document": false,
+      "counter_in_baseline_bundle": true,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.8791503310203552,
+        "claim_to_counter_p_contradiction": 0.9958035349845886,
+        "primary_to_counter_p_contradiction": 0.0027857704553753138,
+        "primary_to_claim_p_contradiction": 0.020641831681132317,
+        "counter_confidence": 0.8791503310203552,
+        "counter_margin": 0.7651187554001808,
+        "counter_distribution": {
+          "contradiction": 0.8791503310203552,
+          "neutral": 0.11403157562017441,
+          "entailment": 0.006818100344389677
+        },
+        "primary_distribution": {
+          "neutral": 0.9782038927078247,
+          "contradiction": 0.020641831681132317,
+          "entailment": 0.0011543420841917396
+        }
+      },
+      "candidate_pool_size": 14,
+      "mismatch_labels": [
+        "outcome mismatch"
+      ],
+      "analysis": "Pyridostatin and HR-defective cells are shared, but the claim's endpoint is PROLIFERATION and the counter's is TELOMERE FRAGILITY. Same intervention and population, different measured outcome. (Counter was inside arm D's bundle.)"
+    },
+    {
+      "claim_index": 368,
+      "kind": "regression",
+      "gold": "SUPPORT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": false,
+      "claim": "Reducing H3k4me3 methylation induces mouse epiblast stem cells to naive pluripotency efficiently.",
+      "primary_evidence": "Here, we show that blocking histone H3K4 methyltransferase MLL1 activity with the small-molecule inhibitor MM-401 reprograms mouse epiblast stem cells (EpiSCs) to naive pluripotency. These findings show that discrete perturbation of H3K4 methylation is sufficient to drive reprogramming to naive pluripotency.",
+      "primary_doc_id": "6441369",
+      "primary_section": "unknown",
+      "counter_evidence": "Upon withdrawal of 2i/LIF, naive mouse ES cells can drift towards a primed pluripotent state resembling that of the post-implantation epiblast.",
+      "counter_doc_id": "4462419",
+      "counter_section": "unknown",
+      "cross_document": true,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": false
+      },
+      "g4_would_have_blocked": true,
+      "adjudication_status": "INSUFFICIENT",
+      "adjudication_reason_default_run": "counter_evidence_not_finding_grounded_section_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.790939211845398,
+        "claim_to_counter_p_contradiction": 0.8436468243598938,
+        "primary_to_counter_p_contradiction": 0.031927864998579025,
+        "primary_to_claim_p_contradiction": 0.0001981659297598526,
+        "counter_confidence": 0.790939211845398,
+        "counter_margin": 0.5888973474502563,
+        "counter_distribution": {
+          "contradiction": 0.790939211845398,
+          "neutral": 0.2020418643951416,
+          "entailment": 0.007018936797976494
+        },
+        "primary_distribution": {
+          "neutral": 0.998985230922699,
+          "entailment": 0.0008165761828422546,
+          "contradiction": 0.0001981659297598526
+        }
+      },
+      "candidate_pool_size": 16,
+      "mismatch_labels": [
+        "intervention mismatch",
+        "direction mismatch"
+      ],
+      "analysis": "MLL1 inhibition driving EpiSC -> naive (claim) vs 2i/LIF withdrawal driving naive -> primed (counter). Different intervention and the opposite transition."
+    },
+    {
+      "claim_index": 391,
+      "kind": "regression",
+      "gold": "SUPPORT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": false,
+      "claim": "Splenomegaly is observed in knockin mouse lacking the SHP-2 MAPK pathway.",
+      "primary_evidence": "The SHP2 signal-deficient mice (gp130F759/F759 were born normal but displayed splenomegaly and lymphadenopathy and an enhanced acute phase reaction. Neural cell-fate decisions were similarly perturbed in a mouse knockin model that phenocopies human NS.",
+      "primary_doc_id": 26851674,
+      "primary_section": "unknown",
+      "counter_evidence": "Here, we demonstrate that genetic knockdown of SHP-2 in cultured cortical precursors or in the embryonic cortex inhibited basal neurogenesis and caused enhanced and precocious astrocyte formation.",
+      "counter_doc_id": "18038250",
+      "counter_section": "unknown",
+      "cross_document": true,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": false
+      },
+      "g4_would_have_blocked": true,
+      "adjudication_status": "INSUFFICIENT",
+      "adjudication_reason_default_run": "counter_evidence_not_finding_grounded_section_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9051328897476196,
+        "claim_to_counter_p_contradiction": 0.6410179138183594,
+        "primary_to_counter_p_contradiction": 0.36944663524627686,
+        "primary_to_claim_p_contradiction": 0.0006265868432819843,
+        "counter_confidence": 0.9051328897476196,
+        "counter_margin": 0.8177381306886673,
+        "counter_distribution": {
+          "contradiction": 0.9051328897476196,
+          "neutral": 0.08739475905895233,
+          "entailment": 0.007472330238670111
+        },
+        "primary_distribution": {
+          "neutral": 0.9919964671134949,
+          "entailment": 0.007376892026513815,
+          "contradiction": 0.0006265868432819843
+        }
+      },
+      "candidate_pool_size": 11,
+      "mismatch_labels": [
+        "outcome mismatch",
+        "population mismatch"
+      ],
+      "analysis": "SHP-2 is shared, but the claim's outcome is SPLENOMEGALY in a whole-animal knockin and the counter's is NEUROGENESIS/astrocyte formation in cortical precursors."
+    },
+    {
+      "claim_index": 418,
+      "kind": "regression",
+      "gold": "SUPPORT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": false,
+      "claim": "The DESMOND program demonstrates no significant impact on biochemical outcomes.",
+      "primary_evidence": "The overall evidence rating was low to very low for important outcomes such as pre-eclampsia, gestational diabetes, gestational hypertension, and preterm delivery. No patients received ALK inhibitor therapy.",
+      "primary_doc_id": 29124963,
+      "primary_section": "results",
+      "counter_evidence": "Dietary intervention resulted in the largest reduction in maternal gestational weight gain (3.84 kg, 2.45 to 5.22 kg), with improved pregnancy outcomes compared with other interventions.",
+      "counter_doc_id": 11360768,
+      "counter_section": "results",
+      "cross_document": true,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_results",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.944595217704773,
+        "claim_to_counter_p_contradiction": 0.9049577116966248,
+        "primary_to_counter_p_contradiction": 0.0033103751484304667,
+        "primary_to_claim_p_contradiction": 0.001977876527234912,
+        "counter_confidence": 0.944595217704773,
+        "counter_margin": 0.890160795301199,
+        "counter_distribution": {
+          "contradiction": 0.944595217704773,
+          "neutral": 0.05443442240357399,
+          "entailment": 0.0009703457471914589
+        },
+        "primary_distribution": {
+          "neutral": 0.9911051392555237,
+          "entailment": 0.0069169639609754086,
+          "contradiction": 0.001977876527234912
+        }
+      },
+      "candidate_pool_size": 27,
+      "mismatch_labels": [
+        "intervention mismatch",
+        "population mismatch",
+        "outcome mismatch"
+      ],
+      "analysis": "DESMOND (diabetes self-management education) vs dietary intervention in pregnancy; biochemical outcomes vs gestational weight gain. The primary evidence is itself off-topic (pre-eclampsia, ALK inhibitors), so retrieval failed before adjudication."
+    },
+    {
+      "claim_index": 419,
+      "kind": "regression",
+      "gold": "SUPPORT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": false,
+      "claim": "The DESMOND program demonstrates no significant impact on lifestyles outcomes.",
+      "primary_evidence": "With all interventions combined, there were no significant differences in birth weight (mean difference -50 g, -100 to 0 g) and the incidence of large for gestational age (relative risk 0.85, 0.66 to 1.09) or small for gestational age (1.00, 0.78 to 1.28) babies between the groups, though by itself physical activity was associated with reduced birth weight (mean difference -60 g, -120 to -10 g). The overall evidence rating was low to very low for important outcomes such as pre-eclampsia, gestational diabetes, gestational hypertension, and preterm delivery.",
+      "primary_doc_id": 11360768,
+      "primary_section": "results",
+      "counter_evidence": "Dietary intervention resulted in the largest reduction in maternal gestational weight gain (3.84 kg, 2.45 to 5.22 kg), with improved pregnancy outcomes compared with other interventions.",
+      "counter_doc_id": 11360768,
+      "counter_section": "results",
+      "cross_document": false,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_results",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9987208247184753,
+        "claim_to_counter_p_contradiction": 0.9554209113121033,
+        "primary_to_counter_p_contradiction": 0.20064367353916168,
+        "primary_to_claim_p_contradiction": 0.0014786930987611413,
+        "counter_confidence": 0.9987208247184753,
+        "counter_margin": 0.9976382666500285,
+        "counter_distribution": {
+          "contradiction": 0.9987208247184753,
+          "neutral": 0.001082558068446815,
+          "entailment": 0.00019657173834275454
+        },
+        "primary_distribution": {
+          "neutral": 0.997079610824585,
+          "contradiction": 0.0014786930987611413,
+          "entailment": 0.0014416207559406757
+        }
+      },
+      "candidate_pool_size": 20,
+      "mismatch_labels": [
+        "intervention mismatch",
+        "population mismatch",
+        "outcome mismatch"
+      ],
+      "analysis": "Same mismatch as 418 for the lifestyle-outcomes variant of the claim."
+    },
+    {
+      "claim_index": 420,
+      "kind": "regression",
+      "gold": "SUPPORT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": false,
+      "claim": "The DESMOND program demonstrates no significant impact on weight loss.",
+      "primary_evidence": "The groups differed on weight lost at 24 months. Surgery generates substantial weight loss, but 20–30% fails to achieve successful weight loss.",
+      "primary_doc_id": 40949706,
+      "primary_section": "unknown",
+      "counter_evidence": "CONCLUSIONS This study demonstrates the ability of TTM-based tailored feedback to improve healthy eating, exercise, managing emotional distress, and weight on a population basis.",
+      "counter_doc_id": "6841927",
+      "counter_section": "conclusions",
+      "cross_document": true,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_conclusions",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.995470404624939,
+        "claim_to_counter_p_contradiction": 0.9960209727287292,
+        "primary_to_counter_p_contradiction": 0.00839473307132721,
+        "primary_to_claim_p_contradiction": 0.029166357591748238,
+        "counter_confidence": 0.995470404624939,
+        "counter_margin": 0.9913320210762322,
+        "counter_distribution": {
+          "contradiction": 0.995470404624939,
+          "neutral": 0.00413838354870677,
+          "entailment": 0.0003911823150701821
+        },
+        "primary_distribution": {
+          "neutral": 0.9702590107917786,
+          "contradiction": 0.029166357591748238,
+          "entailment": 0.0005746020469814539
+        }
+      },
+      "candidate_pool_size": 20,
+      "mismatch_labels": [
+        "intervention mismatch",
+        "outcome mismatch"
+      ],
+      "analysis": "DESMOND vs TTM-based tailored feedback. Weight is shared, but the programmes are different, so the counter's success says nothing about DESMOND."
+    },
+    {
+      "claim_index": 452,
+      "kind": "regression",
+      "gold": "SUPPORT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": false,
+      "claim": "The recruitment of Wdr5 to its target loci depends on Kat8.",
+      "primary_evidence": "FISH showed that, although they were heterogeneous, breakpoints on 9p resulted in the partial or complete deletion of PAX5. This approach identified 5 fusion gene partners with PAX5: LOC392027 (7p12.1), SLCO1B3 (12p12), ASXL1 (20q11.1), KIF3B (20q11.21), and C20orf112 (20q11.1).",
+      "primary_doc_id": "11615422",
+      "primary_section": "unknown",
+      "counter_evidence": "FISH showed that, although they were heterogeneous, breakpoints on 9p resulted in the partial or complete deletion of PAX5.",
+      "counter_doc_id": "11615422",
+      "counter_section": "unknown",
+      "cross_document": false,
+      "counter_in_baseline_bundle": true,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.6785492897033691,
+        "claim_to_counter_p_contradiction": 0.7429829835891724,
+        "primary_to_counter_p_contradiction": 0.0006917404243722558,
+        "primary_to_claim_p_contradiction": 0.0038709603250026703,
+        "counter_confidence": 0.6785492897033691,
+        "counter_margin": 0.3695509135723114,
+        "counter_distribution": {
+          "contradiction": 0.6785492897033691,
+          "neutral": 0.30899837613105774,
+          "entailment": 0.01245236024260521
+        },
+        "primary_distribution": {
+          "neutral": 0.995561957359314,
+          "contradiction": 0.0038709603250026703,
+          "entailment": 0.000567000126466155
+        }
+      },
+      "candidate_pool_size": 17,
+      "mismatch_labels": [
+        "ambiguous/other"
+      ],
+      "analysis": "Claim is Wdr5 recruitment depending on Kat8; counter is PAX5 deletion via 9p breakpoints detected by FISH. Entirely unrelated topic -- a retrieval failure that no proposition-level test would be needed to catch."
+    },
+    {
+      "claim_index": 457,
+      "kind": "regression",
+      "gold": "SUPPORT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": false,
+      "claim": "The risk of cancer rises with level of alcohol consumption.",
+      "primary_evidence": "RESULTS Drinkers of wine outside meals exhibited higher death rates from all causes, noncardiovascular diseases, and cancer, as compared to drinkers of wine with meals. It has been hypothesized, and preliminary data support the notion, that drinking pattern could have important influences on determining the health effects of alcohol (13,14).",
+      "primary_doc_id": "5939172",
+      "primary_section": "results",
+      "counter_evidence": "Wine, particularly red wine, has high levels of phenolic compounds that favorably influence multiple biochemical systems, such as increased high-density lipoprotein cholesterol, antioxidant activity, decreased platelet aggregation and endothelial adhesion, suppression of cancer cell growth, and promotion of nitric oxide production.",
+      "counter_doc_id": "71625969",
+      "counter_section": "unknown",
+      "cross_document": true,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": false
+      },
+      "g4_would_have_blocked": true,
+      "adjudication_status": "INSUFFICIENT",
+      "adjudication_reason_default_run": "counter_evidence_not_finding_grounded_section_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.998324453830719,
+        "claim_to_counter_p_contradiction": 0.9932125806808472,
+        "primary_to_counter_p_contradiction": 0.00038960130768828094,
+        "primary_to_claim_p_contradiction": 0.0028175036422908306,
+        "counter_confidence": 0.998324453830719,
+        "counter_margin": 0.9969484765315428,
+        "counter_distribution": {
+          "contradiction": 0.998324453830719,
+          "neutral": 0.0013759772991761565,
+          "entailment": 0.0002996171242557466
+        },
+        "primary_distribution": {
+          "neutral": 0.9798640012741089,
+          "entailment": 0.017318394035100937,
+          "contradiction": 0.0028175036422908306
+        }
+      },
+      "candidate_pool_size": 17,
+      "mismatch_labels": [
+        "intervention mismatch",
+        "outcome mismatch"
+      ],
+      "analysis": "Alcohol consumption and cancer risk (claim) vs red wine phenolics improving lipid/antioxidant biochemistry (counter). Narrower exposure, different endpoint."
+    }
+  ],
+  "rescues": [
+    {
+      "claim_index": 10,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "A diminished ovarian reserve is a very strong indicator of infertility, even in an a priori non-infertile population.",
+      "primary_evidence": "Objective To determine the associations between biomarkers of ovarian reserve and reproductive potential among women of late reproductive age. Conclusions and Relevance Among women aged 30 to 44 years without a history of infertility who had been trying to conceive for 3 months or less, biomarkers indicating diminished ovarian reserve compared with normal ovarian reserve were not associated with reduced fertility.",
+      "primary_doc_id": "13497630",
+      "primary_section": "unknown",
+      "counter_evidence": "Conclusions and Relevance Among women aged 30 to 44 years without a history of infertility who had been trying to conceive for 3 months or less, biomarkers indicating diminished ovarian reserve compared with normal ovarian reserve were not associated with reduced fertility.",
+      "counter_doc_id": "13497630",
+      "counter_section": "unknown",
+      "cross_document": false,
+      "counter_in_baseline_bundle": true,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9792534112930298,
+        "claim_to_counter_p_contradiction": 0.9859001040458679,
+        "primary_to_counter_p_contradiction": 0.008848527446389198,
+        "primary_to_claim_p_contradiction": 0.08191905170679092,
+        "counter_confidence": 0.9792534112930298,
+        "counter_margin": 0.9595549497753382,
+        "counter_distribution": {
+          "contradiction": 0.9792534112930298,
+          "neutral": 0.019698461517691612,
+          "entailment": 0.0010480661876499653
+        },
+        "primary_distribution": {
+          "neutral": 0.9171388745307922,
+          "contradiction": 0.08191905170679092,
+          "entailment": 0.0009421409340575337
+        }
+      },
+      "candidate_pool_size": 26,
+      "preserved_dimensions": {
+        "population": "preserved",
+        "intervention": "preserved",
+        "outcome": "preserved",
+        "endpoint": "preserved",
+        "temporal": "n/a",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Same population (women without infertility history), same exposure (DOR biomarkers), same outcome (fertility); the finding inverts the claim."
+    },
+    {
+      "claim_index": 46,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "Asymptomatic visual impairment screening in elderly populations leads to improved vision.",
+      "primary_evidence": "OBJECTIVE To assess whether population screening for impaired vision among older people in the community leads to improvements in vision. Visual impairment in this age group can usually be reduced with treatment.",
+      "primary_doc_id": "26016929",
+      "primary_section": "background",
+      "counter_evidence": "CONCLUSIONS Screening of asymptomatic older people in the community is not justified on present evidence.",
+      "counter_doc_id": "26016929",
+      "counter_section": "conclusions",
+      "cross_document": false,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_conclusions",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9734235405921936,
+        "claim_to_counter_p_contradiction": 0.9885453581809998,
+        "primary_to_counter_p_contradiction": 0.007109354715794325,
+        "primary_to_claim_p_contradiction": 0.002031253883615136,
+        "counter_confidence": 0.9734235405921936,
+        "counter_margin": 0.9481361322104931,
+        "counter_distribution": {
+          "contradiction": 0.9734235405921936,
+          "neutral": 0.025287408381700516,
+          "entailment": 0.0012889993377029896
+        },
+        "primary_distribution": {
+          "neutral": 0.996217668056488,
+          "contradiction": 0.002031253883615136,
+          "entailment": 0.00175105023663491
+        }
+      },
+      "candidate_pool_size": 23,
+      "preserved_dimensions": {
+        "population": "preserved",
+        "intervention": "preserved",
+        "outcome": "preserved",
+        "endpoint": "preserved",
+        "temporal": "n/a",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Textbook: same population (asymptomatic older people), same intervention (screening), same outcome (benefit); 'not justified' inverts 'leads to improved vision'."
+    },
+    {
+      "claim_index": 83,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "Charcoal is an effective treatment for acute paraquat poisoning.",
+      "primary_evidence": "The present study retrospectively analyzed 19 patients diagnosed with paraquat (PQ) poisoning with the aim to investigate the effect of activated charcoal hemoperfusion on renal function and PQ elimination. There was a linear correlation between plasma and urine paraquat concentration prior to and during activated charcoal hemoperfusion.",
+      "primary_doc_id": "3430789",
+      "primary_section": "unknown",
+      "counter_evidence": "Activated charcoal hemoperfusion had little effect on avoiding acute kidney injury in patients with severe PQ poisoning.",
+      "counter_doc_id": "3430789",
+      "counter_section": "unknown",
+      "cross_document": false,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9817984700202942,
+        "claim_to_counter_p_contradiction": 0.9933422207832336,
+        "primary_to_counter_p_contradiction": 0.0062419213354587555,
+        "primary_to_claim_p_contradiction": 0.00025603760150261223,
+        "counter_confidence": 0.9817984700202942,
+        "counter_margin": 0.9672288736328483,
+        "counter_distribution": {
+          "contradiction": 0.9817984700202942,
+          "neutral": 0.014569596387445927,
+          "entailment": 0.0036319755017757416
+        },
+        "primary_distribution": {
+          "neutral": 0.9993451237678528,
+          "entailment": 0.00039888915489427745,
+          "contradiction": 0.00025603760150261223
+        }
+      },
+      "candidate_pool_size": 21,
+      "preserved_dimensions": {
+        "population": "preserved",
+        "intervention": "preserved",
+        "outcome": "preserved",
+        "endpoint": "mismatched",
+        "temporal": "n/a",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Same intervention (activated charcoal) and population (severe paraquat poisoning); endpoint narrows from general effectiveness to acute kidney injury, but the direction is inverted on a shared outcome axis."
+    },
+    {
+      "claim_index": 85,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "Chenodeoxycholic acid treatment decreases brown adipose tissue activity.",
+      "primary_evidence": "Brown fat is also able to utilize blood glucose and lipid and results in improved glucose metabolism and blood lipid independent of weight loss. The inducible brown adipocyte, beige adipocyte evolving by thermogenic activation of white adipose tissue have different origin and molecular signature from classical brown adipocytes but share the characteristics of high mitochondria content, UCP1 expression and thermogenic capacity when activated.",
+      "primary_doc_id": "14865329",
+      "primary_section": "unknown",
+      "counter_evidence": "Treatment of 12 healthy female subjects with CDCA for 2 days resulted in increased BAT activity.",
+      "counter_doc_id": "1568684",
+      "counter_section": "unknown",
+      "cross_document": true,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": false
+      },
+      "g4_would_have_blocked": true,
+      "adjudication_status": "INSUFFICIENT",
+      "adjudication_reason_default_run": "counter_evidence_not_finding_grounded_section_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9979623556137085,
+        "claim_to_counter_p_contradiction": 0.9964371919631958,
+        "primary_to_counter_p_contradiction": 0.00027581671020016074,
+        "primary_to_claim_p_contradiction": 0.00019829579105135053,
+        "counter_confidence": 0.9979623556137085,
+        "counter_margin": 0.9968858887441456,
+        "counter_distribution": {
+          "contradiction": 0.9979623556137085,
+          "entailment": 0.0010764668695628643,
+          "neutral": 0.0009611768182367086
+        },
+        "primary_distribution": {
+          "neutral": 0.9996398687362671,
+          "contradiction": 0.00019829579105135053,
+          "entailment": 0.00016184427659027278
+        }
+      },
+      "candidate_pool_size": 14,
+      "preserved_dimensions": {
+        "population": "preserved",
+        "intervention": "preserved",
+        "outcome": "preserved",
+        "endpoint": "preserved",
+        "temporal": "n/a",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Textbook: same drug (CDCA), same outcome (BAT activity), decreased vs increased. G4 would have blocked this -- correctly rescued without it."
+    },
+    {
+      "claim_index": 89,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "Citrullinated proteins externalized in neutrophil extracellular traps act indirectly to disrupt the inflammatory cycle.",
+      "primary_evidence": "Neutrophils isolated from patients with various autoimmune diseases display enhanced neutrophil extracellular trap (NET) formation, a phenomenon that exposes autoantigens in the context of immunostimulatory molecules. CONCLUSIONS Citrullinated H4 from activated neutrophils and NETs is a target of antibodies in RA, and synthetic citrullinated H4-derived peptides are a new substrate for ACPA detection.",
+      "primary_doc_id": 30041340,
+      "primary_section": "conclusions",
+      "counter_evidence": "In turn, NETs significantly augmented inflammatory responses in RA and OA synovial fibroblasts, including induction of IL-6, IL-8, chemokines, and adhesion molecules.",
+      "counter_doc_id": 11328820,
+      "counter_section": "unknown",
+      "cross_document": true,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": false
+      },
+      "g4_would_have_blocked": true,
+      "adjudication_status": "INSUFFICIENT",
+      "adjudication_reason_default_run": "counter_evidence_not_finding_grounded_section_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.7851266264915466,
+        "claim_to_counter_p_contradiction": 0.9978088736534119,
+        "primary_to_counter_p_contradiction": 0.0002114753151545301,
+        "primary_to_claim_p_contradiction": 0.0006031790981069207,
+        "counter_confidence": 0.7851266264915466,
+        "counter_margin": 0.585741251707077,
+        "counter_distribution": {
+          "contradiction": 0.7851266264915466,
+          "neutral": 0.1993853747844696,
+          "entailment": 0.0154879717156291
+        },
+        "primary_distribution": {
+          "neutral": 0.9968647360801697,
+          "entailment": 0.0025320497807115316,
+          "contradiction": 0.0006031790981069207
+        }
+      },
+      "candidate_pool_size": 24,
+      "preserved_dimensions": {
+        "population": "preserved",
+        "intervention": "preserved",
+        "outcome": "preserved",
+        "endpoint": "preserved",
+        "temporal": "n/a",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Same agent (NETs), same outcome (inflammatory response); 'disrupt' vs 'significantly augmented' inverts the direction."
+    },
+    {
+      "claim_index": 93,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "Cognitive behavioral therapy is an ineffective treatment for insomnia",
+      "primary_evidence": "OBJECTIVE To examine short- and long-term clinical efficacy of cognitive behavioral therapy (CBT) and pharmacological treatment in older adults experiencing chronic primary insomnia. Data from this study on the treatment of chronic, severe insomnia (a small subset of all insomnia) are not generalizable to the typical insomnia patient.",
+      "primary_doc_id": 24346598,
+      "primary_section": "conclusions",
+      "counter_evidence": "RESULTS CBT resulted in improved short- and long-term outcomes compared with zopiclone on 3 out of 4 outcome measures.",
+      "counter_doc_id": "5912283",
+      "counter_section": "results",
+      "cross_document": true,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_results",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9995154142379761,
+        "claim_to_counter_p_contradiction": 0.9932606816291809,
+        "primary_to_counter_p_contradiction": 0.00026056484784930944,
+        "primary_to_claim_p_contradiction": 0.007475535850971937,
+        "counter_confidence": 0.9995154142379761,
+        "counter_margin": 0.9991781437711325,
+        "counter_distribution": {
+          "contradiction": 0.9995154142379761,
+          "neutral": 0.00033727046684361994,
+          "entailment": 0.00014734255091752857
+        },
+        "primary_distribution": {
+          "neutral": 0.9920955300331116,
+          "contradiction": 0.007475535850971937,
+          "entailment": 0.0004290103097446263
+        }
+      },
+      "candidate_pool_size": 21,
+      "preserved_dimensions": {
+        "population": "preserved",
+        "intervention": "preserved",
+        "outcome": "preserved",
+        "endpoint": "preserved",
+        "temporal": "n/a",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Same intervention (CBT), same population (insomnia), same outcome (efficacy); 'ineffective' vs 'improved outcomes'."
+    },
+    {
+      "claim_index": 101,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "Cost effectiveness evaluations based on cRCT data accurately reflect prices for patients in actual clinical practice.",
+      "primary_evidence": "The objective of this study was to evaluate the external validity of published cost-effectiveness studies by comparing the data used in these studies (typically based on RCTs) to observational data from actual clinical practice. CONCLUSION Evaluating the cost effectiveness of prognostic biomarkers is important even when effects at an individual level are small.",
+      "primary_doc_id": "15048300",
+      "primary_section": "unknown",
+      "counter_evidence": "CONCLUSIONS The published cost-effectiveness analyses of coxibs lacked external validity, did not represent patients in actual clinical practice, and should not have been used to inform prescribing policies.",
+      "counter_doc_id": "15048300",
+      "counter_section": "conclusions",
+      "cross_document": false,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_conclusions",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.8070629239082336,
+        "claim_to_counter_p_contradiction": 0.9852476119995117,
+        "primary_to_counter_p_contradiction": 0.002118943026289344,
+        "primary_to_claim_p_contradiction": 0.011806623078882694,
+        "counter_confidence": 0.8070629239082336,
+        "counter_margin": 0.6157427132129669,
+        "counter_distribution": {
+          "contradiction": 0.8070629239082336,
+          "neutral": 0.19132021069526672,
+          "entailment": 0.0016169004375115037
+        },
+        "primary_distribution": {
+          "neutral": 0.9867749214172363,
+          "contradiction": 0.011806623078882694,
+          "entailment": 0.001418386586010456
+        }
+      },
+      "candidate_pool_size": 24,
+      "preserved_dimensions": {
+        "population": "preserved",
+        "intervention": "preserved",
+        "outcome": "preserved",
+        "endpoint": "preserved",
+        "temporal": "n/a",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Same object (cost-effectiveness analyses from trial data), same outcome (external validity); 'accurately reflect' vs 'lacked external validity'."
+    },
+    {
+      "claim_index": 110,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "Deltex has no known interactions with eIF3f.",
+      "primary_evidence": "We show that eIF3f has an intrinsic DUB activity. Knocking down eIF3f leads to an accumulation of monoubiquitinated forms of activated Notch, an effect counteracted by murine WT eIF3f but not by a catalytically inactive mutant.",
+      "primary_doc_id": "9505448",
+      "primary_section": "unknown",
+      "counter_evidence": "We also show that eIF3f is recruited to activated Notch on endocytic vesicles by the putative E3 ubiquitin ligase Deltex1, which serves as a bridging factor.",
+      "counter_doc_id": "9505448",
+      "counter_section": "unknown",
+      "cross_document": false,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9995978474617004,
+        "claim_to_counter_p_contradiction": 0.9959153532981873,
+        "primary_to_counter_p_contradiction": 0.0002482318377587944,
+        "primary_to_claim_p_contradiction": 0.004980333615094423,
+        "counter_confidence": 0.9995978474617004,
+        "counter_margin": 0.999364663643064,
+        "counter_distribution": {
+          "contradiction": 0.9995978474617004,
+          "neutral": 0.0002331838186364621,
+          "entailment": 0.00016894302098080516
+        },
+        "primary_distribution": {
+          "neutral": 0.9946310520172119,
+          "contradiction": 0.004980333615094423,
+          "entailment": 0.0003885690530296415
+        }
+      },
+      "candidate_pool_size": 22,
+      "preserved_dimensions": {
+        "population": "preserved",
+        "intervention": "preserved",
+        "outcome": "preserved",
+        "endpoint": "preserved",
+        "temporal": "n/a",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Same two entities (Deltex, eIF3f), same relation (interaction); polarity inverted from 'no known interactions' to a described bridging role."
+    },
+    {
+      "claim_index": 122,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "Diminished ovarian reserve is a reliable indicator of infertility in a non-infertile population.",
+      "primary_evidence": "Objective To determine the associations between biomarkers of ovarian reserve and reproductive potential among women of late reproductive age. Conclusions and Relevance Among women aged 30 to 44 years without a history of infertility who had been trying to conceive for 3 months or less, biomarkers indicating diminished ovarian reserve compared with normal ovarian reserve were not associated with reduced fertility.",
+      "primary_doc_id": "13497630",
+      "primary_section": "unknown",
+      "counter_evidence": "Conclusions and Relevance Among women aged 30 to 44 years without a history of infertility who had been trying to conceive for 3 months or less, biomarkers indicating diminished ovarian reserve compared with normal ovarian reserve were not associated with reduced fertility.",
+      "counter_doc_id": "13497630",
+      "counter_section": "unknown",
+      "cross_document": false,
+      "counter_in_baseline_bundle": true,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.973422110080719,
+        "claim_to_counter_p_contradiction": 0.9820408821105957,
+        "primary_to_counter_p_contradiction": 0.008848527446389198,
+        "primary_to_claim_p_contradiction": 0.18285568058490753,
+        "counter_confidence": 0.973422110080719,
+        "counter_margin": 0.9487717300653458,
+        "counter_distribution": {
+          "contradiction": 0.973422110080719,
+          "neutral": 0.02465038001537323,
+          "entailment": 0.001927470206283033
+        },
+        "primary_distribution": {
+          "neutral": 0.8155105113983154,
+          "contradiction": 0.18285568058490753,
+          "entailment": 0.0016338246641680598
+        }
+      },
+      "candidate_pool_size": 22,
+      "preserved_dimensions": {
+        "population": "preserved",
+        "intervention": "preserved",
+        "outcome": "preserved",
+        "endpoint": "preserved",
+        "temporal": "n/a",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Same structure as claim 10."
+    },
+    {
+      "claim_index": 180,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "Human embryonic stem cells give rise to cell types from the outer embryonic germ layer, but not the other two layers.",
+      "primary_evidence": "When grafted into SCID mice, both lines give rise to teratomas containing derivatives of all three embryonic germ layers. Embryonic stem cells provide a model to study early human embryology, an investigational tool for discovery of novel growth factors and medicines, and a potential source of cells for use in transplantation therapy.",
+      "primary_doc_id": "3360421",
+      "primary_section": "unknown",
+      "counter_evidence": "After undifferentiated proliferation in vitro for 4 to 5 months, these cells still maintained the developmental potential to form trophoblast and derivatives of all three embryonic germ layers, including gut epithelium (endoderm); cartilage, bone, smooth muscle, and striated muscle (mesoderm); and neural epithelium, embryonic ganglia, and stratified squamous epithelium (ectoderm).",
+      "counter_doc_id": "19770974",
+      "counter_section": "unknown",
+      "cross_document": true,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": false
+      },
+      "g4_would_have_blocked": true,
+      "adjudication_status": "INSUFFICIENT",
+      "adjudication_reason_default_run": "counter_evidence_not_finding_grounded_section_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9969461560249329,
+        "claim_to_counter_p_contradiction": 0.9909957051277161,
+        "primary_to_counter_p_contradiction": 0.0001519346988061443,
+        "primary_to_claim_p_contradiction": 0.1839532107114792,
+        "counter_confidence": 0.9969461560249329,
+        "counter_margin": 0.9940258485730737,
+        "counter_distribution": {
+          "contradiction": 0.9969461560249329,
+          "neutral": 0.0029203074518591166,
+          "entailment": 0.00013355098781175911
+        },
+        "primary_distribution": {
+          "neutral": 0.8136236071586609,
+          "contradiction": 0.1839532107114792,
+          "entailment": 0.0024232061114162207
+        }
+      },
+      "candidate_pool_size": 8,
+      "preserved_dimensions": {
+        "population": "preserved",
+        "intervention": "n/a",
+        "outcome": "preserved",
+        "endpoint": "preserved",
+        "temporal": "n/a",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Same population (hESC), same outcome (germ-layer potential); the claim's restriction to the outer layer is inverted by 'all three'."
+    },
+    {
+      "claim_index": 204,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "Incidence of heart failure increased by 10% in women since 1979.",
+      "primary_evidence": "RESULTS The incidence of heart failure was higher among men (378/100 000 persons; 95% confidence interval [CI], 361-395 for men; 289/100 000 persons; 95% CI, 277-300 for women) and did not change over time among men or women. CONCLUSION In this community-based cohort, the incidence of heart failure has not declined during 2 decades, but survival after onset of heart failure has increased overall, with less improvement among women and elderly persons.",
+      "primary_doc_id": "19675911",
+      "primary_section": "conclusions",
+      "counter_evidence": "RESULTS The incidence of heart failure was higher among men (378/100 000 persons; 95% confidence interval [CI], 361-395 for men; 289/100 000 persons; 95% CI, 277-300 for women) and did not change over time among men or women.",
+      "counter_doc_id": "19675911",
+      "counter_section": "results",
+      "cross_document": false,
+      "counter_in_baseline_bundle": true,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_results",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9925245642662048,
+        "claim_to_counter_p_contradiction": 0.9992258548736572,
+        "primary_to_counter_p_contradiction": 0.003729023039340973,
+        "primary_to_claim_p_contradiction": 0.2615734040737152,
+        "counter_confidence": 0.9925245642662048,
+        "counter_margin": 0.9856415251269937,
+        "counter_distribution": {
+          "contradiction": 0.9925245642662048,
+          "neutral": 0.006883039139211178,
+          "entailment": 0.0005923981079831719
+        },
+        "primary_distribution": {
+          "neutral": 0.736471951007843,
+          "contradiction": 0.2615734040737152,
+          "entailment": 0.0019546877592802048
+        }
+      },
+      "candidate_pool_size": 25,
+      "preserved_dimensions": {
+        "population": "preserved",
+        "intervention": "n/a",
+        "outcome": "preserved",
+        "endpoint": "preserved",
+        "temporal": "preserved",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Same population (women), same outcome (heart failure incidence), same temporal frame (change over time); 'increased by 10%' vs 'did not change'."
+    },
+    {
+      "claim_index": 236,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "Klf4 is not required for proper myeloid cell differentiation.",
+      "primary_evidence": "In addition, inducible expression of KLF4 in the HL60 human acute myeloid leukemia cell line stimulated monocytic differentiation and enhanced 12-O-tetradecanoylphorbol 13-acetate induced macrophage differentiation, but blocked all-trans-retinoic acid induced granulocytic differentiation of HL60 cells. Simultaneous depletion of Klf2, Klf4 and Klf5 lead to ES cell differentiation.",
+      "primary_doc_id": 22150633,
+      "primary_section": "unknown",
+      "counter_evidence": "The inflammation-selective effects of loss-of-KLF4 and the gain-of-KLF4-induced monocytic differentiation in HL60 cells identify KLF4 as a key regulator of monocytic differentiation and a potential target for translational immune modulation.",
+      "counter_doc_id": "25148216",
+      "counter_section": "unknown",
+      "cross_document": true,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": false
+      },
+      "g4_would_have_blocked": true,
+      "adjudication_status": "INSUFFICIENT",
+      "adjudication_reason_default_run": "counter_evidence_not_finding_grounded_section_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9996756315231323,
+        "claim_to_counter_p_contradiction": 0.9934688806533813,
+        "primary_to_counter_p_contradiction": 0.0010045578237622976,
+        "primary_to_claim_p_contradiction": 0.31802675127983093,
+        "counter_confidence": 0.9996756315231323,
+        "counter_margin": 0.9994954270223388,
+        "counter_distribution": {
+          "contradiction": 0.9996756315231323,
+          "neutral": 0.00018020450079347938,
+          "entailment": 0.00014423388347495347
+        },
+        "primary_distribution": {
+          "neutral": 0.6772191524505615,
+          "contradiction": 0.31802675127983093,
+          "entailment": 0.004754114430397749
+        }
+      },
+      "candidate_pool_size": 15,
+      "preserved_dimensions": {
+        "population": "preserved",
+        "intervention": "preserved",
+        "outcome": "preserved",
+        "endpoint": "preserved",
+        "temporal": "n/a",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Same gene (KLF4), same outcome (myeloid/monocytic differentiation); 'not required' vs 'key regulator'."
+    },
+    {
+      "claim_index": 262,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "Medications to treat obesity are highly effective.",
+      "primary_evidence": "To succeed in developing drugs that control body weight to the extent seen following surgical intervention, it seems obvious that a new paradigm is needed. OBJECTIVE To summarise the long term efficacy of anti-obesity drugs in reducing weight and improving health status.",
+      "primary_doc_id": "7552215",
+      "primary_section": "background",
+      "counter_evidence": "It is therefore unsurprising that anti-obesity drug discovery programmes have been littered with false starts, failures in clinical development, and withdrawals due to adverse effects that were not fully appreciated at the time of launch.",
+      "counter_doc_id": "5839365",
+      "counter_section": "unknown",
+      "cross_document": true,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": false
+      },
+      "g4_would_have_blocked": true,
+      "adjudication_status": "INSUFFICIENT",
+      "adjudication_reason_default_run": "counter_evidence_not_finding_grounded_section_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9979307651519775,
+        "claim_to_counter_p_contradiction": 0.8940632939338684,
+        "primary_to_counter_p_contradiction": 0.0001525428961031139,
+        "primary_to_claim_p_contradiction": 0.3448611795902252,
+        "counter_confidence": 0.9979307651519775,
+        "counter_margin": 0.996105047990568,
+        "counter_distribution": {
+          "contradiction": 0.9979307651519775,
+          "neutral": 0.0018257171614095569,
+          "entailment": 0.00024349095474462956
+        },
+        "primary_distribution": {
+          "neutral": 0.653792679309845,
+          "contradiction": 0.3448611795902252,
+          "entailment": 0.001346142846159637
+        }
+      },
+      "candidate_pool_size": 23,
+      "preserved_dimensions": {
+        "population": "n/a",
+        "intervention": "preserved",
+        "outcome": "preserved",
+        "endpoint": "preserved",
+        "temporal": "n/a",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Same intervention class (anti-obesity medications), same outcome (effectiveness); 'highly effective' vs a record of failures and withdrawals."
+    },
+    {
+      "claim_index": 294,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "Natriuretic peptides increase susceptibility to diabetes.",
+      "primary_evidence": "Further studies are needed to investigate the mechanisms underlying this association and possibilities for preventive interventions. This review considers research in the field of type 1 diabetes toward identifying disease mechanisms using genetic approaches.",
+      "primary_doc_id": 5567005,
+      "primary_section": "unknown",
+      "counter_evidence": "In participants of our case-cohort study who were free of T2D and cardiovascular disease at baseline, we observed a 21% (95% CI 3%-36%) decreased risk of incident T2D per one standard deviation (SD) higher log-transformed NT-pro-BNP levels in analysis adjusted for age, sex, body mass index, systolic blood pressure, smoking, family history of T2D, history of hypertension, and levels of triglycerides, high-density lipoprotein cholesterol, and low-density lipoprotein cholesterol.",
+      "counter_doc_id": "15663829",
+      "counter_section": "methods",
+      "cross_document": true,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": false
+      },
+      "g4_would_have_blocked": true,
+      "adjudication_status": "INSUFFICIENT",
+      "adjudication_reason_default_run": "counter_evidence_not_finding_grounded_section_methods",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9985972046852112,
+        "claim_to_counter_p_contradiction": 0.9922404289245605,
+        "primary_to_counter_p_contradiction": 0.47754019498825073,
+        "primary_to_claim_p_contradiction": 0.00025212971377186477,
+        "counter_confidence": 0.9985972046852112,
+        "counter_margin": 0.9978045125608332,
+        "counter_distribution": {
+          "contradiction": 0.9985972046852112,
+          "neutral": 0.0007926921243779361,
+          "entailment": 0.0006101569742895663
+        },
+        "primary_distribution": {
+          "neutral": 0.9995895028114319,
+          "contradiction": 0.00025212971377186477,
+          "entailment": 0.00015839628758840263
+        }
+      },
+      "candidate_pool_size": 15,
+      "preserved_dimensions": {
+        "population": "preserved",
+        "intervention": "preserved",
+        "outcome": "preserved",
+        "endpoint": "preserved",
+        "temporal": "n/a",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Textbook: same exposure (natriuretic peptides), same outcome (incident T2D); increased vs 21% decreased risk. Counter sat in a methods section, so G4 blocked it -- correctly rescued without it."
+    },
+    {
+      "claim_index": 317,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "PKG-la does not have a large impact on expression of spinal long term potentiation in PGK-la knockout mice.",
+      "primary_evidence": "Here, we found that Protein Kinase G1 (PKG-I) localized presynaptically in nociceptor terminals plays an essential role in the expression of spinal LTP. Furthermore, we show that the knockout mice exhibited significant abnormalities in spine morphology and in synaptic function, including enhanced hippocampal long-term potentiation.",
+      "primary_doc_id": "14188138",
+      "primary_section": "unknown",
+      "counter_evidence": "Patch clamp recordings showed that activity-induced LTP at identified synapses between nociceptors and spinal neurons projecting to the periaqueductal grey (PAG) was completely abolished in SNS-PKG-I(-/-) mice, although basal synaptic transmission was not affected.",
+      "counter_doc_id": "11254556",
+      "counter_section": "unknown",
+      "cross_document": true,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": false
+      },
+      "g4_would_have_blocked": true,
+      "adjudication_status": "INSUFFICIENT",
+      "adjudication_reason_default_run": "counter_evidence_not_finding_grounded_section_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.763805091381073,
+        "claim_to_counter_p_contradiction": 0.8374033570289612,
+        "primary_to_counter_p_contradiction": 0.0002481777046341449,
+        "primary_to_claim_p_contradiction": 0.1275538206100464,
+        "counter_confidence": 0.763805091381073,
+        "counter_margin": 0.5489417612552643,
+        "counter_distribution": {
+          "contradiction": 0.763805091381073,
+          "neutral": 0.21486333012580872,
+          "entailment": 0.021331559866666794
+        },
+        "primary_distribution": {
+          "neutral": 0.8366432189941406,
+          "contradiction": 0.1275538206100464,
+          "entailment": 0.03580296039581299
+        }
+      },
+      "candidate_pool_size": 15,
+      "preserved_dimensions": {
+        "population": "preserved",
+        "intervention": "preserved",
+        "outcome": "preserved",
+        "endpoint": "preserved",
+        "temporal": "n/a",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Same model (PKG-I knockout mice), same outcome (spinal LTP); 'no large impact' vs 'completely abolished'."
+    },
+    {
+      "claim_index": 324,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "Patients with common epithelial cancers are less likely to have an emergency event as their first hospital admission if they live in resource-deprived areas.",
+      "primary_evidence": "RESULTS Patients from deprived areas, older people, and women were more likely to be admitted as emergencies. Patients with colonic cancer were very significantly less likely to receive any treatment if they came from any but the most affluent area (ORs 0.639, 0.603 and 0.544 in increasingly deprived quartiles), this may have been exacerbated if the hospital was distant from their residence (OR for forth quartile for both travel and deprivation 0.731, not significant).",
+      "primary_doc_id": "5641851",
+      "primary_section": "results",
+      "counter_evidence": "RESULTS Patients from deprived areas, older people, and women were more likely to be admitted as emergencies.",
+      "counter_doc_id": "16390264",
+      "counter_section": "results",
+      "cross_document": true,
+      "counter_in_baseline_bundle": true,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_results",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9945830702781677,
+        "claim_to_counter_p_contradiction": 0.9877398610115051,
+        "primary_to_counter_p_contradiction": 0.0007640427211299539,
+        "primary_to_claim_p_contradiction": 0.26113519072532654,
+        "counter_confidence": 0.9945830702781677,
+        "counter_margin": 0.9905065111815929,
+        "counter_distribution": {
+          "contradiction": 0.9945830702781677,
+          "neutral": 0.004076559096574783,
+          "entailment": 0.0013403738848865032
+        },
+        "primary_distribution": {
+          "neutral": 0.7312997579574585,
+          "contradiction": 0.26113519072532654,
+          "entailment": 0.007565015461295843
+        }
+      },
+      "candidate_pool_size": 27,
+      "preserved_dimensions": {
+        "population": "preserved",
+        "intervention": "n/a",
+        "outcome": "preserved",
+        "endpoint": "preserved",
+        "temporal": "n/a",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Same population (patients in deprived areas), same outcome (emergency first admission); less likely vs more likely."
+    },
+    {
+      "claim_index": 341,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "Pre-mRNAs associated with spliceosomal components are less stable than unassociated splicing substrates.",
+      "primary_evidence": "In order to provide both accuracy to the recognition of reactive splice sites in the pre-mRNA and flexibility to the choice of splice sites during alternative splicing, the spliceosome exhibits exceptional compositional and structural dynamics that are exploited during substrate-dependent complex assembly, catalytic activation, and active site remodeling. Furthermore, the process of transcription influences alternative splicing of newly synthesized pre-mRNAs.",
+      "primary_doc_id": "21330280",
+      "primary_section": "unknown",
+      "counter_evidence": "Pol II-synthesized RNAs containing functional splice sites are protected from nuclear degradation, presumably because the local concentration of the splicing machinery is sufficiently high to ensure its association over interactions with nucleases.",
+      "counter_doc_id": 4162857,
+      "counter_section": "unknown",
+      "cross_document": true,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": false
+      },
+      "g4_would_have_blocked": true,
+      "adjudication_status": "INSUFFICIENT",
+      "adjudication_reason_default_run": "counter_evidence_not_finding_grounded_section_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9949009418487549,
+        "claim_to_counter_p_contradiction": 0.9016233682632446,
+        "primary_to_counter_p_contradiction": 0.0010118290083482862,
+        "primary_to_claim_p_contradiction": 0.0005293554859235883,
+        "counter_confidence": 0.9949009418487549,
+        "counter_margin": 0.9917001910507679,
+        "counter_distribution": {
+          "contradiction": 0.9949009418487549,
+          "entailment": 0.0032007507979869843,
+          "neutral": 0.0018982348265126348
+        },
+        "primary_distribution": {
+          "neutral": 0.9991187453269958,
+          "contradiction": 0.0005293554859235883,
+          "entailment": 0.00035193871008232236
+        }
+      },
+      "candidate_pool_size": 7,
+      "preserved_dimensions": {
+        "population": "preserved",
+        "intervention": "n/a",
+        "outcome": "preserved",
+        "endpoint": "preserved",
+        "temporal": "n/a",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Same object (pre-mRNAs with splice sites / spliceosomal association), same outcome (stability); 'less stable' vs 'protected from degradation'."
+    },
+    {
+      "claim_index": 370,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "Removal of H3K9me3 by ectopic expression of other H3K9 demethylases decreases reprogramming efficiency in SCNT experiments.",
+      "primary_evidence": "Here we show that overexpression of a related H3K9me3 demethylase KDM4A improves human SCNT, and that, as in mice, H3K9me3 in the human somatic cell genome is an SCNT reprogramming barrier. Furthermore, we show that interactions between RNA and KDM4E are essential for H3K9 demethylation during EGA.",
+      "primary_doc_id": "15803282",
+      "primary_section": "unknown",
+      "counter_evidence": "Here we show that overexpression of a related H3K9me3 demethylase KDM4A improves human SCNT, and that, as in mice, H3K9me3 in the human somatic cell genome is an SCNT reprogramming barrier.",
+      "counter_doc_id": "15803282",
+      "counter_section": "unknown",
+      "cross_document": false,
+      "counter_in_baseline_bundle": true,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9863734245300293,
+        "claim_to_counter_p_contradiction": 0.8314900398254395,
+        "primary_to_counter_p_contradiction": 0.002495009219273925,
+        "primary_to_claim_p_contradiction": 0.11177965253591537,
+        "counter_confidence": 0.9863734245300293,
+        "counter_margin": 0.9754904555156827,
+        "counter_distribution": {
+          "contradiction": 0.9863734245300293,
+          "neutral": 0.0108829690143466,
+          "entailment": 0.002743595512583852
+        },
+        "primary_distribution": {
+          "neutral": 0.882332980632782,
+          "contradiction": 0.11177965253591537,
+          "entailment": 0.0058873374946415424
+        }
+      },
+      "candidate_pool_size": 13,
+      "preserved_dimensions": {
+        "population": "n/a",
+        "intervention": "preserved",
+        "outcome": "preserved",
+        "endpoint": "preserved",
+        "temporal": "n/a",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Same intervention (H3K9me3 demethylase overexpression), same outcome (SCNT reprogramming efficiency); decreases vs improves."
+    },
+    {
+      "claim_index": 374,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "Repressing IL-18 has negative effects on atherosclerotic lesion composition and progression.",
+      "primary_evidence": "IL-18 was highly expressed in the atherosclerotic plaques compared with control normal arteries and was localized mainly in plaque macrophages. CONCLUSIONS These results suggest, for the first time, a major role for IL-18 in atherosclerotic plaque destabilization leading to acute ischemic syndromes.",
+      "primary_doc_id": "17421851",
+      "primary_section": "results",
+      "counter_evidence": "Interruption of IL18 action reduces atherosclerosis in mice.",
+      "counter_doc_id": "24384587",
+      "counter_section": "unknown",
+      "cross_document": true,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": false
+      },
+      "g4_would_have_blocked": true,
+      "adjudication_status": "INSUFFICIENT",
+      "adjudication_reason_default_run": "counter_evidence_not_finding_grounded_section_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.996736466884613,
+        "claim_to_counter_p_contradiction": 0.98848956823349,
+        "primary_to_counter_p_contradiction": 0.00020180281717330217,
+        "primary_to_claim_p_contradiction": 0.0003776969388127327,
+        "counter_confidence": 0.996736466884613,
+        "counter_margin": 0.9948347300523892,
+        "counter_distribution": {
+          "contradiction": 0.996736466884613,
+          "entailment": 0.0019017368322238326,
+          "neutral": 0.0013617672957479954
+        },
+        "primary_distribution": {
+          "neutral": 0.9994410872459412,
+          "contradiction": 0.0003776969388127327,
+          "entailment": 0.00018122096662409604
+        }
+      },
+      "candidate_pool_size": 17,
+      "preserved_dimensions": {
+        "population": "preserved",
+        "intervention": "preserved",
+        "outcome": "preserved",
+        "endpoint": "preserved",
+        "temporal": "n/a",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Same intervention (interrupting IL-18), same outcome (atherosclerosis); 'negative effects' vs 'reduces atherosclerosis'."
+    },
+    {
+      "claim_index": 403,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "Systemic immunosuppressive (IS) therapy increases the chance of cancer mortality in patients with inflammatory eye disease (IED)",
+      "primary_evidence": "DESIGN Retrospective cohort study evaluating overall and cancer mortality in relation to immunosuppressive drug exposure among patients with ocular inflammatory diseases. For patients unexposed to immunosuppressive treatment, risks of death overall (standardised mortality ratio 1.02, 95% confidence interval [CI] 0.94 to 1.11) and from cancer (1.10, 0.93 to 1.29) were similar to those of the US population.",
+      "primary_doc_id": "21009874",
+      "primary_section": "methods",
+      "counter_evidence": "Patients who used azathioprine, methotrexate, mycophenolate mofetil, ciclosporin, systemic corticosteroids, or dapsone had overall and cancer mortality similar to that of patients who never took immunosuppressive drugs.",
+      "counter_doc_id": "21009874",
+      "counter_section": "results",
+      "cross_document": false,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_results",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.8380401134490967,
+        "claim_to_counter_p_contradiction": 0.9969639182090759,
+        "primary_to_counter_p_contradiction": 0.45678824186325073,
+        "primary_to_claim_p_contradiction": 0.013552607968449593,
+        "counter_confidence": 0.8380401134490967,
+        "counter_margin": 0.6770002543926239,
+        "counter_distribution": {
+          "contradiction": 0.8380401134490967,
+          "neutral": 0.16103985905647278,
+          "entailment": 0.0009199948399327695
+        },
+        "primary_distribution": {
+          "neutral": 0.9716930985450745,
+          "entailment": 0.014754380099475384,
+          "contradiction": 0.013552607968449593
+        }
+      },
+      "candidate_pool_size": 27,
+      "preserved_dimensions": {
+        "population": "preserved",
+        "intervention": "preserved",
+        "outcome": "preserved",
+        "endpoint": "preserved",
+        "temporal": "n/a",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Same intervention (systemic immunosuppressives), same population (IED), same outcome (cancer mortality); increased chance vs mortality similar to never-users."
+    },
+    {
+      "claim_index": 412,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "Taking 400mg of α-tocopheryl acetate in combination with vitamin C reduces the risk of prostate cancer.",
+      "primary_evidence": "CONCLUSIONS In this large, long-term trial of male physicians, neither vitamin E nor C supplementation reduced the risk of prostate or total cancer. Some human and animal studies indicate that plasma concentrations of gamma-tocopherol are inversely associated with the incidence of cardiovascular disease and prostate cancer.",
+      "primary_doc_id": "12009265",
+      "primary_section": "conclusions",
+      "counter_evidence": "CONCLUSIONS In this large, long-term trial of male physicians, neither vitamin E nor C supplementation reduced the risk of prostate or total cancer.",
+      "counter_doc_id": "12009265",
+      "counter_section": "conclusions",
+      "cross_document": false,
+      "counter_in_baseline_bundle": true,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_conclusions",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9840188026428223,
+        "claim_to_counter_p_contradiction": 0.9996213912963867,
+        "primary_to_counter_p_contradiction": 0.011404259130358696,
+        "primary_to_claim_p_contradiction": 0.20073574781417847,
+        "counter_confidence": 0.9840188026428223,
+        "counter_margin": 0.9685539649799466,
+        "counter_distribution": {
+          "contradiction": 0.9840188026428223,
+          "neutral": 0.015464837662875652,
+          "entailment": 0.0005162886227481067
+        },
+        "primary_distribution": {
+          "neutral": 0.7962546348571777,
+          "contradiction": 0.20073574781417847,
+          "entailment": 0.003009560750797391
+        }
+      },
+      "candidate_pool_size": 27,
+      "preserved_dimensions": {
+        "population": "preserved",
+        "intervention": "preserved",
+        "outcome": "preserved",
+        "endpoint": "preserved",
+        "temporal": "n/a",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Textbook: same intervention (vitamin E + C), same population, same outcome (prostate cancer risk); reduces vs 'neither reduced'."
+    },
+    {
+      "claim_index": 434,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "The density of cytokine receptor bearing cells has no effect on the distance over which cytokines act.",
+      "primary_evidence": "Here, we used theoretical considerations and experimental models of immune responses in vitro and in vivo to quantify the spatial extent of cytokine communications in dense tissues. Such heterogeneous distributions of cytokines were a source of non‐genetic cell‐to‐cell variability that is often overlooked in single‐cell studies.",
+      "primary_doc_id": "4928282",
+      "primary_section": "unknown",
+      "counter_evidence": "The size of these self‐assembled niches scaled with the density of cytokine‐consuming cells, a parameter that gets tuned during immune responses.",
+      "counter_doc_id": "4928282",
+      "counter_section": "unknown",
+      "cross_document": false,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": true
+      },
+      "g4_would_have_blocked": false,
+      "adjudication_status": "TRUE_CONTRADICTION",
+      "adjudication_reason_default_run": "symmetric_contradiction_grounded_in_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9691534042358398,
+        "claim_to_counter_p_contradiction": 0.9665183424949646,
+        "primary_to_counter_p_contradiction": 0.0008928981842473149,
+        "primary_to_claim_p_contradiction": 0.04127448797225952,
+        "counter_confidence": 0.9691534042358398,
+        "counter_margin": 0.9387662336230278,
+        "counter_distribution": {
+          "contradiction": 0.9691534042358398,
+          "neutral": 0.030387170612812042,
+          "entailment": 0.00045938161201775074
+        },
+        "primary_distribution": {
+          "neutral": 0.9576387405395508,
+          "contradiction": 0.04127448797225952,
+          "entailment": 0.0010867814999073744
+        }
+      },
+      "candidate_pool_size": 17,
+      "preserved_dimensions": {
+        "population": "preserved",
+        "intervention": "n/a",
+        "outcome": "preserved",
+        "endpoint": "preserved",
+        "temporal": "n/a",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Same variable (density of cytokine-consuming cells), same outcome (spatial range of cytokine action); 'no effect' vs 'scaled with'."
+    },
+    {
+      "claim_index": 449,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "The peak incidence of fractures occurs in toddlers.",
+      "primary_evidence": "CONCLUSIONS There has been a statistically significant increase in the incidence of distal forearm fractures in children and adolescents, but whether this is due to changing patterns of physical activity, decreased bone acquisition due to poor calcium intake, or both is unclear at present. Given the large number of childhood fractures, however, studies are needed to define the cause(s) of this increase.",
+      "primary_doc_id": "7209559",
+      "primary_section": "conclusions",
+      "counter_evidence": "CONTEXT The incidence of distal forearm fractures in children peaks around the time of the pubertal growth spurt, possibly because physical activity increases at the time of a transient deficit in cortical bone mass due to the increased calcium demand during maximal skeletal growth.",
+      "counter_doc_id": "7209559",
+      "counter_section": "background",
+      "cross_document": false,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": false
+      },
+      "g4_would_have_blocked": true,
+      "adjudication_status": "INSUFFICIENT",
+      "adjudication_reason_default_run": "counter_evidence_not_finding_grounded_section_background",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9987261891365051,
+        "claim_to_counter_p_contradiction": 0.9839959740638733,
+        "primary_to_counter_p_contradiction": 0.00019927095854654908,
+        "primary_to_claim_p_contradiction": 0.001004247460514307,
+        "counter_confidence": 0.9987261891365051,
+        "counter_margin": 0.9978417629608884,
+        "counter_distribution": {
+          "contradiction": 0.9987261891365051,
+          "neutral": 0.0008844261756166816,
+          "entailment": 0.0003894075925927609
+        },
+        "primary_distribution": {
+          "neutral": 0.9988276362419128,
+          "contradiction": 0.001004247460514307,
+          "entailment": 0.00016815470007713884
+        }
+      },
+      "candidate_pool_size": 21,
+      "preserved_dimensions": {
+        "population": "preserved",
+        "intervention": "n/a",
+        "outcome": "preserved",
+        "endpoint": "preserved",
+        "temporal": "mismatched",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Same population (children), same outcome (peak fracture incidence); the TEMPORAL/age axis is what inverts -- toddlers vs pubertal growth spurt. Counter sat in a BACKGROUND section, so G4 blocked it; correctly rescued without it, which directly contradicts G4's design rationale."
+    },
+    {
+      "claim_index": 494,
+      "kind": "rescue",
+      "gold": "CONTRADICT",
+      "baseline_prediction": "SUPPORT",
+      "adjudicated_prediction": "CONTRADICT",
+      "override_correct": true,
+      "claim": "Women with a lower birth weight are more likely to develop breast cancer later in life.",
+      "primary_evidence": "We reviewed the available evidence on the association between birthweight and the risk of breast cancer. Birth weight is a significant predictor of breast cancer risk in adult life and mammary gland mass could be an intermediate stage in this long process.",
+      "primary_doc_id": "27123743",
+      "primary_section": "unknown",
+      "counter_evidence": "Compared to women weighing 3001-3500 grams at birth, women with birth weights >4000g were at almost 3-fold risk of developing high mammographic density (odds ratio: 2.9, 95% confidence interval 1.1 to 7.9).",
+      "counter_doc_id": 5487448,
+      "counter_section": "unknown",
+      "cross_document": true,
+      "counter_in_baseline_bundle": false,
+      "gates": {
+        "g1": true,
+        "g2": true,
+        "g3": true,
+        "g4": false
+      },
+      "g4_would_have_blocked": true,
+      "adjudication_status": "INSUFFICIENT",
+      "adjudication_reason_default_run": "counter_evidence_not_finding_grounded_section_unknown",
+      "nli": {
+        "counter_to_claim_p_contradiction": 0.9953644275665283,
+        "claim_to_counter_p_contradiction": 0.9579989910125732,
+        "primary_to_counter_p_contradiction": 0.00039442707202397287,
+        "primary_to_claim_p_contradiction": 0.00030282678199000657,
+        "counter_confidence": 0.9953644275665283,
+        "counter_margin": 0.9929019801784307,
+        "counter_distribution": {
+          "contradiction": 0.9953644275665283,
+          "neutral": 0.002462447388097644,
+          "entailment": 0.0021731024608016014
+        },
+        "primary_distribution": {
+          "neutral": 0.9972635507583618,
+          "entailment": 0.0024336448404937983,
+          "contradiction": 0.00030282678199000657
+        }
+      },
+      "candidate_pool_size": 19,
+      "preserved_dimensions": {
+        "population": "preserved",
+        "intervention": "preserved",
+        "outcome": "mismatched",
+        "endpoint": "mismatched",
+        "temporal": "n/a",
+        "context/condition": "preserved",
+        "causal/relation": "preserved"
+      },
+      "direction_inverted": true,
+      "analysis": "Same population (women) and exposure (birth weight), direction inverted (lower vs >4000g at higher risk) -- but the counter's endpoint is MAMMOGRAPHIC DENSITY, a surrogate, not breast cancer. Correct here, yet it is the one rescue whose outcome axis does not match."
+    }
+  ]
+}

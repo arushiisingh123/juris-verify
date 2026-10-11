@@ -1,0 +1,700 @@
+{
+  "metadata": {
+    "diagnostic": "proposition_scope_alignment",
+    "research_only": true,
+    "production_modified": false,
+    "blind_dataset": "docs\\scope_alignment_blind_dataset.json",
+    "artifact": "eval/results_20261011_160640_n504_section2_w0.05_prosactive_gatesg1g2g3.json",
+    "artifact_gate_rule": [
+      "g1",
+      "g2",
+      "g3"
+    ],
+    "join_method": "exact claim text",
+    "join": {
+      "n_overrides_in_artifact": 42,
+      "n_cases": 42,
+      "n_joined": 42,
+      "unmatched_case_ids": [],
+      "ambiguous": []
+    },
+    "rule_fingerprint_sha256": "0449d3d00fc7cf0a65cdc65ad0b1b080bbcb87b9f7986b7df845b308caa50d77",
+    "rules_prespecified": {
+      "A": "overall_scope_match == YES AND direction == OPPOSITE",
+      "B": "population/outcome/endpoint != DIFFERENT AND direction == OPPOSITE",
+      "C": "no scope dimension == DIFFERENT AND direction == OPPOSITE"
+    },
+    "contrast_conditions": {
+      "scope_only_A": "overall_scope_match == YES (no direction term)",
+      "scope_only_C": "no scope dimension == DIFFERENT (no direction term)",
+      "direction_only": "direction == OPPOSITE (no scope term)"
+    },
+    "features_excluded_by_design": [
+      "gold label",
+      "rescue/regression label",
+      "override correctness",
+      "adjudication status",
+      "adjudication reason",
+      "gate outcomes",
+      "document ids",
+      "section labels",
+      "counter_section",
+      "all adjudicator NLI probabilities"
+    ],
+    "annotation_schema": {
+      "population_alignment": [
+        "SAME",
+        "DIFFERENT",
+        "NOT_APPLICABLE",
+        "UNCLEAR"
+      ],
+      "intervention_alignment": [
+        "SAME",
+        "DIFFERENT",
+        "NOT_APPLICABLE",
+        "UNCLEAR"
+      ],
+      "outcome_alignment": [
+        "SAME",
+        "DIFFERENT",
+        "NOT_APPLICABLE",
+        "UNCLEAR"
+      ],
+      "endpoint_alignment": [
+        "SAME",
+        "DIFFERENT",
+        "NOT_APPLICABLE",
+        "UNCLEAR"
+      ],
+      "context_alignment": [
+        "SAME",
+        "DIFFERENT",
+        "NOT_APPLICABLE",
+        "UNCLEAR"
+      ],
+      "causal_relation_alignment": [
+        "SAME",
+        "DIFFERENT",
+        "NOT_APPLICABLE",
+        "UNCLEAR"
+      ],
+      "direction": [
+        "OPPOSITE",
+        "SAME",
+        "NOT_APPLICABLE",
+        "UNCLEAR"
+      ],
+      "overall_scope_match": [
+        "YES",
+        "NO",
+        "UNCLEAR"
+      ],
+      "genuine_contradiction": [
+        "YES",
+        "NO",
+        "UNCLEAR"
+      ]
+    },
+    "annotation_status": {
+      "n_complete": 0,
+      "n_incomplete": 42,
+      "n_invalid": 0,
+      "complete_case_ids": [],
+      "incomplete": [
+        {
+          "case_id": "C01",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C02",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C03",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C04",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C05",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C06",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C07",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C08",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C09",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C10",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C11",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C12",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C13",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C14",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C15",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C16",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C17",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C18",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C19",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C20",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C21",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C22",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C23",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C24",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C25",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C26",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C27",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C28",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C29",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C30",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C31",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C32",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C33",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C34",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C35",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C36",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C37",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C38",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C39",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C40",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C41",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        },
+        {
+          "case_id": "C42",
+          "missing": [
+            "population_alignment",
+            "intervention_alignment",
+            "outcome_alignment",
+            "endpoint_alignment",
+            "context_alignment",
+            "causal_relation_alignment",
+            "direction",
+            "overall_scope_match",
+            "genuine_contradiction"
+          ]
+        }
+      ],
+      "invalid": []
+    }
+  },
+  "status": "BLOCKED_NO_ANNOTATIONS",
+  "phase_1_descriptive": null,
+  "phase_2_rule_decisions": null,
+  "phase_3_outcome_scoring": null
+}
