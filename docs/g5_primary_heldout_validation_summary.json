@@ -1,0 +1,240 @@
+{
+  "metadata": {
+    "document": "G5 primary held-out validation — computed statistics",
+    "verification_mode": "ARTIFACT",
+    "confusion_matrices_recomputed_from_source": true,
+    "artifacts_missing": [],
+    "research_only": true,
+    "production_modified": false,
+    "experiments_rerun": false,
+    "figures_provenance": "Dataset sizes, frame size, gold counts and baseline correct count are AS SUPPLIED by the project owner and were not verifiable in this repository. All precision, recall, confidence intervals, Fisher exact and McNemar values are COMPUTED here from the confusion matrices.",
+    "g5_definition": "overall_scope_match == YES AND direction == OPPOSITE",
+    "direction_only_definition": "direction == OPPOSITE",
+    "annotation_seed": 20261012
+  },
+  "baseline_derivation": {
+    "population": 188,
+    "pre_override_correct": 154,
+    "pre_override_accuracy_pct": 81.91,
+    "post_override_correct": 158,
+    "post_override_accuracy_pct": 84.04,
+    "frozen_run_overrides": 12,
+    "frozen_run_overrides_on_gold_contradict": 8,
+    "frozen_run_overrides_on_gold_support": 4
+  },
+  "baseline_used_for_simulation": {
+    "correct": 154,
+    "population": 188,
+    "source": "derived from the candidate artifact (pre-override)"
+  },
+  "dataset_as_supplied": {
+    "validation_rows": 450,
+    "unique_claims": 188,
+    "corpus_documents": 5183,
+    "candidate_frame": 54,
+    "gold_contradict": 17,
+    "gold_support": 37,
+    "post_override_accuracy_of_frozen_run_NOT_the_baseline": 158
+  },
+  "primary_heldout_validation": {
+    "g5": {
+      "rule": "G5 / Rule A",
+      "confusion_matrix": {
+        "TP": 7,
+        "FP": 0,
+        "FN": 10,
+        "TN": 37
+      },
+      "n_cases": 54,
+      "n_accepted": 7,
+      "n_rejected": 47,
+      "gold_contradict": 17,
+      "gold_support": 37,
+      "precision_pct": 100.0,
+      "precision_ci95_wilson": [
+        64.57,
+        100.0
+      ],
+      "precision_ci95_clopper_pearson": [
+        59.04,
+        100.0
+      ],
+      "recall_pct": 41.18,
+      "recall_ci95_wilson": [
+        21.61,
+        63.99
+      ],
+      "recall_ci95_clopper_pearson": [
+        18.44,
+        67.08
+      ],
+      "specificity_pct": 100.0,
+      "specificity_ci95_wilson": [
+        90.59,
+        100.0
+      ],
+      "candidate_frame_accuracy_pct": 81.48,
+      "rescues": 7,
+      "added_errors": 0,
+      "net_claims": 7,
+      "fisher_exact_two_sided_p": 0.00010981331736048717
+    },
+    "direction_only": {
+      "rule": "direction-only",
+      "confusion_matrix": {
+        "TP": 11,
+        "FP": 4,
+        "FN": 6,
+        "TN": 33
+      },
+      "n_cases": 54,
+      "n_accepted": 15,
+      "n_rejected": 39,
+      "gold_contradict": 17,
+      "gold_support": 37,
+      "precision_pct": 73.33,
+      "precision_ci95_wilson": [
+        48.05,
+        89.1
+      ],
+      "precision_ci95_clopper_pearson": [
+        44.9,
+        92.21
+      ],
+      "recall_pct": 64.71,
+      "recall_ci95_wilson": [
+        41.3,
+        82.69
+      ],
+      "recall_ci95_clopper_pearson": [
+        38.33,
+        85.79
+      ],
+      "specificity_pct": 89.19,
+      "specificity_ci95_wilson": [
+        75.29,
+        95.71
+      ],
+      "candidate_frame_accuracy_pct": 81.48,
+      "rescues": 11,
+      "added_errors": 4,
+      "net_claims": 7,
+      "fisher_exact_two_sided_p": 0.0001001884941907688
+    }
+  },
+  "paired_comparison_mcnemar": {
+    "on_accept_decision": {
+      "discordant_pairs": 8,
+      "split": [
+        0,
+        8
+      ],
+      "p_two_sided_exact": 0.0078125,
+      "interpretation": "Structurally determined: G5 is a strict subset of direction-only, so every discordant pair must fall one way. This p-value is NOT evidence that G5 is more accurate."
+    },
+    "on_correctness": {
+      "g5_correct_dironly_wrong": 4,
+      "dironly_correct_g5_wrong": 4,
+      "discordant_pairs": 8,
+      "p_two_sided_exact": 1.0,
+      "interpretation": "The decision-relevant comparison. The two rules are indistinguishable in per-case correctness on this frame."
+    }
+  },
+  "simulated_application": {
+    "g5": {
+      "baseline_correct": 154,
+      "population": 188,
+      "baseline_accuracy_pct": 81.91,
+      "after_correct": 161,
+      "after_accuracy_pct": 85.64,
+      "delta_pp": 3.72,
+      "rescues": 7,
+      "added_errors": 0,
+      "net_claims": 7
+    },
+    "direction_only": {
+      "baseline_correct": 154,
+      "population": 188,
+      "baseline_accuracy_pct": 81.91,
+      "after_correct": 161,
+      "after_accuracy_pct": 85.64,
+      "delta_pp": 3.72,
+      "rescues": 11,
+      "added_errors": 4,
+      "net_claims": 7
+    },
+    "same_result_as_direction_only": true
+  },
+  "discovery_study": {
+    "rule": "G5 / Rule A (discovery study)",
+    "confusion_matrix": {
+      "n": 42,
+      "gold_contradict": 24,
+      "gold_support": 18,
+      "TP": 20,
+      "FP": 0,
+      "FN": 4,
+      "TN": 18
+    },
+    "n_cases": 42,
+    "n_accepted": 20,
+    "n_rejected": 22,
+    "gold_contradict": 24,
+    "gold_support": 18,
+    "precision_pct": 100.0,
+    "precision_ci95_wilson": [
+      83.89,
+      100.0
+    ],
+    "precision_ci95_clopper_pearson": [
+      83.16,
+      100.0
+    ],
+    "recall_pct": 83.33,
+    "recall_ci95_wilson": [
+      64.15,
+      93.32
+    ],
+    "recall_ci95_clopper_pearson": [
+      62.62,
+      95.26
+    ],
+    "specificity_pct": 100.0,
+    "specificity_ci95_wilson": [
+      82.41,
+      100.0
+    ],
+    "candidate_frame_accuracy_pct": 90.48,
+    "rescues": 20,
+    "added_errors": 0,
+    "net_claims": 20,
+    "fisher_exact_two_sided_p": 2.1218719501364174e-08
+  },
+  "recomputed_from_artifacts": {
+    "n_cases": 54,
+    "unmatched_case_ids": [],
+    "g5": {
+      "TP": 7,
+      "FP": 0,
+      "FN": 10,
+      "TN": 37
+    },
+    "direction_only": {
+      "TP": 11,
+      "FP": 4,
+      "FN": 6,
+      "TN": 33
+    },
+    "g5_accepted_with_genuine_contradiction_yes": 7,
+    "baseline": {
+      "population": 188,
+      "pre_override_correct": 154,
+      "pre_override_accuracy_pct": 81.91,
+      "post_override_correct": 158,
+      "post_override_accuracy_pct": 84.04,
+      "frozen_run_overrides": 12,
+      "frozen_run_overrides_on_gold_contradict": 8,
+      "frozen_run_overrides_on_gold_support": 4
+    }
+  }
+}

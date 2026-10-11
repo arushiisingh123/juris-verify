@@ -1,0 +1,1063 @@
+{
+  "metadata": {
+    "study": "primary held-out validation of Rule A",
+    "purpose": "Primary Rule A validation — balanced candidate frame",
+    "n_cases": 54,
+    "exposed_fields": [
+      "case_id",
+      "claim",
+      "primary_evidence",
+      "counter_evidence"
+    ],
+    "annotation_schema": {
+      "population_alignment": {
+        "allowed_values": [
+          "SAME",
+          "DIFFERENT",
+          "NOT_APPLICABLE",
+          "UNCLEAR"
+        ]
+      },
+      "intervention_alignment": {
+        "allowed_values": [
+          "SAME",
+          "DIFFERENT",
+          "NOT_APPLICABLE",
+          "UNCLEAR"
+        ]
+      },
+      "outcome_alignment": {
+        "allowed_values": [
+          "SAME",
+          "DIFFERENT",
+          "NOT_APPLICABLE",
+          "UNCLEAR"
+        ]
+      },
+      "endpoint_alignment": {
+        "allowed_values": [
+          "SAME",
+          "DIFFERENT",
+          "NOT_APPLICABLE",
+          "UNCLEAR"
+        ]
+      },
+      "context_alignment": {
+        "allowed_values": [
+          "SAME",
+          "DIFFERENT",
+          "NOT_APPLICABLE",
+          "UNCLEAR"
+        ]
+      },
+      "causal_relation_alignment": {
+        "allowed_values": [
+          "SAME",
+          "DIFFERENT",
+          "NOT_APPLICABLE",
+          "UNCLEAR"
+        ]
+      },
+      "direction": {
+        "allowed_values": [
+          "OPPOSITE",
+          "SAME",
+          "NOT_APPLICABLE",
+          "UNCLEAR"
+        ]
+      },
+      "overall_scope_match": {
+        "allowed_values": [
+          "YES",
+          "NO",
+          "UNCLEAR"
+        ]
+      },
+      "genuine_contradiction": {
+        "allowed_values": [
+          "YES",
+          "NO",
+          "UNCLEAR"
+        ]
+      }
+    },
+    "free_text_field": "annotator_notes",
+    "schema_source": "reproduced exactly from study 1",
+    "annotations_performed": false,
+    "guide": "docs/scope_alignment_blind_annotation.md (study-1 guide; same schema)"
+  },
+  "cases": [
+    {
+      "case_id": "P001",
+      "claim": "Deletion of αvβ8 does not result in a spontaneous inflammatory phenotype.",
+      "primary_evidence": "Treg-cell-specific deletion of integrin αvβ8 did not result in a spontaneous inflammatory phenotype, suggesting that this pathway is not important in Treg-cell-mediated maintenance of immune homeostasis. The Autoimmune regulator (Aire) gene, which is defective in the disorder autoimmune polyglandular syndrome type 1, has been shown to promote the thymic expression of self-antigens.",
+      "counter_evidence": "These results suggest that failure of thymic expression of selective single self-antigens can be sufficient to cause organ-specific autoimmune disease, even in otherwise self-tolerant individuals.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "DIFFERENT",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "DIFFERENT",
+        "causal_relation_alignment": "UNCLEAR",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Claim: Treg-specific αvβ8 deletion and inflammatory phenotype. Counter: failure of thymic self-antigen expression causing organ-specific autoimmunity. Different intervention and phenotype."
+      }
+    },
+    {
+      "case_id": "P002",
+      "claim": "UCB T cells reduce TCR diversity after transplantation.",
+      "primary_evidence": "Technical challenges have limited faithful measurement of TCR diversity after allo-HSCT. More recent clinical studies, however, suggest that conditioning regimens and in particular the omission of in vivo T-cell depletion may play a crucial role in post-transplant T-cell expansion, facilitating a uniquely rapid immune recovery after UCB transplantation.",
+      "counter_evidence": "After 6 months, cord blood-graft recipients approximated the TCR diversity of healthy individuals, whereas recipients of T cell-depleted peripheral-blood stem cell grafts had 28-fold and 14-fold lower CD4(+) and CD8(+) T cell diversities, respectively.",
+      "annotation": {
+        "population_alignment": "SAME",
+        "intervention_alignment": "SAME",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "SAME",
+        "context_alignment": "SAME",
+        "causal_relation_alignment": "UNCLEAR",
+        "direction": "OPPOSITE",
+        "overall_scope_match": "YES",
+        "genuine_contradiction": "YES",
+        "annotator_notes": "Counter reports cord-blood recipients approach healthy TCR diversity at 6 months, against 'reduce TCR diversity'. The claim does not state a comparator."
+      }
+    },
+    {
+      "case_id": "P003",
+      "claim": "The PRR MDA5 is a sensor of RNA virus infection.",
+      "primary_evidence": "Our data further indicate that Lgp2-/- mice exhibited resistance to lethal vesicular stomatitis virus infection, a virus whose replicative RNA intermediates are recognized specifically by RIG-I rather than by MDA5 to trigger the production of type I IFN. This link between Mda5-mediated sensing of viral RNA and 2′-O-methylation of mRNA suggests that RNA modifications such as 2′-O-methylation provide a molecular signature for the discrimination of self and non-self mRNA.",
+      "counter_evidence": "The DExD/H box RNA helicase retinoic acid-inducible gene I (RIG-I) and the melanoma differentiation-associated gene 5 (MDA5) are key intracellular receptors that recognize virus infection to produce type I IFN.",
+      "annotation": {
+        "population_alignment": "NOT_APPLICABLE",
+        "intervention_alignment": "SAME",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "SAME",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "SAME",
+        "direction": "SAME",
+        "overall_scope_match": "YES",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter says MDA5 is a key receptor recognizing virus infection, consistent with the claim."
+      }
+    },
+    {
+      "case_id": "P004",
+      "claim": "Non-invasive ventilation use should be decreased if there is inadequate response to conventional treatment.",
+      "primary_evidence": "In 10 patients we evaluated gas exchange, inspiratory effort, patient–ventilator synchrony and patient tolerance after 30 min of non-invasive ventilation delivered either by helmet or facial mask; both trials were preceded by periods of spontaneous unassisted breathing. CONCLUSIONS Non-invasive ventilation is a highly cost effective treatment that both reduced total costs and improved mortality in hospital.",
+      "counter_evidence": "CONCLUSIONS Non-invasive ventilation is a highly cost effective treatment that both reduced total costs and improved mortality in hospital.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "SAME",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "DIFFERENT",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Claim is a recommendation about NIV use after inadequate response to conventional treatment. Counter reports general cost and mortality outcomes. Different proposition types."
+      }
+    },
+    {
+      "case_id": "P005",
+      "claim": "N348I mutations cause resistance to zidovudine (AZT).",
+      "primary_evidence": "The association with TAMs and NNRTI resistance mutations was consistent with the selection of N348I in patients treated with regimens that included both zidovudine and nevirapine (odds ratio 2.62, 95% confidence interval 1.43–4.81). Biochemical analyses of recombinant RT containing N348I provide supporting evidence for the role of this mutation in zidovudine and NNRTI resistance and give some insight into the molecular mechanism of resistance.",
+      "counter_evidence": "N348I has been associated with resistance to the non-nucleoside RT inhibitor (NNRTI), nevirapine; however, a possible mechanism that links changes in RNase H activity to changes in NNRTI susceptibility remains to be established.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "SAME",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "DIFFERENT",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter concerns nevirapine/NNRTI resistance, not AZT resistance. Counter says 'associated with' while the claim says 'cause'."
+      }
+    },
+    {
+      "case_id": "P006",
+      "claim": "Basophils counteract disease development in patients with systemic lupus erythematosus (SLE).",
+      "primary_evidence": "Basophils were also present in the lymph nodes and spleen of subjects with SLE. Although neutrophils have long been shown to be associated with lupus, their potential role in disease pathogenesis remains elusive.",
+      "counter_evidence": "Thus, in Lyn(-/-) mice, basophils and IgE autoantibodies amplify autoantibody production that leads to lupus nephritis, and in individuals with SLE IgE autoantibodies and activated basophils are factors associated with disease activity and nephritis.",
+      "annotation": {
+        "population_alignment": "SAME",
+        "intervention_alignment": "SAME",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "UNCLEAR",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "SAME",
+        "direction": "OPPOSITE",
+        "overall_scope_match": "YES",
+        "genuine_contradiction": "YES",
+        "annotator_notes": "Counter says basophils amplify autoantibody production, nephritis and disease activity, against 'counteract disease development'."
+      }
+    },
+    {
+      "case_id": "P007",
+      "claim": "Ly49Q directs the organization of neutrophil migration to inflammation sites by regulating membrane raft functions.",
+      "primary_evidence": "During the steady state, Ly49Q inhibited neutrophil adhesion by preventing focal-complex formation, likely by inhibiting Src and PI3 kinases. We propose that Ly49Q is pivotal in switching neutrophils to their polarized morphology and rapid migration upon inflammation, through its spatiotemporal regulation of membrane rafts and raft-associated signaling molecules.",
+      "counter_evidence": "During the steady state, Ly49Q inhibited neutrophil adhesion by preventing focal-complex formation, likely by inhibiting Src and PI3 kinases.",
+      "annotation": {
+        "population_alignment": "SAME",
+        "intervention_alignment": "SAME",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "DIFFERENT",
+        "causal_relation_alignment": "UNCLEAR",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter describes steady-state adhesion inhibition; claim concerns migration upon inflammation via membrane rafts. Different outcome and context; counter does not oppose the claim."
+      }
+    },
+    {
+      "case_id": "P008",
+      "claim": "mTORC2 regulates intracellular cysteine levels through xCT inhibition.",
+      "primary_evidence": "mTORC2 phosphorylates serine 26 at the cytosolic N terminus of xCT, inhibiting its activity. Lysosomal degradation of extracellular proteins can sustain cell survival and induce activation of mTORC1 but fails to elicit significant cell accumulation.",
+      "counter_evidence": "Genetic inhibition of mTORC2, or pharmacologic inhibition of the mammalian target of rapamycin (mTOR) kinase, promotes glutamate secretion, cystine uptake, and incorporation into glutathione, linking growth factor receptor signaling with amino acid uptake and utilization.",
+      "annotation": {
+        "population_alignment": "NOT_APPLICABLE",
+        "intervention_alignment": "SAME",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "UNCLEAR",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "SAME",
+        "direction": "SAME",
+        "overall_scope_match": "YES",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter: mTORC2 inhibition promotes cystine uptake, consistent with mTORC2 restricting xCT activity."
+      }
+    },
+    {
+      "case_id": "P009",
+      "claim": "Tirasemtiv has no effect on fast-twitch muscle.",
+      "primary_evidence": "Notably, we show that sensitization of the fast-skeletal-troponin complex to calcium improves muscle force and grip strength immediately after administration of single doses of CK-2017357 in a model of the neuromuscular disease myasthenia gravis. The data indicate 1) there were no differences in total hindlimb muscle BF between UT and T rats at any time; however, 2) T rats had higher preexercise heart rates and higher muscle BFs in the deep red extensor muscles, suggesting a greater anticipatory response to the impending exercise; 3) T rats demonstrated more rapid elevations in BF in the red extensor muscles at the commencement of exercise; 4) T rats had higher BFs in red extensor muscles during exercise, whereas UT rats had higher BFs in white muscles; and 5) T rats maintained higher BFs in the visceral organs during exercise.",
+      "counter_evidence": "We developed a small-molecule fast-skeletal-troponin activator, CK-2017357, as a means to increase muscle strength by amplifying the response of muscle when neural input is otherwise diminished secondary to neuromuscular disease.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "UNCLEAR",
+        "outcome_alignment": "UNCLEAR",
+        "endpoint_alignment": "UNCLEAR",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "UNCLEAR",
+        "direction": "OPPOSITE",
+        "overall_scope_match": "UNCLEAR",
+        "genuine_contradiction": "UNCLEAR",
+        "annotator_notes": "Claim names tirasemtiv; counter names CK-2017357. The text does not state that these are the same agent. Counter says it increases muscle strength by activating fast-skeletal troponin."
+      }
+    },
+    {
+      "case_id": "P010",
+      "claim": "Leuko-increased blood increases infectious complications in red blood cell transfusion.",
+      "primary_evidence": "CONCLUSION A national universal leukoreduction program is potentially associated with decreased mortality as well as decreased fever episodes and antibiotic use after red blood cell transfusion in high-risk patients. Furthermore, within tissues, leukocytes are rather primed or activated than immunosuppressed.",
+      "counter_evidence": "However, this is rather a reprogramming of circulating leukocytes, since there is not a global defect of the immune cells functions.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "UNCLEAR",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "UNCLEAR",
+        "direction": "UNCLEAR",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter addresses leukocyte reprogramming and immune function; it does not mention transfusion or infectious complications."
+      }
+    },
+    {
+      "case_id": "P011",
+      "claim": "Combination nicotine replacement therapies with varenicline or bupropion lead to significantly higher long-term abstinence rates at 52 weeks than varenicline monotherapy.",
+      "primary_evidence": "RESULTS At 12 weeks, 53.0% of the combination therapy group achieved prolonged smoking abstinence and 56.2% achieved 7-day point-prevalence smoking abstinence compared with 43.2% and 48.6% in varenicline monotherapy (odds ratio [OR], 1.49; 95% CI, 1.05-2.12; P = .03 and OR, 1.36; 95% CI, 0.95-1.93; P = .09, respectively). CONCLUSIONS AND RELEVANCE Among cigarette smokers, combined use of varenicline and bupropion, compared with varenicline alone, increased prolonged abstinence but not 7-day point prevalence at 12 and 26 weeks.",
+      "counter_evidence": "Neither outcome was significantly different at 52 weeks.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "UNCLEAR",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "SAME",
+        "context_alignment": "SAME",
+        "causal_relation_alignment": "SAME",
+        "direction": "OPPOSITE",
+        "overall_scope_match": "YES",
+        "genuine_contradiction": "YES",
+        "annotator_notes": "Counter reports no significant difference at 52 weeks, against the claim of significantly higher abstinence at 52 weeks. The comparison arms are not stated in the counter itself, and the claim's intervention is worded differently from the primary evidence."
+      }
+    },
+    {
+      "case_id": "P012",
+      "claim": "Lymphadenopathy is observed in knockin mouse lacking the SHP-2 MAPK pathway.",
+      "primary_evidence": "The SHP2 signal-deficient mice (gp130F759/F759 were born normal but displayed splenomegaly and lymphadenopathy and an enhanced acute phase reaction. Neural cell-fate decisions were similarly perturbed in a mouse knockin model that phenocopies human NS.",
+      "counter_evidence": "Here, we demonstrate that genetic knockdown of SHP-2 in cultured cortical precursors or in the embryonic cortex inhibited basal neurogenesis and caused enhanced and precocious astrocyte formation.",
+      "annotation": {
+        "population_alignment": "DIFFERENT",
+        "intervention_alignment": "UNCLEAR",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "DIFFERENT",
+        "causal_relation_alignment": "UNCLEAR",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Claim: lymphadenopathy in a knockin mouse. Counter: SHP-2 knockdown in cortical precursors affecting neurogenesis and astrocyte formation."
+      }
+    },
+    {
+      "case_id": "P013",
+      "claim": "Neutrophil extracellular traps (NETs) are released by ANCA-stimulated neutrophils.",
+      "primary_evidence": "Here we show that chromatin fibers, so-called neutrophil extracellular traps (NETs), are released by ANCA-stimulated neutrophils and contain the targeted autoantigens proteinase-3 (PR3) and myeloperoxidase (MPO). Moreover, neutrophil populations stimulated with GM-CSF and C5a showed increased survival compared with resting neutrophils, which did not generate NETs.",
+      "counter_evidence": "We show that, following priming with granulocyte/macrophage colony-stimulating factor (GM-CSF) and subsequent short-term toll-like receptor 4 (TLR4) or complement factor 5a (C5a) receptor stimulation, viable neutrophils are able to generate NETs.",
+      "annotation": {
+        "population_alignment": "SAME",
+        "intervention_alignment": "DIFFERENT",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "SAME",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "SAME",
+        "direction": "SAME",
+        "overall_scope_match": "UNCLEAR",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter shows NETs generated after GM-CSF priming plus TLR4/C5a stimulation, not ANCA stimulation. Supports NET release in general, so it does not oppose the claim."
+      }
+    },
+    {
+      "case_id": "P014",
+      "claim": "FoxO3a activation in neuronal death is mediated by reactive oxygen species (ROS).",
+      "primary_evidence": "Here, we demonstrate that the protein kinase MST1 mediates oxidative-stress-induced cell death in primary mammalian neurons by directly activating the FOXO transcription factors. MST1 phosphorylates FOXO proteins at a conserved site within the forkhead domain that disrupts their interaction with 14-3-3 proteins, promotes FOXO nuclear translocation, and thereby induces cell death in neurons.",
+      "counter_evidence": "elegans MST1 ortholog CST-1 shortens life span and accelerates tissue aging, while overexpression of cst-1 promotes life span and delays aging.",
+      "annotation": {
+        "population_alignment": "DIFFERENT",
+        "intervention_alignment": "DIFFERENT",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "DIFFERENT",
+        "causal_relation_alignment": "UNCLEAR",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter concerns C. elegans CST-1 and lifespan. Claim concerns FoxO3a, ROS and neuronal death."
+      }
+    },
+    {
+      "case_id": "P015",
+      "claim": "The center of the granuloma in an immune cell induces a pro-inflammatory immune response.",
+      "primary_evidence": "A general structure of the developing granuloma was identified, comprising an inner cell layer with few CD8(+) cells surrounding the necrotic centre and an outer area of lymphocyte infiltration harbouring mycobacteria-containing antigen-presenting cells as well as CD4(+), CD8(+), and B cells in active follicle-like centres resembling secondary lymphoid organs. We found that the centers of granulomas have a pro-inflammatory environment that is characterized by the presence of antimicrobial peptides, reactive oxygen species and pro-inflammatory eicosanoids.",
+      "counter_evidence": "It is concluded that the follicular structures in the peripheral rim of granulomas serve as a morphological substrate for the orchestration of the enduring host response in pulmonary tuberculosis.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "NOT_APPLICABLE",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "DIFFERENT",
+        "causal_relation_alignment": "UNCLEAR",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Claim concerns the granuloma center; counter concerns follicular structures in the peripheral rim."
+      }
+    },
+    {
+      "case_id": "P016",
+      "claim": "Commelina yellow mottle virus' (ComYMV) genome consists of 7489 baise pairs.",
+      "primary_evidence": "We have characterized the viral transcript and determined the complete sequence of the genome of Commelina mellow mottle virus (CoYMV), a member of this group. The virus is tentatively named pagoda yellow mosaic associated virus (PYMAV).",
+      "counter_evidence": "The complete genome of this virus was determined to comprise 7424 nucleotides, and the virus shared 40.4-45.1% identity with that of other badnaviruses.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "NOT_APPLICABLE",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "SAME",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "NOT_APPLICABLE",
+        "direction": "OPPOSITE",
+        "overall_scope_match": "UNCLEAR",
+        "genuine_contradiction": "UNCLEAR",
+        "annotator_notes": "Counter gives a different genome length (7424 nt) for 'this virus', whose identity is not stated in the counter. Cannot confirm it is the virus in the claim."
+      }
+    },
+    {
+      "case_id": "P017",
+      "claim": "Macrolides protect against myocardial infarction.",
+      "primary_evidence": "No effect was found for previous use of macrolides (primarily erythromycin), sulfonamides, penicillins, or cephalosporins. These results of preliminary nature should stimulate more research to further explore the role of infections in the etiology of acute myocardial infarction.",
+      "counter_evidence": "Further, adoptive transfer of Cav1 null macrophages into WT mice on d3 post-MI exacerbated adverse cardiac remodeling at d14 post-MI.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "DIFFERENT",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "DIFFERENT",
+        "causal_relation_alignment": "UNCLEAR",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter concerns Cav1-null macrophage transfer and cardiac remodeling in mice; it does not mention macrolides."
+      }
+    },
+    {
+      "case_id": "P018",
+      "claim": "Chenodeosycholic acid treatment increases whole-body energy expenditure.",
+      "primary_evidence": "Whole-body energy expenditure was also increased upon CDCA treatment. low levels of physical activity and times of day, suggesting actions on basal metabolic rate.",
+      "counter_evidence": "These findings identify bile acids as a target to activate BAT in humans.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "UNCLEAR",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "UNCLEAR",
+        "direction": "SAME",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter concerns BAT activation by bile acids, not whole-body energy expenditure. It points the same way as the claim."
+      }
+    },
+    {
+      "case_id": "P019",
+      "claim": "Vitamin D deficiency effects the term of delivery.",
+      "primary_evidence": "Vitamin D insufficiency affects almost 50% of the population worldwide. In this review, we will summarize the mechanisms that are presumed to underlie the relationship between vitamin D and understand its biology and clinical implications.",
+      "counter_evidence": "The mechanism underlying the blunted PTH response is unclear but may be related to magnesium (Mg) deficiency.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "DIFFERENT",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "NOT_APPLICABLE",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter concerns the PTH response and Mg deficiency; it does not mention vitamin D or delivery."
+      }
+    },
+    {
+      "case_id": "P020",
+      "claim": "New drugs for tuberculosis often do not penetrate the necrotic portion of a tuberculosis lesion in high concentrations.",
+      "primary_evidence": "We propose an alternative working model to prioritize new antibiotic regimens based on quantitative and spatial distribution of TB drugs in the major lesion types found in human lungs. The finding that lesion penetration may contribute to treatment outcome has wide implications for TB.",
+      "counter_evidence": "Rifampicin even accumulates in necrotic caseum, a critical lesion site where persisting tubercle bacilli reside.",
+      "annotation": {
+        "population_alignment": "SAME",
+        "intervention_alignment": "DIFFERENT",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "SAME",
+        "context_alignment": "SAME",
+        "causal_relation_alignment": "NOT_APPLICABLE",
+        "direction": "OPPOSITE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter concerns rifampicin, an established drug, while the claim concerns new drugs ('often' does not exclude exceptions)."
+      }
+    },
+    {
+      "case_id": "P021",
+      "claim": "CHEK2 is not associated with breast cancer.",
+      "primary_evidence": "Previous investigation has established a role for the CHEK2 gene in breast cancer aetiology, but studies have largely been limited to the rare 1100delC mutation. We genotyped these six tagSNPs in 1,577 postmenopausal breast cancer cases and 1,513 population controls, but found no convincing association between any common CHEK2 haplotype and breast cancer risk.",
+      "counter_evidence": "Previous investigation has established a role for the CHEK2 gene in breast cancer aetiology, but studies have largely been limited to the rare 1100delC mutation.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "SAME",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "DIFFERENT",
+        "causal_relation_alignment": "SAME",
+        "direction": "OPPOSITE",
+        "overall_scope_match": "UNCLEAR",
+        "genuine_contradiction": "UNCLEAR",
+        "annotator_notes": "Counter says a role for CHEK2 in breast cancer was established but limited to the rare 1100delC mutation. Claim is stated generally. Unclear whether the gene-level claim is contradicted or only variant-specific."
+      }
+    },
+    {
+      "case_id": "P022",
+      "claim": "Histone demethylase recruitment and a transient decrease in histone methylation is necessary for ligand-dependent induction of transcription by nuclear receptors.",
+      "primary_evidence": "This strategy, based at least in part on an HMT-dependent inhibitory histone code, imposes a requirement for specific histone demethylases, including LSD1, to permit ligand- and signal-dependent activation of regulated gene expression. These events link an inhibitory methylation component of the histone code to a broadly used strategy that circumvents pathological constitutive gene induction by physiologically regulated transcription factors.",
+      "counter_evidence": "Whereas histone methylation by Set1 and Set2 is dispensable for NuA4's interaction with Pol II and targeting to some coding regions, it stimulates NuA4-histone interaction and H4 acetylation in vivo.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "DIFFERENT",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "DIFFERENT",
+        "causal_relation_alignment": "UNCLEAR",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter concerns Set1/Set2 methylation and NuA4 targeting; claim concerns demethylase recruitment in nuclear receptor induction."
+      }
+    },
+    {
+      "case_id": "P023",
+      "claim": "Bariatric surgery has a positive impact on mental health.",
+      "primary_evidence": "Corresponding to the considerable weight loss after bariatric surgery, important aspects of mental health improved significantly during the 4-year follow-up period. CONCLUSIONS AND RELEVANCE Mental health conditions are common among bariatric surgery patients-in particular, depression and binge eating disorder.",
+      "counter_evidence": "CONCLUSIONS AND RELEVANCE Mental health conditions are common among bariatric surgery patients-in particular, depression and binge eating disorder.",
+      "annotation": {
+        "population_alignment": "SAME",
+        "intervention_alignment": "SAME",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "DIFFERENT",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter gives prevalence of mental health conditions among patients, not change after surgery."
+      }
+    },
+    {
+      "case_id": "P024",
+      "claim": "The risk of breast cancer among parous women increases with placental weight of pregnancies, and this association is strongest for premenopausal breast cancer.",
+      "primary_evidence": "We reviewed the available evidence on the association between birthweight and the risk of breast cancer. The majority of studies identified a positive link between birthweight and premenopausal, but not postmenopausal, breast cancer.",
+      "counter_evidence": "Body mass index (BMI) showed significant inverse and positive associations with breast cancer among pre- and postmenopausal women, respectively; these associations were nonlinear.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "DIFFERENT",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "UNCLEAR",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "SAME",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter concerns BMI, not placental weight."
+      }
+    },
+    {
+      "case_id": "P025",
+      "claim": "CX3CR1 on the Th2 cells promotes T cell survival",
+      "primary_evidence": "CX3CR1-induced survival was also observed for T(H)1 cells upon airway inflammation but not under homeostatic conditions or upon peripheral inflammation. IL-4 promotes the differentiation of naive CD4+ T cells into IL-4-producing T helper 2 (Th2) cells.",
+      "counter_evidence": "CX3CR1-induced survival was also observed for T(H)1 cells upon airway inflammation but not under homeostatic conditions or upon peripheral inflammation.",
+      "annotation": {
+        "population_alignment": "DIFFERENT",
+        "intervention_alignment": "SAME",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "SAME",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "SAME",
+        "direction": "SAME",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter reports the same survival effect in Th1 cells under airway inflammation, which is consistent with the claim."
+      }
+    },
+    {
+      "case_id": "P026",
+      "claim": "Diabetic patients with acute coronary syndrome experience increased short-term and long-term risk for bleeding events.",
+      "primary_evidence": "CONCLUSION ticagrelor, when compared with clopidogrel, reduced ischaemic events in ACS patients irrespective of diabetic status and glycaemic control, without an increase in major bleeding events. BACKGROUND Patients with diabetes mellitus (DM) are at high risk for recurrent cardiovascular events after acute coronary syndromes, in part because of increased platelet reactivity.",
+      "counter_evidence": "CONCLUSIONS Subjects with DM tended to have a greater reduction in ischemic events without an observed increase in TIMI major bleeding and therefore a greater net treatment benefit with prasugrel compared with clopidogrel.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "DIFFERENT",
+        "outcome_alignment": "UNCLEAR",
+        "endpoint_alignment": "UNCLEAR",
+        "context_alignment": "DIFFERENT",
+        "causal_relation_alignment": "DIFFERENT",
+        "direction": "UNCLEAR",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Claim: risk of bleeding associated with diabetes. Counter: treatment comparison (prasugrel vs clopidogrel) in diabetic subjects. Different question."
+      }
+    },
+    {
+      "case_id": "P027",
+      "claim": "Smc5/6 engagment drives the activation of SUMO E3 ligase Mms21 by ATP-dependent remolding.",
+      "primary_evidence": "Here we show that the SUMO ligase and the chromosome disjunction functions of Mms21 depend on its docking to an intact and active Smc5/6 complex, indicating that the Smc5/6-Mms21 complex operates as a large SUMO ligase in vivo. In spite of the physical distance separating the E3 and the nucleotide-binding domains in Smc5/6, Mms21-dependent sumoylation requires binding of ATP to Smc5, a step that is part of the ligase mechanism that assists Ubc9 function.",
+      "counter_evidence": "Yet how the activity of the SUMO ligase is controlled remains unknown.",
+      "annotation": {
+        "population_alignment": "NOT_APPLICABLE",
+        "intervention_alignment": "UNCLEAR",
+        "outcome_alignment": "UNCLEAR",
+        "endpoint_alignment": "UNCLEAR",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "UNCLEAR",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter says control of SUMO ligase activity is unknown. It neither supports nor opposes the claimed mechanism."
+      }
+    },
+    {
+      "case_id": "P028",
+      "claim": "Rapid phosphotransfer rates govern fidelity in two component systems",
+      "primary_evidence": "Some bacteria have over 150 different two-component pathways, and the specificity of the phosphotransfer reactions within these systems is tightly controlled to prevent unwanted crosstalk. The structure presented here has allowed us to identify specificity determinants for the CheA-CheY interaction and subsequently to successfully reengineer phosphotransfer signalling.",
+      "counter_evidence": "The data indicate that preferential binding affinity is the basis for signaling fidelity in bacterial two-component systems.",
+      "annotation": {
+        "population_alignment": "SAME",
+        "intervention_alignment": "DIFFERENT",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "SAME",
+        "context_alignment": "SAME",
+        "causal_relation_alignment": "SAME",
+        "direction": "UNCLEAR",
+        "overall_scope_match": "UNCLEAR",
+        "genuine_contradiction": "UNCLEAR",
+        "annotator_notes": "Claim: rapid phosphotransfer rates govern fidelity. Counter: preferential binding affinity is the basis for fidelity. Competing explanations, not necessarily mutually exclusive."
+      }
+    },
+    {
+      "case_id": "P029",
+      "claim": "Headaches are not correlated with cognitive impairment.",
+      "primary_evidence": "Evidence was lacking for cognitive impairment for any headache type with or without brain lesions. Evidence that headache of any type by itself or in combination with brain lesions was associated with cognitive impairment was lacking.",
+      "counter_evidence": "Migraine with aura was the only headache type associated with brain infarcts.",
+      "annotation": {
+        "population_alignment": "SAME",
+        "intervention_alignment": "SAME",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "SAME",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter concerns brain infarcts, not cognitive impairment."
+      }
+    },
+    {
+      "case_id": "P030",
+      "claim": "1/2000 in UK have abnormal PrP positivity.",
+      "primary_evidence": "RESULTS Of the 32,441 appendix samples 16 were positive for abnormal PrP, indicating an overall prevalence of 493 per million population (95% confidence interval 282 to 801 per million). CONCLUSIONS This study corroborates previous studies and suggests a high prevalence of infection with abnormal PrP, indicating vCJD carrier status in the population compared with the 177 vCJD cases to date.",
+      "counter_evidence": "CONCLUSIONS This study corroborates previous studies and suggests a high prevalence of infection with abnormal PrP, indicating vCJD carrier status in the population compared with the 177 vCJD cases to date.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "NOT_APPLICABLE",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "UNCLEAR",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "NOT_APPLICABLE",
+        "direction": "SAME",
+        "overall_scope_match": "UNCLEAR",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter supports high prevalence of abnormal PrP but gives no figure and no UK population."
+      }
+    },
+    {
+      "case_id": "P031",
+      "claim": "Macrolides have no protective effect against myocardial infarction.",
+      "primary_evidence": "No effect was found for previous use of macrolides (primarily erythromycin), sulfonamides, penicillins, or cephalosporins. These results of preliminary nature should stimulate more research to further explore the role of infections in the etiology of acute myocardial infarction.",
+      "counter_evidence": "Further, adoptive transfer of Cav1 null macrophages into WT mice on d3 post-MI exacerbated adverse cardiac remodeling at d14 post-MI.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "DIFFERENT",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "DIFFERENT",
+        "causal_relation_alignment": "UNCLEAR",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter concerns Cav1-null macrophage transfer after MI in mice; it does not mention macrolides."
+      }
+    },
+    {
+      "case_id": "P032",
+      "claim": "Antibiotic induced alterations in the gut microbiome reduce resistance against Clostridium difficile",
+      "primary_evidence": "Here we show that antibiotic treatment induces substantial changes in the gut microbial community and in the metabolome of mice susceptible to C. Among these, Clostridium difficile, a major cause of antibiotic-induced diarrhoea, greatly increases morbidity and mortality in hospitalized patients.",
+      "counter_evidence": "difficile infection and, upon administration, enhances resistance to infection in a secondary bile acid dependent fashion.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "UNCLEAR",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "UNCLEAR",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "UNCLEAR",
+        "direction": "UNCLEAR",
+        "overall_scope_match": "UNCLEAR",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter is a sentence fragment; subject unclear. It reports enhanced resistance to infection upon administration, which is not in conflict with the claim."
+      }
+    },
+    {
+      "case_id": "P033",
+      "claim": "ADAR1 binds to Dicer to cleave pre-miRNA.",
+      "primary_evidence": "Most importantly, ADAR1 increases the maximum rate (Vmax) of pre-microRNA (miRNA) cleavage by Dicer and facilitates loading of miRNA onto RNA-induced silencing complexes, identifying a new role of ADAR1 in miRNA processing and RNAi mechanisms. We find that purified Dicer-2 can efficiently cleave pre-miRNA, but that inorganic phosphate and the Dicer-2 partner protein R2D2 inhibit pre-miRNA cleavage.",
+      "counter_evidence": "We find that purified Dicer-2 can efficiently cleave pre-miRNA, but that inorganic phosphate and the Dicer-2 partner protein R2D2 inhibit pre-miRNA cleavage.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "DIFFERENT",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "UNCLEAR",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "DIFFERENT",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter concerns Dicer-2 inhibition by phosphate and R2D2; ADAR1 is not mentioned."
+      }
+    },
+    {
+      "case_id": "P034",
+      "claim": "Anthrax spores can be disposed of easily after they are dispersed.",
+      "primary_evidence": "RESULTS Viable B anthracis spores reaerosolized under semiquiescent conditions, with a marked increase in reaerosolization during simulated active office conditions. CONCLUSIONS Bacillus anthracis spores used in a recent terrorist incident reaerosolized under common office activities.",
+      "counter_evidence": "sorbens will persist.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "UNCLEAR",
+        "outcome_alignment": "UNCLEAR",
+        "endpoint_alignment": "UNCLEAR",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "UNCLEAR",
+        "direction": "UNCLEAR",
+        "overall_scope_match": "UNCLEAR",
+        "genuine_contradiction": "UNCLEAR",
+        "annotator_notes": "Counter is a fragment ('sorbens will persist') and does not state what persists."
+      }
+    },
+    {
+      "case_id": "P035",
+      "claim": "Occupancy of ribosomes by IncRNAs mirror 5 0-UTRs",
+      "primary_evidence": "Here, we show that classical noncoding RNAs and 5' UTRs show the same ribosome occupancy as lincRNAs, demonstrating that ribosome occupancy alone is not sufficient to classify transcripts as coding or noncoding. Together with the ribosomal proteins, the 5S rRNA is imported into the nucleolus where 40S and 60S ribosomal subunits are assembled prior to export to the cytoplasm [1, 2].",
+      "counter_evidence": "The pre-ribosomal RNA (pre-rRNA) transcripts are subsequently modified and processed into the mature 18S, 5.8S and 28S rRNAs.",
+      "annotation": {
+        "population_alignment": "NOT_APPLICABLE",
+        "intervention_alignment": "NOT_APPLICABLE",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "NOT_APPLICABLE",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter concerns rRNA processing."
+      }
+    },
+    {
+      "case_id": "P036",
+      "claim": "PDPN promotes efficient motility along stromal surfaces by activating the C-type lectin receptor to rearrange the actin cytoskeleton in dendritic cells.",
+      "primary_evidence": "PDPN is expressed by lymphatic endothelial and fibroblastic reticular cells and promotes blood-lymph separation during development by activating the C-type lectin receptor, CLEC-2, on platelets. Thus, activation of CLEC-2 by PDPN rearranges the actin cytoskeleton in DCs to promote efficient motility along stromal surfaces.",
+      "counter_evidence": "PDPN is expressed by lymphatic endothelial and fibroblastic reticular cells and promotes blood-lymph separation during development by activating the C-type lectin receptor, CLEC-2, on platelets.",
+      "annotation": {
+        "population_alignment": "DIFFERENT",
+        "intervention_alignment": "SAME",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "DIFFERENT",
+        "causal_relation_alignment": "SAME",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter concerns PDPN-CLEC-2 on platelets in blood-lymph separation during development; claim concerns dendritic cell motility."
+      }
+    },
+    {
+      "case_id": "P037",
+      "claim": "Polymeal nutrition reduces cardiovascular mortality.",
+      "primary_evidence": "RESULTS Combining the ingredients of the Polymeal would reduce cardiovascular disease events by 76%. CONCLUSION The Polymeal promises to be an effective, non-pharmacological, safe, cheap, and tasty alternative to reduce cardiovascular morbidity and increase life expectancy in the general population.",
+      "counter_evidence": "OBJECTIVE Although the Polypill concept (proposed in 2003) is promising in terms of benefits for cardiovascular risk management, the potential costs and adverse effects are its main pitfalls.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "DIFFERENT",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "NOT_APPLICABLE",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter concerns the Polypill, not the Polymeal."
+      }
+    },
+    {
+      "case_id": "P038",
+      "claim": "A high microerythrocyte count raises vulnerability to severe anemia in homozygous alpha (+)- thalassemia trait subjects.",
+      "primary_evidence": "Individuals homozygous for alpha(+)-thalassaemia have microcytosis and an increased erythrocyte count. Methodology: In total out of 850, 340 subjects with microcytic hypochromic anemia [MCV<80fl; MCH<27pg] from Southwest part of Iran, were studied in Research Center of Thalassemia and Hemoglobinopathies (RCTH) which is the only center working on hematology and oncology in Southwest (Khuzestan) region of Iran.",
+      "counter_evidence": "CONCLUSIONS The increased erythrocyte count and microcytosis in children homozygous for alpha(+)-thalassaemia may contribute substantially to their protection against SMA.",
+      "annotation": {
+        "population_alignment": "SAME",
+        "intervention_alignment": "SAME",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "UNCLEAR",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "SAME",
+        "direction": "OPPOSITE",
+        "overall_scope_match": "YES",
+        "genuine_contradiction": "YES",
+        "annotator_notes": "Counter says increased erythrocyte count and microcytosis may protect against SMA (the expansion is not given). Claim says severe anemia without specifying cause or setting."
+      }
+    },
+    {
+      "case_id": "P039",
+      "claim": "Incidence rates of cervical cancer have decreased.",
+      "primary_evidence": "RESULTS The mean incidence of cervical carcinoma in the early 1960s was 15.4 per 10(5) woman-years. Thus, it might be possible to decrease the incidence of cervical adenocarcinoma.",
+      "counter_evidence": "In 1991, it was only 2.7 per 10(5) woman-years.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "NOT_APPLICABLE",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "SAME",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "NOT_APPLICABLE",
+        "direction": "SAME",
+        "overall_scope_match": "YES",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter gives a low 1991 incidence; the cancer type is not named in the counter, and no earlier comparison is given in it."
+      }
+    },
+    {
+      "case_id": "P040",
+      "claim": "Transplanted human glial progenitor cells are incapable of forming a neural network with host animals' neurons.",
+      "primary_evidence": "To assess the cell-autonomous and species-selective properties of human glia, we engrafted human glial progenitor cells (GPCs) into neonatal immunodeficient mice. Upon transplantation into the fetal mouse brain, the cells migrate into various brain regions and differentiate into glia and neurons, including glutamatergic, GABAergic, and catecholaminergic subtypes.",
+      "counter_evidence": "The engrafted human glia were gap-junction-coupled to host astroglia, yet retained the size and pleomorphism of hominid astroglia, and propagated Ca2+ signals 3-fold faster than their hosts.",
+      "annotation": {
+        "population_alignment": "SAME",
+        "intervention_alignment": "SAME",
+        "outcome_alignment": "UNCLEAR",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "SAME",
+        "causal_relation_alignment": "UNCLEAR",
+        "direction": "OPPOSITE",
+        "overall_scope_match": "UNCLEAR",
+        "genuine_contradiction": "UNCLEAR",
+        "annotator_notes": "Counter reports gap-junction coupling between human glia and host astroglia, not neurons. Claim concerns a 'neural network' with host neurons."
+      }
+    },
+    {
+      "case_id": "P041",
+      "claim": "In young and middle-aged adults, current or remote uses of ADHD medications do not increase the risk of serious cardiovascular events.",
+      "primary_evidence": "OBJECTIVE To examine whether current use of medications prescribed primarily to treat ADHD is associated with increased risk of serious cardiovascular events in young and middle-aged adults. CONCLUSIONS Among young and middle-aged adults, current or new use of ADHD medications, compared with nonuse or remote use, was not associated with an increased risk of serious cardiovascular events.",
+      "counter_evidence": "There were 107,322 person-years of current use (median, 0.33 years), with a crude incidence per 1000 person-years of 1.34 (95% CI, 1.14-1.57) for MI, 0.30 (95% CI, 0.20-0.42) for SCD, and 0.56 (95% CI, 0.43-0.72) for stroke.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "SAME",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "DIFFERENT",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter gives crude incidence in users with no comparison group, so it makes no risk comparison."
+      }
+    },
+    {
+      "case_id": "P042",
+      "claim": "Taking 400mg of α-tocopheryl acetate helps to prevent prostate cancer.",
+      "primary_evidence": "CONCLUSIONS In this large, long-term trial of male physicians, neither vitamin E nor C supplementation reduced the risk of prostate or total cancer. CONCLUSIONS The combination of radiotherapy plus 6 months of androgen suppression provides inferior survival as compared with radiotherapy plus 3 years of androgen suppression in the treatment of locally advanced prostate cancer.",
+      "counter_evidence": "CONCLUSIONS In this large, long-term trial of male physicians, neither vitamin E nor C supplementation reduced the risk of prostate or total cancer.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "UNCLEAR",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "SAME",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "SAME",
+        "direction": "OPPOSITE",
+        "overall_scope_match": "YES",
+        "genuine_contradiction": "YES",
+        "annotator_notes": "Counter shows neither vitamin E nor C reduced prostate cancer. The specific 400 mg α-tocopheryl acetate dose is not stated in the counter."
+      }
+    },
+    {
+      "case_id": "P043",
+      "claim": "Deamination of cytidine to uridine on the minus strand of viral DNA results in catastrophic G-to-A mutations in the viral genome.",
+      "primary_evidence": "Here, using a murine leukemia virus (MLV)-based system, we provide evidence that CEM15/APOBEC3G is a DNA deaminase that is incorporated into virions during viral production and subsequently triggers massive deamination of deoxycytidine to deoxyuridine within the retroviral minus (first)-strand cDNA, thus providing a probable trigger for viral destruction. G to A hypermutation is one of the characteristics of primate lentiviruses, as well as other retroviruses, during replication in vivo and in cell culture.",
+      "counter_evidence": "Importantly, the accumulation of CEM15-mediated non-lethal hypermutation in the replicating viral genome could potently contribute to the genetic variation of primate lentiviral populations.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "UNCLEAR",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "UNCLEAR",
+        "direction": "OPPOSITE",
+        "overall_scope_match": "UNCLEAR",
+        "genuine_contradiction": "UNCLEAR",
+        "annotator_notes": "Counter describes non-lethal hypermutation, while the claim describes catastrophic mutation. Both may occur."
+      }
+    },
+    {
+      "case_id": "P044",
+      "claim": "Replacement of histone H2A with H2A.Z slows gene activation in yeasts by stabilizing +1 nucleosomes.",
+      "primary_evidence": "This incorporation is mediated by the conserved SWR1 complex, which replaces histone H2A in canonical nucleosomes with H2A.Z in an ATP-dependent manner. Histone variant H2A.Z (Htz1 in yeast) replaces conventional H2A in many nucleosomes.",
+      "counter_evidence": "Remarkably, further addition of free H2A.Z-H2B dimer leads to hyperstimulation of ATPase activity, eviction of nucleosomal H2A-H2B, and deposition of H2A.Z-H2B.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "UNCLEAR",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "UNCLEAR",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter describes the mechanism of H2A.Z deposition, not effects on gene activation or nucleosome stability."
+      }
+    },
+    {
+      "case_id": "P045",
+      "claim": "Ribosomopathies have a low degree of cell and tissue specific pathology.",
+      "primary_evidence": "Acquired abnormalities in ribosome function have been implicated more broadly in human malignancies. Recent discoveries of causative mutations and deletions in genes linked to ribosome biogenesis have defined a group of similar pathologies termed ribosomopathies.",
+      "counter_evidence": "Elucidation of the mechanisms whereby selective abnormalities in ribosome biogenesis cause specific clinical syndromes will hopefully lead to novel therapeutic strategies for these diseases.",
+      "annotation": {
+        "population_alignment": "SAME",
+        "intervention_alignment": "NOT_APPLICABLE",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "UNCLEAR",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "SAME",
+        "direction": "OPPOSITE",
+        "overall_scope_match": "YES",
+        "genuine_contradiction": "YES",
+        "annotator_notes": "Counter presupposes selective abnormalities causing specific clinical syndromes, against 'low degree of specificity'. The statement is indirect (framed as an aim)."
+      }
+    },
+    {
+      "case_id": "P046",
+      "claim": "The myocardial lineage develops from cardiac progenitors of mesodermal origin.",
+      "primary_evidence": "Together, these findings identify a human cardiovascular progenitor that defines one of the earliest stages of human cardiac development. The intersection of Isl1 and Wnt1 lineages within the heart provides a caveat to using Isl1 as an exclusive second heart field cardiac progenitor marker and suggests that some Isl1-expressing progenitor cells derived from embryos, embryonic stem cultures, or induced pluripotent stem cultures may be of neural crest lineage.",
+      "counter_evidence": "Combining Isl1(Cre/+), a SHF driver, and Wnt1::Flpe, a neural crest driver, with Rc::FrePe reveals that some Isl1 derivatives in the cardiac outflow tract derive from Wnt1-expressing neural crest progenitors.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "NOT_APPLICABLE",
+        "outcome_alignment": "UNCLEAR",
+        "endpoint_alignment": "UNCLEAR",
+        "context_alignment": "DIFFERENT",
+        "causal_relation_alignment": "UNCLEAR",
+        "direction": "UNCLEAR",
+        "overall_scope_match": "UNCLEAR",
+        "genuine_contradiction": "UNCLEAR",
+        "annotator_notes": "Counter says some Isl1 derivatives in the outflow tract are neural crest derived. It does not say these are myocardial, and the claim is not exclusive."
+      }
+    },
+    {
+      "case_id": "P047",
+      "claim": "Exposure to fine particulate air pollution is relate to anxiety prevalence.",
+      "primary_evidence": "Exposure to particulate matter was characterized using estimated average exposure to particulate matter <2.5 μm in diameter (PM2.5) and 2.5 to 10 μm in diameter (PM2.5-10) in the one month, three months, six months, one year, and 15 years prior to assessment of anxiety symptoms, and residential distance to the nearest major road two years prior to assessment. CONCLUSIONS Exposure to fine particulate matter (PM2.5) was associated with high symptoms of anxiety, with more recent exposures potentially more relevant than more distant exposures.",
+      "counter_evidence": "There was no association between anxiety and exposure to PM2.5-10.",
+      "annotation": {
+        "population_alignment": "SAME",
+        "intervention_alignment": "DIFFERENT",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "SAME",
+        "context_alignment": "SAME",
+        "causal_relation_alignment": "SAME",
+        "direction": "OPPOSITE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter concerns PM2.5-10 (coarse), while the claim concerns fine particulate air pollution."
+      }
+    },
+    {
+      "case_id": "P048",
+      "claim": "Cytochrome c is released from the mitochondrial intermembrane space to cytosol during apoptosis.",
+      "primary_evidence": "Apoptosis that proceeds via the mitochondrial pathway involves mitochondrial outer membrane permeabilization (MOMP), responsible for the release of cytochrome c and other proteins of the mitochondrial intermembrane space. Electron microscopy confirmed the mitochondrial morphology alterations and showed abnormal cristae structure.",
+      "counter_evidence": "Omi/HtrA2 is a serine protease released as a pro-apoptotic factor from the mitochondrial intermembrane space into the cytosol.",
+      "annotation": {
+        "population_alignment": "NOT_APPLICABLE",
+        "intervention_alignment": "DIFFERENT",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "SAME",
+        "context_alignment": "SAME",
+        "causal_relation_alignment": "NOT_APPLICABLE",
+        "direction": "SAME",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter concerns Omi/HtrA2, not cytochrome c."
+      }
+    },
+    {
+      "case_id": "P049",
+      "claim": "Hypothalamic glutamate neurotransmission is crucial to energy balance.",
+      "primary_evidence": "In adulthood, increased body weight and fasting also altered the expression of glucose and glutamate transporters. Here, we show that neurons in the dorsal raphe nucleus, expressing vesicular transporters for GABA or glutamate (hereafter, DRNVgat and DRNVGLUT3 neurons), are reciprocally activated by changes in energy balance and that modulating their activity has opposite effects on feeding-DRNVgat neurons increase, whereas DRNVGLUT3 neurons suppress, food intake.",
+      "counter_evidence": "Leptin, a key regulator of appetite and metabolism, has previously been reported to influence glial structural proteins and morphology.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "DIFFERENT",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "NOT_APPLICABLE",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter concerns leptin and glial proteins."
+      }
+    },
+    {
+      "case_id": "P050",
+      "claim": "Occupancy of ribosomes by IncRNAs do not make functional peptides.",
+      "primary_evidence": "Here, we show that classical noncoding RNAs and 5' UTRs show the same ribosome occupancy as lincRNAs, demonstrating that ribosome occupancy alone is not sufficient to classify transcripts as coding or noncoding. We conclude that human cells adopt unique strategies and recruit distinct trans-acting factors to carry out essential processing steps, posing fundamental implications for understanding ribosomopathies at the molecular level and developing effective therapeutic agents.",
+      "counter_evidence": "However, a recent study of ribosome occupancy reported that many large intergenic ncRNAs (lincRNAs) are bound by ribosomes, raising the possibility that they are translated into proteins.",
+      "annotation": {
+        "population_alignment": "SAME",
+        "intervention_alignment": "NOT_APPLICABLE",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "SAME",
+        "causal_relation_alignment": "DIFFERENT",
+        "direction": "OPPOSITE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter concerns ribosome binding and a possibility of translation. Claim concerns production of functional peptides."
+      }
+    },
+    {
+      "case_id": "P051",
+      "claim": "Bone marrow cells contribute to adult macrophage compartments.",
+      "primary_evidence": "We also found that after bone marrow transplantation, host macrophages retained the capacity to expand when the development of donor macrophages was compromised. We have demonstrated that major tissue-resident macrophage populations, including liver Kupffer cells and lung alveolar, splenic, and peritoneal macrophages, are established prior to birth and maintain themselves subsequently during adulthood independent of replenishment by blood monocytes.",
+      "counter_evidence": "Furthermore, we have established that short-lived Ly6C(+) monocytes constitute obligatory steady-state precursors of blood-resident Ly6C(-) cells and that the abundance of Ly6C(+) blood monocytes dynamically controls the circulation lifespan of their progeny.",
+      "annotation": {
+        "population_alignment": "DIFFERENT",
+        "intervention_alignment": "NOT_APPLICABLE",
+        "outcome_alignment": "DIFFERENT",
+        "endpoint_alignment": "DIFFERENT",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "NOT_APPLICABLE",
+        "direction": "NOT_APPLICABLE",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter concerns monocyte precursor relationships, not macrophage origin."
+      }
+    },
+    {
+      "case_id": "P052",
+      "claim": "Mice that lack Interferon-γ or its receptor exhibit high resistance to experimental autoimmune myocarditis.",
+      "primary_evidence": "Both IL-12Rbeta1-deficient mice and STAT4-deficient mice were resistant to the induction of myocarditis. CONCLUSIONS Our data provide evidence that IFN-gamma protects mice from lethal autoimmune myocarditis by inducing the expression of inducible nitric oxide synthase followed by the downregulation of T-cell responses.",
+      "counter_evidence": "Lack of IFN-gamma due to either depletion with an antibody or a genetic deficiency exacerbated myocarditis.",
+      "annotation": {
+        "population_alignment": "UNCLEAR",
+        "intervention_alignment": "SAME",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "SAME",
+        "context_alignment": "SAME",
+        "causal_relation_alignment": "SAME",
+        "direction": "OPPOSITE",
+        "overall_scope_match": "YES",
+        "genuine_contradiction": "YES",
+        "annotator_notes": "Counter reports exacerbated myocarditis with IFN-γ lack, against 'resistance'. Species not stated in the counter."
+      }
+    },
+    {
+      "case_id": "P053",
+      "claim": "Teaching hospitals do not provide better care than non-teaching hospitals.",
+      "primary_evidence": "Other outcomes were diverse, but typically teaching healthcare structures did not do better than nonteaching ones. Conclusions  The available data are limited by their nonrandomized design, but overall they do not suggest that a healthcare facility's teaching status on its own markedly improves or worsens patient outcomes.",
+      "counter_evidence": "Differences were seen for some diagnoses (e.g., significantly better survival for breast cancer and cerebrovascular accidents in teaching hospitals and significantly better survival from cholecystectomy in nonteaching hospitals), but these were small in magnitude.",
+      "annotation": {
+        "population_alignment": "SAME",
+        "intervention_alignment": "SAME",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "UNCLEAR",
+        "context_alignment": "SAME",
+        "causal_relation_alignment": "SAME",
+        "direction": "UNCLEAR",
+        "overall_scope_match": "YES",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter reports mixed and small differences by diagnosis. It does not clearly oppose 'no better care'."
+      }
+    },
+    {
+      "case_id": "P054",
+      "claim": "Birth-weight is positively associated with breast cancer.",
+      "primary_evidence": "We reviewed the available evidence on the association between birthweight and the risk of breast cancer. A high birth weight (> or =4000 g) in 2 successive births was associated with an increased risk of breast cancer before but not after adjusting for placental weight and other covariates (adjusted hazard ratio, 1.10; 95% CI, 0.76-1.59).",
+      "counter_evidence": "CONCLUSIONS Placental weight is positively associated with maternal risk of breast cancer.",
+      "annotation": {
+        "population_alignment": "DIFFERENT",
+        "intervention_alignment": "DIFFERENT",
+        "outcome_alignment": "SAME",
+        "endpoint_alignment": "SAME",
+        "context_alignment": "UNCLEAR",
+        "causal_relation_alignment": "SAME",
+        "direction": "SAME",
+        "overall_scope_match": "NO",
+        "genuine_contradiction": "NO",
+        "annotator_notes": "Counter concerns placental weight and maternal risk, not birth weight."
+      }
+    }
+  ]
+}
